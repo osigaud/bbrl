@@ -25,7 +25,9 @@ def cumulated_reward(reward, done):
     assert v_done.eq(
         1.0
     ).all(), "[agents.rl.functional.cumulated_reward] Computing cumulated reward over unfinished trajectories"
-    arange = torch.arange(timesteps, device=done.device).unsqueeze(-1).repeat(1, batch_size)
+    arange = (
+        torch.arange(timesteps, device=done.device).unsqueeze(-1).repeat(1, batch_size)
+    )
     index_done = index_done.unsqueeze(0).repeat(timesteps, 1)
 
     mask = arange.le(index_done)
@@ -34,14 +36,18 @@ def cumulated_reward(reward, done):
 
 
 def temporal_difference(critic, reward, must_bootstrap, discount_factor):
-    target = reward[:-1] + discount_factor * critic[1:].detach() * (must_bootstrap.float())
+    target = reward[:-1] + discount_factor * critic[1:].detach() * (
+        must_bootstrap.float()
+    )
     td = target - critic[:-1]
     to_add = torch.zeros(1, td.size()[1]).to(td.device)
     td = torch.cat([td, to_add], dim=0)
     return td
 
 
-def doubleqlearning_temporal_difference(q, action, q_target, reward, must_bootstrap, discount_factor):
+def doubleqlearning_temporal_difference(
+    q, action, q_target, reward, must_bootstrap, discount_factor
+):
     action_max = q.max(-1)[1]
     q_target_max = _index(q_target, action_max).detach()[1:]
 
@@ -72,7 +78,9 @@ def gae(critic, reward, must_bootstrap, discount_factor, gae_coef):
     return gae_vals
 
 
-def compute_reinforce_loss(reward, action_probabilities, baseline, action, done, discount_factor):
+def compute_reinforce_loss(
+    reward, action_probabilities, baseline, action, done, discount_factor
+):
 
     batch_size = reward.size()[1]
 
@@ -88,8 +96,14 @@ def compute_reinforce_loss(reward, action_probabilities, baseline, action, done,
     action = action[:max_trajectories_length]
 
     # Create a binary mask to mask useless values (of size max_trajectories_length x batch_size)
-    arange = torch.arange(max_trajectories_length, device=done.device).unsqueeze(-1).repeat(1, batch_size)
-    mask = arange.lt(trajectories_length.unsqueeze(0).repeat(max_trajectories_length, 1))
+    arange = (
+        torch.arange(max_trajectories_length, device=done.device)
+        .unsqueeze(-1)
+        .repeat(1, batch_size)
+    )
+    mask = arange.lt(
+        trajectories_length.unsqueeze(0).repeat(max_trajectories_length, 1)
+    )
     reward = reward * mask
 
     # Compute discounted cumulated reward
@@ -101,7 +115,7 @@ def compute_reinforce_loss(reward, action_probabilities, baseline, action, done,
 
     # baseline loss
     g = baseline - cum_reward
-    baseline_loss = g ** 2
+    baseline_loss = g**2
     baseline_loss = (baseline_loss * mask).mean()
 
     # policy loss
@@ -114,4 +128,8 @@ def compute_reinforce_loss(reward, action_probabilities, baseline, action, done,
     entropy = torch.distributions.Categorical(action_probabilities).entropy() * mask
     entropy_loss = entropy.mean()
 
-    return {"baseline_loss": baseline_loss, "policy_loss": policy_loss, "entropy_loss": entropy_loss}
+    return {
+        "baseline_loss": baseline_loss,
+        "policy_loss": policy_loss,
+        "entropy_loss": entropy_loss,
+    }

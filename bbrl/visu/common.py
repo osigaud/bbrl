@@ -30,4 +30,3 @@ def final_show(save_figure, plot, directory, figure_name, x_label, y_label, titl
         plt.show()
 
     plt.close()
-

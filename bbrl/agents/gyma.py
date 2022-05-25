@@ -12,7 +12,6 @@ import gym
 from bbrl.agent import TAgent
 
 
-
 def _convert_action(action):
     if len(action.size()) == 0:
         action = action.item()
@@ -78,11 +77,18 @@ def _torch_cat_dict(d):
 
 
 class GymAgent(TAgent):
-    """ Create an Agent from a gym environment
-    """
+    """Create an Agent from a gym environment"""
 
-    def __init__(self, make_env_fn=None, make_env_args={}, n_envs=None, action_string="action", output="env/", use_seed=True):
-        """ Create an agent from a Gym environment
+    def __init__(
+        self,
+        make_env_fn=None,
+        make_env_args={},
+        n_envs=None,
+        action_string="action",
+        output="env/",
+        use_seed=True,
+    ):
+        """Create an agent from a Gym environment
 
         Args:
             make_env_fn ([function that returns a gym.Env]): The function to create a single gym environments
@@ -168,8 +174,8 @@ class GymAgent(TAgent):
         action = _convert_action(action)
 
         obs, reward, done, info = env.step(action)
-        if 'TimeLimit.truncated' in info.keys():
-            truncated = info['TimeLimit.truncated']
+        if "TimeLimit.truncated" in info.keys():
+            truncated = info["TimeLimit.truncated"]
         else:
             truncated = False
         self.cumulated_reward[k] += reward
@@ -203,7 +209,9 @@ class GymAgent(TAgent):
                 "timestep": torch.tensor([self.timestep[k]]),
             }
         self.timestep[k] += 1
-        retour, done, truncated, observation = self._make_step(self.envs[k], action, k, save_render)
+        retour, done, truncated, observation = self._make_step(
+            self.envs[k], action, k, save_render
+        )
 
         self.last_frame[k] = observation
         if done:
@@ -232,7 +240,9 @@ class GymAgent(TAgent):
                 observations.append(obs)
             observations = _torch_cat_dict(observations)
             for k in observations:
-                self.set((self.output + k, t), observations[k].to(self.ghost_params.device))
+                self.set(
+                    (self.output + k, t), observations[k].to(self.ghost_params.device)
+                )
         else:
             assert t > 0
             action = self.get((self.input, t - 1))
@@ -272,8 +282,16 @@ class GymAgent(TAgent):
 class AutoResetGymAgent(GymAgent):
     """The same as GymAgent, but with an automatic reset when done is True"""
 
-    def __init__(self, make_env_fn=None, make_env_args={}, n_envs=None, action_string="action", output="env/", use_seed=True):
-        """ Create an agent from a Gym environment  with Autoreset
+    def __init__(
+        self,
+        make_env_fn=None,
+        make_env_args={},
+        n_envs=None,
+        action_string="action",
+        output="env/",
+        use_seed=True,
+    ):
+        """Create an agent from a Gym environment  with Autoreset
 
         Args:
             make_env_fn ([function that returns a gym.Env]): The function to create a single gym environments
@@ -304,7 +322,9 @@ class AutoResetGymAgent(GymAgent):
 
     def _step(self, k, action, save_render):
         self.timestep[k] += 1
-        retour, done, truncated, _ = self._make_step(self.envs[k], action, k, save_render)
+        retour, done, truncated, _ = self._make_step(
+            self.envs[k], action, k, save_render
+        )
         if done:
             self.is_running[k] = False
             self.truncated[k] = truncated
@@ -331,10 +351,17 @@ class AutoResetGymAgent(GymAgent):
 
 
 class NoAutoResetGymAgent(GymAgent):
-    """ The same as GymAgent, named to make sure it is not AutoReset
-    """
+    """The same as GymAgent, named to make sure it is not AutoReset"""
 
-    def __init__(self, make_env_fn=None, make_env_args={}, n_envs=None, action_string="action", output="env/", use_seed=True):
+    def __init__(
+        self,
+        make_env_fn=None,
+        make_env_args={},
+        n_envs=None,
+        action_string="action",
+        output="env/",
+        use_seed=True,
+    ):
         super().__init__(
             make_env_fn=make_env_fn,
             make_env_args=make_env_args,

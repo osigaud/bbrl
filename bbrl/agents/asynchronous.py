@@ -28,7 +28,7 @@ def f(agent, in_queue, out_queue):
 
 
 class AsynchronousAgent(Agent):
-    """ Implements an agent that is executed aynchronously in another process, and that returns its own workspace
+    """Implements an agent that is executed aynchronously in another process, and that returns its own workspace
 
     Usage is:
     * agent(workspace)
@@ -50,22 +50,23 @@ class AsynchronousAgent(Agent):
         self.agent = agent
 
     def __call__(self, **kwargs):
-        """ Executes the agent in non-blocking mode. A new workspace is created by the agent.
-        """
+        """Executes the agent in non-blocking mode. A new workspace is created by the agent."""
         assert not self._is_running
         if self.process is None:
             self.o_queue = mp.Queue()
             self.o_queue.cancel_join_thread()
             self.i_queue = mp.Queue()
             self.i_queue.cancel_join_thread()
-            self.process = mp.Process(target=f, args=(self.agent, self.i_queue, self.o_queue))
+            self.process = mp.Process(
+                target=f, args=(self.agent, self.i_queue, self.o_queue)
+            )
             self.process.daemon = False
             self.process.start()
         self._is_running = True
         self.i_queue.put(kwargs)
 
     def is_running(self):
-        """ Is the agent still running ?
+        """Is the agent still running ?
 
         Returns:
             [bool]: True is the agent is running
@@ -87,7 +88,7 @@ class AsynchronousAgent(Agent):
         return self._is_running
 
     def get_workspace(self):
-        """ Returns the built workspace is the agent has stopped its execution
+        """Returns the built workspace is the agent has stopped its execution
 
         Returns:
             [bbrl.Workspace]: The built workspace
@@ -97,8 +98,7 @@ class AsynchronousAgent(Agent):
         return self._workspace
 
     def close(self):
-        """ Close the agent and kills the corresponding process
-        """
+        """Close the agent and kills the corresponding process"""
         if self.process is None:
             return
 

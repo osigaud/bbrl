@@ -15,7 +15,7 @@ from bbrl import instantiate_class, get_arguments, get_class
 from bbrl.workspace import Workspace
 
 from bbrl.agents.agent import Agent
-from bbrl.agents import Agents, TemporalAgent, PrintAgent
+from bbrl.agents import Agents, TemporalAgent
 from bbrl.agents.gymb import AutoResetGymAgent, NoAutoResetGymAgent
 
 from bbrl.utils.chrono import Chrono
@@ -72,7 +72,7 @@ class ContinuousActionTunableVarianceAgent(Agent):
             action = mean  # valid actions are supposed to be in [-1,1] range
         return action
 
-    
+
 class ContinuousActionStateDependentVarianceAgent(Agent):
     def __init__(self, state_dim, hidden_layers, action_dim):
         super().__init__()
@@ -116,7 +116,9 @@ class ContinuousActionStateDependentVarianceAgent(Agent):
 class VAgent(Agent):
     def __init__(self, state_dim, hidden_layers):
         super().__init__()
-        self.model = build_mlp([state_dim] + list(hidden_layers) + [1], activation=nn.ReLU())
+        self.model = build_mlp(
+            [state_dim] + list(hidden_layers) + [1], activation=nn.ReLU()
+        )
 
     def forward(self, t, **kwargs):
         observation = self.get(("env/env_obs", t))
@@ -165,7 +167,9 @@ class NoAutoResetEnvAgent(NoAutoResetGymAgent):
 # Create the A2C Agent
 def create_a2c_agent(cfg, train_env_agent, eval_env_agent):
     observation_size, n_actions = train_env_agent.get_obs_and_actions_sizes()
-    action_agent = ContinuousActionStateDependentVarianceAgent(observation_size, cfg.algorithm.architecture.hidden_size, n_actions)
+    action_agent = ContinuousActionStateDependentVarianceAgent(
+        observation_size, cfg.algorithm.architecture.hidden_size, n_actions
+    )
     tr_agent = Agents(train_env_agent, action_agent)
     ev_agent = Agents(eval_env_agent, action_agent)
 
@@ -195,10 +199,12 @@ def compute_critic_loss(cfg, reward, must_bootstrap, critic):
     # target = reward[:-1] + cfg.algorithm.discount_factor * critic[1:].detach() * (must_bootstrap.float())
     # td = target - critic[:-1]
     # assert target.shape == critic[:-1].shape, f"Missing one element in the critic list: {target.shape} vs {critic.shape}"
-    td = gae(critic, reward, must_bootstrap, cfg.algorithm.discount_factor, cfg.algorithm.gae)
-    
+    td = gae(
+        critic, reward, must_bootstrap, cfg.algorithm.discount_factor, cfg.algorithm.gae
+    )
+
     # Compute critic loss
-    td_error = td ** 2
+    td_error = td**2
     critic_loss = td_error.mean()
     return critic_loss, td
 
@@ -219,7 +225,9 @@ def run_a2c(cfg, max_grad_norm=0.5):
     eval_env_agent = NoAutoResetEnvAgent(cfg, n_envs=cfg.algorithm.nb_evals)
 
     # 3) Create the A2C Agent
-    a2c_agent, eval_agent, critic_agent = create_a2c_agent(cfg, train_env_agent, eval_env_agent)
+    a2c_agent, eval_agent, critic_agent = create_a2c_agent(
+        cfg, train_env_agent, eval_env_agent
+    )
 
     # 4) Create the temporal critic agent to compute critic values over the workspace
     tcritic_agent = TemporalAgent(critic_agent)
@@ -241,9 +249,13 @@ def run_a2c(cfg, max_grad_norm=0.5):
         if epoch > 0:
             train_workspace.zero_grad()
             train_workspace.copy_n_last_steps(1)
-            a2c_agent(train_workspace, t=1, n_steps=cfg.algorithm.n_steps - 1, stochastic=True)
+            a2c_agent(
+                train_workspace, t=1, n_steps=cfg.algorithm.n_steps - 1, stochastic=True
+            )
         else:
-            a2c_agent(train_workspace, t=0, n_steps=cfg.algorithm.n_steps, stochastic=True)
+            a2c_agent(
+                train_workspace, t=0, n_steps=cfg.algorithm.n_steps, stochastic=True
+            )
 
         # Compute the critic value over the whole workspace
         tcritic_agent(train_workspace, n_steps=cfg.algorithm.n_steps)
@@ -252,7 +264,13 @@ def run_a2c(cfg, max_grad_norm=0.5):
         transition_workspace = train_workspace.get_transitions()
 
         critic, done, reward, action, action_logp, truncated = transition_workspace[
-                "critic", "env/done", "env/reward", "action", "action_logprobs", "env/truncated"]
+            "critic",
+            "env/done",
+            "env/reward",
+            "action",
+            "action_logprobs",
+            "env/truncated",
+        ]
 
         must_bootstrap = torch.logical_or(~done[1], truncated[1])
 
@@ -294,9 +312,19 @@ def run_a2c(cfg, max_grad_norm=0.5):
                 eval_agent.save_model(filename)
                 policy = eval_agent.agent.agents[1]
                 critic = critic_agent
-                plot_policy(policy, eval_env_agent, "./tmp/", cfg.gym_env.env_name, best_reward, stochastic=False)
-                plot_critic(critic, eval_env_agent, "./tmp/", cfg.gym_env.env_name, best_reward)
+                plot_policy(
+                    policy,
+                    eval_env_agent,
+                    "./tmp/",
+                    cfg.gym_env.env_name,
+                    best_reward,
+                    stochastic=False,
+                )
+                plot_critic(
+                    critic, eval_env_agent, "./tmp/", cfg.gym_env.env_name, best_reward
+                )
     chrono.stop()
+
 
 params = {
     "save_best": True,
@@ -321,7 +349,10 @@ params = {
         "a2c_coef": 0.1,
         "architecture": {"hidden_size": [25, 25]},
     },
-    "gym_env": {"classname": "__main__.make_gym_env", "env_name": "CartPoleContinuous-v1"},
+    "gym_env": {
+        "classname": "__main__.make_gym_env",
+        "env_name": "CartPoleContinuous-v1",
+    },
     "optimizer": {"classname": "torch.optim.Adam", "lr": 0.01},
 }
 

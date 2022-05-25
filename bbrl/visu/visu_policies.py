@@ -7,7 +7,9 @@ import torch as th
 from bbrl.visu.common import final_show
 
 
-def plot_policy(agent, env, directory, env_name, best_reward, plot=False, stochastic=False):
+def plot_policy(
+    agent, env, directory, env_name, best_reward, plot=False, stochastic=False
+):
     if "cartpole" in env_name.lower():
         plot_env = plot_cartpole_policy
     elif "pendulum" in env_name.lower():
@@ -48,7 +50,7 @@ def plot_pendulum_policy(
         ):
             obs = np.array([[np.cos(t), np.sin(t), td]])
             obs = th.from_numpy(obs.astype(np.float32))
-            action = agent.predict_action(obs,  stochastic)
+            action = agent.predict_action(obs, stochastic)
 
             portrait[definition - (1 + index_td), index_t] = action.item()
 
@@ -106,7 +108,7 @@ def plot_cartpole_policy(
             obs = np.append(obs, y)
             obs = np.append(obs, z2)
             obs = th.from_numpy(obs.astype(np.float32))
-            action = agent.predict_action(obs,  stochastic)
+            action = agent.predict_action(obs, stochastic)
 
             portrait[definition - (1 + index_y), index_x] = action.item()
 

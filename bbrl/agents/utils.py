@@ -19,7 +19,7 @@ class Agents(Agent):
     """
 
     def __init__(self, *agents, name=None):
-        """ Creates the agent from multiple agents
+        """Creates the agent from multiple agents
 
         Args:
             name ([str], optional): [name of the resulting agent]. Defaults to None.
@@ -53,11 +53,10 @@ class Agents(Agent):
 
 
 class TemporalAgent(Agent):
-    """Execute one Agent over multiple timesteps
-    """
+    """Execute one Agent over multiple timesteps"""
 
     def __init__(self, agent, name=None):
-        """ The agent to transform to a temporal agent
+        """The agent to transform to a temporal agent
 
         Args:
             agent ([bbrl.Agent]): The agent to encapsulate
@@ -77,7 +76,7 @@ class TemporalAgent(Agent):
             Defaults to None = not used.
         """
 
-        assert (n_steps is not None or stop_variable is not None)
+        assert n_steps is not None or stop_variable is not None
         _t = t
         while True:
             self.agent(workspace, t=_t, **kwargs)
@@ -104,8 +103,7 @@ class TemporalAgent(Agent):
 
 
 class CopyTAgent(Agent):
-    """An agent that copies a variable
-    """
+    """An agent that copies a variable"""
 
     def __init__(self, input_name, output_name, detach=False, name=None):
         """

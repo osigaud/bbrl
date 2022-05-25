@@ -14,8 +14,7 @@ from bbrl.agents.agent import Agent
 
 
 class ShuffledDatasetAgent(Agent):
-    """An agent that read a dataset in a shuffle order, in an infinite way.
-    """
+    """An agent that read a dataset in a shuffle order, in an infinite way."""
 
     def __init__(self, dataset, batch_size, output_names=("x", "y")):
         """Create the agent
@@ -65,7 +64,7 @@ class DataLoaderAgent(Agent):
     """
 
     def __init__(self, dataloader, output_names=("x", "y")):
-        """ Create the agent based on a dataloader
+        """Create the agent based on a dataloader
 
         Args:
             dataloader ([DataLader]): The underlying pytoch daaloader object

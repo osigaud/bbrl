@@ -46,7 +46,7 @@ class BraxAgent(TAgent):
     """
 
     def __init__(self, n_envs, env_name, input="action", output="env/", **kwargs):
-        """ Initialize the agent
+        """Initialize the agent
 
         Args:
             n_envs ([int]): number of envs (batch dimension)
@@ -68,7 +68,9 @@ class BraxAgent(TAgent):
     def _initialize_envs(self, n_envs):
         assert self._seed is not None, "[GymAgent] seeds must be specified"
 
-        self.gym_env = create_gym_env(self.brax_env_name, batch_size=n_envs, seed=self._seed, **self.args)
+        self.gym_env = create_gym_env(
+            self.brax_env_name, batch_size=n_envs, seed=self._seed, **self.args
+        )
         self.gym_env = JaxToTorchWrapper(self.gym_env)
 
     def _write(self, v, t):
@@ -94,7 +96,9 @@ class BraxAgent(TAgent):
             ret = {
                 "env_obs": o,
                 "done": torch.tensor([False], device=my_device).repeat(self.n_envs),
-                "initial_state": torch.tensor([True], device=my_device).repeat(self.n_envs),
+                "initial_state": torch.tensor([True], device=my_device).repeat(
+                    self.n_envs
+                ),
                 "reward": torch.zeros(self.n_envs, device=my_device).float(),
                 "timestep": self.timestep,
                 "cumulated_reward": self.cumulated_reward,
@@ -115,7 +119,9 @@ class BraxAgent(TAgent):
             ret = {
                 "env_obs": obs.float(),
                 "done": done,
-                "initial_state": torch.tensor([False], device=my_device).repeat(self.n_envs),
+                "initial_state": torch.tensor([False], device=my_device).repeat(
+                    self.n_envs
+                ),
                 "reward": rewards.float(),
                 "timestep": self.timestep,
                 "cumulated_reward": self.cumulated_reward,

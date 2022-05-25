@@ -78,11 +78,18 @@ def _torch_cat_dict(d):
 
 
 class GymAgent(TAgent):
-    """ Create an Agent from a gym environment
-    """
+    """Create an Agent from a gym environment"""
 
-    def __init__(self, make_env_fn=None, make_env_args={}, n_envs=None, action_string="action", output="env/", use_seed=True):
-        """ Create an agent from a Gym environment
+    def __init__(
+        self,
+        make_env_fn=None,
+        make_env_args={},
+        n_envs=None,
+        action_string="action",
+        output="env/",
+        use_seed=True,
+    ):
+        """Create an agent from a Gym environment
 
         Args:
             make_env_fn ([function that returns a gym.Env]): The function to create a single gym environments
@@ -170,8 +177,8 @@ class GymAgent(TAgent):
         action = _convert_action(action)
 
         obs, reward, done, info = env.step(action)
-        if 'TimeLimit.truncated' in info.keys():
-            truncated = info['TimeLimit.truncated']
+        if "TimeLimit.truncated" in info.keys():
+            truncated = info["TimeLimit.truncated"]
         else:
             truncated = False
         self.cumulated_reward[k] += reward
@@ -202,12 +209,17 @@ class GymAgent(TAgent):
                     **self.last_frame[k],
                     "done": torch.tensor([True]),
                     "truncated": torch.tensor([self.truncated[k]]),
-                    "cumulated_reward": torch.tensor([self.cumulated_reward[k]]).float(),
+                    "cumulated_reward": torch.tensor(
+                        [self.cumulated_reward[k]]
+                    ).float(),
                     "timestep": torch.tensor([self.timestep[k]]),
-                }, rew
+                },
+                rew,
             )
         self.timestep[k] += 1
-        full_obs, reward, done, truncated, observation = self._make_step(self.envs[k], action, k, save_render)
+        full_obs, reward, done, truncated, observation = self._make_step(
+            self.envs[k], action, k, save_render
+        )
 
         self.last_frame[k] = observation
         if done:
@@ -223,7 +235,10 @@ class GymAgent(TAgent):
     def set_next_obs(self, observations, t):
         observations = _torch_cat_dict(observations)
         for k in observations:
-            self.set(("env/env_next_obs" + k, t), observations[k].to(self.ghost_params.device))
+            self.set(
+                ("env/env_next_obs" + k, t),
+                observations[k].to(self.ghost_params.device),
+            )
 
     def set_reward(self, rewards, t):
         rewards = _torch_cat_dict(rewards)
@@ -259,7 +274,6 @@ class GymAgent(TAgent):
             self.set_reward(rewards, t)
             self.set_obs(observations, t)
 
-
     def is_continuous_action(self):
         return isinstance(self.action_space, gym.spaces.Box)
 
@@ -289,8 +303,16 @@ class GymAgent(TAgent):
 class AutoResetGymAgent(GymAgent):
     """The same as GymAgent, but with an automatic reset when done is True"""
 
-    def __init__(self, make_env_fn=None, make_env_args={}, n_envs=None, action_string="action", output="env/", use_seed=True):
-        """ Create an agent from a Gym environment  with Autoreset
+    def __init__(
+        self,
+        make_env_fn=None,
+        make_env_args={},
+        n_envs=None,
+        action_string="action",
+        output="env/",
+        use_seed=True,
+    ):
+        """Create an agent from a Gym environment  with Autoreset
 
         Args:
             make_env_fn ([function that returns a gym.Env]): The function to create a single gym environments
@@ -322,7 +344,9 @@ class AutoResetGymAgent(GymAgent):
 
     def _step(self, k, action, save_render):
         self.timestep[k] += 1
-        full_obs, reward, done, truncated, _ = self._make_step(self.envs[k], action, k, save_render)
+        full_obs, reward, done, truncated, _ = self._make_step(
+            self.envs[k], action, k, save_render
+        )
         if done:
             self.is_running[k] = False
             self.truncated[k] = truncated
@@ -360,10 +384,17 @@ class AutoResetGymAgent(GymAgent):
 
 
 class NoAutoResetGymAgent(GymAgent):
-    """ The same as GymAgent, named to make sure it is not AutoReset
-    """
+    """The same as GymAgent, named to make sure it is not AutoReset"""
 
-    def __init__(self, make_env_fn=None, make_env_args={}, n_envs=None, action_string="action", output="env/", use_seed=True):
+    def __init__(
+        self,
+        make_env_fn=None,
+        make_env_args={},
+        n_envs=None,
+        action_string="action",
+        output="env/",
+        use_seed=True,
+    ):
         super().__init__(
             make_env_fn=make_env_fn,
             make_env_args=make_env_args,

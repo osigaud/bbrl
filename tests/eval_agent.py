@@ -108,8 +108,10 @@ def evaluate_agent(cfg, filename):
 
 
 params = {
-    "gym_env": {"classname": "__main__.make_gym_env",
-                "env_name": "CartPoleContinuous-v1"},
+    "gym_env": {
+        "classname": "__main__.make_gym_env",
+        "env_name": "CartPoleContinuous-v1",
+    },
 }
 
 if __name__ == "__main__":

@@ -1,4 +1,3 @@
-import os
 import random
 
 import matplotlib.pyplot as plt
@@ -49,7 +48,7 @@ def plot_pendulum_critic(
             obs = th.from_numpy(obs.astype(np.float32))
 
             value = agent.model(obs).squeeze(-1)
-  
+
             portrait[definition - (1 + index_td), index_t] = value.item()
 
     plt.figure(figsize=(10, 10))

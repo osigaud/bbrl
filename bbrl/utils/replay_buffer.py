@@ -20,11 +20,11 @@ class ReplayBuffer:
         self.device = device
 
     def init_workspace(self, all_tensors):
-        '''
-            Create a the array to stores workspace based on the given all_tensors keys.
-            shape of stores tensors : [key] => [self.max_size][time_size][key_dim]
-            Makes a copy of the input content
-        '''
+        """
+        Create a the array to stores workspace based on the given all_tensors keys.
+        shape of stores tensors : [key] => [self.max_size][time_size][key_dim]
+        Makes a copy of the input content
+        """
 
         if self.variables is None:
             self.variables = {}
@@ -42,15 +42,17 @@ class ReplayBuffer:
             self.position = 0
 
     def _insert(self, k, indexes, v):
-        self.variables[k][indexes] = v.detach().moveaxis((0,1),(1,0))
+        self.variables[k][indexes] = v.detach().moveaxis((0, 1), (1, 0))
 
     def put(self, workspace):
-        '''
-            Add a the content of a workspace to the replay buffer.
-            The given workspace must have keys of shape : [time_size][batch_size][key_dim]
-        '''
+        """
+        Add a the content of a workspace to the replay buffer.
+        The given workspace must have keys of shape : [time_size][batch_size][key_dim]
+        """
 
-        new_data = {k: workspace.get_full(k).detach().to(self.device) for k in workspace.keys()}
+        new_data = {
+            k: workspace.get_full(k).detach().to(self.device) for k in workspace.keys()
+        }
         self.init_workspace(new_data)
 
         batch_size = None
@@ -88,7 +90,7 @@ class ReplayBuffer:
                     # the part of the indexes at the beginning of the RB
                     # print("insertion intermediate computed:", indexes)
                     indexes = torch.cat((indexes, torch.arange(batch_begin_size)), 0)
-                    arange =torch.cat((arange, torch.arange(batch_begin_size)), 0)
+                    arange = torch.cat((arange, torch.arange(batch_begin_size)), 0)
                 indexes = indexes.to(dtype=torch.long, device=v.device)
                 arange = arange.to(dtype=torch.long, device=v.device)
                 # print("insertion full computed:", indexes)
@@ -103,7 +105,9 @@ class ReplayBuffer:
             return self.position
 
     def get_shuffled(self, batch_size):
-        who = torch.randint(low=0, high=self.size(), size=(batch_size,), device=self.device)
+        who = torch.randint(
+            low=0, high=self.size(), size=(batch_size,), device=self.device
+        )
         workspace = Workspace()
         for k in self.variables:
             workspace.set_full(k, self.variables[k][who].transpose(0, 1))

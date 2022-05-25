@@ -37,7 +37,9 @@ def build_mlp(sizes, activation, output_activation=nn.Identity()):
 class ProbAgent(Agent):
     def __init__(self, state_dim, hidden_layers, n_action):
         super().__init__(name="prob_agent")
-        self.model = build_mlp([state_dim] + list(hidden_layers) + [n_action], activation=nn.ReLU())
+        self.model = build_mlp(
+            [state_dim] + list(hidden_layers) + [n_action], activation=nn.ReLU()
+        )
 
     def forward(self, t, **kwargs):
         observation = self.get(("env/env_obs", t))
@@ -66,7 +68,9 @@ class ActionAgent(Agent):
 class VAgent(Agent):
     def __init__(self, state_dim, hidden_layers):
         super().__init__()
-        self.model = build_mlp([state_dim] + list(hidden_layers) + [1], activation=nn.ReLU())
+        self.model = build_mlp(
+            [state_dim] + list(hidden_layers) + [1], activation=nn.ReLU()
+        )
 
     def forward(self, t, **kwargs):
         observation = self.get(("env/env_obs", t))
@@ -115,7 +119,9 @@ class NoAutoResetEnvAgent(NoAutoResetGymAgent):
 # Create the A2C Agent
 def create_a2c_agent(cfg, train_env_agent, eval_env_agent):
     observation_size, n_actions = train_env_agent.get_obs_and_actions_sizes()
-    param_agent = ProbAgent(observation_size, cfg.algorithm.architecture.hidden_size, n_actions)
+    param_agent = ProbAgent(
+        observation_size, cfg.algorithm.architecture.hidden_size, n_actions
+    )
     action_agent = ActionAgent()
     # print_agent = PrintAgent(*{"critic", "env/reward", "env/done", "action", "env/env_obs"})
     # print_agent = PrintAgent(*{"transitions", "action", "env/done"})
@@ -146,12 +152,16 @@ def setup_optimizers(cfg, action_agent, critic_agent):
 def compute_critic_loss(cfg, reward, must_bootstrap, critic):
     # Compute temporal difference
     assert is_vec_of_ones(reward[:-1]), "A reward is not one"
-    target = reward[:-1] + cfg.algorithm.discount_factor * critic[1:].detach() * (must_bootstrap.float())
+    target = reward[:-1] + cfg.algorithm.discount_factor * critic[1:].detach() * (
+        must_bootstrap.float()
+    )
     td = target - critic[:-1]
-    assert target.shape == critic[:-1].shape, f"Missing one element in the critic list: {target.shape} vs {critic.shape}"
+    assert (
+        target.shape == critic[:-1].shape
+    ), f"Missing one element in the critic list: {target.shape} vs {critic.shape}"
 
     # Compute critic loss
-    td_error = td ** 2
+    td_error = td**2
     critic_loss = td_error.mean()
     return critic_loss, td
 
@@ -165,7 +175,9 @@ def run_a2c(cfg, max_grad_norm=0.5):
     eval_env_agent = NoAutoResetEnvAgent(cfg, n_envs=cfg.algorithm.nb_evals)
 
     # 3) Create the A2C Agent
-    a2c_agent, eval_agent, param_agent, critic_agent = create_a2c_agent(cfg, train_env_agent, eval_env_agent)
+    a2c_agent, eval_agent, param_agent, critic_agent = create_a2c_agent(
+        cfg, train_env_agent, eval_env_agent
+    )
 
     # 4) Create the temporal critic agent to compute critic values over the workspace
     tcritic_agent = TemporalAgent(critic_agent)
@@ -187,9 +199,13 @@ def run_a2c(cfg, max_grad_norm=0.5):
         if epoch > 0:
             train_workspace.zero_grad()
             train_workspace.copy_n_last_steps(1)
-            a2c_agent(train_workspace, t=1, n_steps=cfg.algorithm.n_steps - 1, stochastic=True)
+            a2c_agent(
+                train_workspace, t=1, n_steps=cfg.algorithm.n_steps - 1, stochastic=True
+            )
         else:
-            a2c_agent(train_workspace, t=0, n_steps=cfg.algorithm.n_steps, stochastic=True)
+            a2c_agent(
+                train_workspace, t=0, n_steps=cfg.algorithm.n_steps, stochastic=True
+            )
 
         # Compute the critic value over the whole workspace
         tcritic_agent(train_workspace, n_steps=cfg.algorithm.n_steps)
@@ -197,7 +213,14 @@ def run_a2c(cfg, max_grad_norm=0.5):
 
         transition_workspace = train_workspace.get_transitions()
 
-        critic, done, reward, action, action_probs, truncated = transition_workspace["critic", "env/done", "env/reward", "action", "action_probs", "env/truncated"]
+        critic, done, reward, action, action_probs, truncated = transition_workspace[
+            "critic",
+            "env/done",
+            "env/reward",
+            "action",
+            "action_probs",
+            "env/truncated",
+        ]
 
         must_bootstrap = torch.logical_or(~done[1], truncated[1])
 

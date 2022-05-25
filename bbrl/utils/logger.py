@@ -70,7 +70,9 @@ class TFLogger(SummaryWriter):
         self.log_dir = log_dir
         self.every_n_seconds = every_n_seconds
         if self.every_n_seconds is None:
-            print("[Deprecated] bbrl.utils.logger: use 'every_n_seconds' instead of cache_size")
+            print(
+                "[Deprecated] bbrl.utils.logger: use 'every_n_seconds' instead of cache_size"
+            )
         else:
             self.save_every = None
         self._start_time = time.time()
@@ -267,7 +269,7 @@ class Log:
         else:
             return v
 
-    def replace_None_(self, name):
+    def replace_none_(self, name):
         v = self.values[name]
         last_v = None
         first_v = None
@@ -330,10 +332,10 @@ class Logs:
 
     def _add(self, log):
         self.hp_names = {k: True for k in log.hps}
-        for l in self.logs:
+        for log in self.logs:
             for k in log.hps:
-                if k not in l.hps:
-                    l.hps[k] = "none"
+                if k not in log.hps:
+                    log.hps[k] = "none"
 
         self.logs.append(log)
 
@@ -341,11 +343,11 @@ class Logs:
         if isinstance(logs, Log):
             self._add(logs)
         else:
-            for l in logs:
-                self._add(l)
+            for log in logs:
+                self._add(log)
 
     def max(self, function):
-        alls = [function(l) for l in self.logs]
+        alls = [function(log) for log in self.logs]
         idx = np.argmax(alls)
         return self.logs[idx]
 
@@ -361,20 +363,20 @@ class Logs:
     def filter(self, hp_name, test_fn):
         logs = Logs()
         if not callable(test_fn):
-            for l in self.logs:
-                h = l.hps[hp_name]
+            for log in self.logs:
+                h = log.hps[hp_name]
                 if h == test_fn:
-                    logs.add(l)
+                    logs.add(log)
         else:
-            for l in self.logs:
-                if test_fn(l.hps[hp_name]):
-                    logs.add(l)
+            for log in self.logs:
+                if test_fn(log.hps[hp_name]):
+                    logs.add(log)
         return logs
 
     def unique_hps(self, name):
         r = {}
-        for l in self.logs:
-            v = l.hps[name]
+        for log in self.logs:
+            v = log.hps[name]
             r[v] = 1
         return list(r.keys())
 
@@ -409,14 +411,6 @@ def flattify(d):
 
 
 def read_log(directory, use_bz2=True, debug=False):
-    # print("== Read ", directory)
-    # if os.path.exists(directory+"/fast.pickle"):
-    #     f=open(directory+"/fast.pickle","rb")
-    #     log=pickle.load(f)
-    #     f.close()
-    #     return log
-
-    f = None
     if use_bz2:
         picklename = directory + "/db.pickle.bzip2"
         f = bz2.BZ2File(picklename, "rb")
@@ -435,7 +429,11 @@ def read_log(directory, use_bz2=True, debug=False):
                         print(name, value, type(value))
                     if isinstance(value, np.int64):
                         value = int(value)
-                    if isinstance(value, int) or isinstance(value, float) or isinstance(value, str):
+                    if (
+                        isinstance(value, int)
+                        or isinstance(value, float)
+                        or isinstance(value, str)
+                    ):
                         if name not in values:
                             values[name] = []
                         while len(values[name]) < iteration + 1:
@@ -458,14 +456,17 @@ def read_log(directory, use_bz2=True, debug=False):
 
 
 def get_directories(directory, use_bz2=True):
-    import os
     import os.path
 
     name = "db.pickle"
     if use_bz2:
         name = "db.pickle.bzip2"
 
-    return [dirpath for dirpath, dirnames, filenames in os.walk(directory) if name in filenames]
+    return [
+        dirpath
+        for dirpath, dirnames, filenames in os.walk(directory)
+        if name in filenames
+    ]
 
 
 def read_directories(directories, use_bz2=True):
@@ -479,7 +480,6 @@ def read_directories(directories, use_bz2=True):
 
 
 def read_directory(directory, use_bz2=True):
-    import os
     import os.path
 
     logs = Logs()
@@ -507,7 +507,9 @@ def _create_col(df, hps, _name):
     return pd.concat(vs)
 
 
-def plot_dataframe(df, y, x="iteration", hue=None, style=None, row=None, col=None, kind="line"):
+def plot_dataframe(
+    df, y, x="iteration", hue=None, style=None, row=None, col=None, kind="line"
+):
     import seaborn as sns
 
     cols = [y, x]

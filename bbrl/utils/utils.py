@@ -74,7 +74,9 @@ def vector_to_parameters(vec: torch.Tensor, parameters) -> None:
     """
     # Ensure vec of type Tensor
     if not isinstance(vec, torch.Tensor):
-        raise TypeError("expected torch.Tensor, but got: {}".format(torch.typename(vec)))
+        raise TypeError(
+            "expected torch.Tensor, but got: {}".format(torch.typename(vec))
+        )
 
     # Pointer for slicing the vector for each parameter
     pointer = 0
@@ -153,7 +155,9 @@ class nRemoteParamAgent(Agent):
         try:
             return self.workspaces
         except AttributeError:
-            raise Exception("The nRemoteParamAgent has not been called yet, workspaces have not been created")
+            raise Exception(
+                "The nRemoteParamAgent has not been called yet, workspaces have not been created"
+            )
 
     def close(self) -> None:
         for a in self.async_agents:
@@ -165,16 +169,16 @@ class nRemoteParamAgent(Agent):
 # change the content of an async agent
 class nRemoteDistinctAgents(Agent):
     """
-        Class that allows to evaluate N (different) individuals with m processes
-        Basic usage :
-        remote = nRemoteDistinctAgents(n_process)
-        remote(acq_agent_list,)
-        The user have to provide:
-            1/ a list of acqusition_agent that will be copied to remotes
-        This implementation is based on the  Asynchronous agents
-        (i think another implementation could use the Nremote agent
-        maybe by slicing the shared workspace to separate the experiences
-        collected by each individual)
+    Class that allows to evaluate N (different) individuals with m processes
+    Basic usage :
+    remote = nRemoteDistinctAgents(n_process)
+    remote(acq_agent_list,)
+    The user have to provide:
+        1/ a list of acqusition_agent that will be copied to remotes
+    This implementation is based on the  Asynchronous agents
+    (i think another implementation could use the Nremote agent
+    maybe by slicing the shared workspace to separate the experiences
+    collected by each individual)
     """
 
     def __init__(self, n_process: int, name: str = "") -> None:
@@ -194,7 +198,9 @@ class nRemoteDistinctAgents(Agent):
             async_agent = AsynchronousAgent(None)
             self.async_agents.append(async_agent)
 
-    def __call__(self, acq_agents: List[Agent], agents_args: Union[list, dict, None], **kwargs):
+    def __call__(
+        self, acq_agents: List[Agent], agents_args: Union[list, dict, None], **kwargs
+    ):
         def get_agent_args(agent_id):
             if agents_args is None:
                 args = {}
@@ -241,7 +247,9 @@ class nRemoteDistinctAgents(Agent):
         try:
             return self.workspaces
         except AttributeError:
-            raise Exception("The nRemoteParamAgent has not been called yet, workspaces have not been created")
+            raise Exception(
+                "The nRemoteParamAgent has not been called yet, workspaces have not been created"
+            )
 
     def close(self) -> None:
         for a in self.async_agents:

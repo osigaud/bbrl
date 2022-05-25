@@ -77,13 +77,17 @@ class RemoteAgent(Agent):
         self.o_queue = mp.Queue()
         self.i_queue.cancel_join_thread()
         self.o_queue.cancel_join_thread()
-        self.process = mp.Process(target=f, args=(self.agent, self.i_queue, self.o_queue, self._seed))
+        self.process = mp.Process(
+            target=f, args=(self.agent, self.i_queue, self.o_queue, self._seed)
+        )
         self.process.daemon = False
         self.process.start()
 
     def __call__(self, workspace, **kwargs):
         with torch.no_grad():
-            assert workspace.is_shared, "You must use a shared workspace when using a Remote Agent"
+            assert (
+                workspace.is_shared
+            ), "You must use a shared workspace when using a Remote Agent"
             if self.process is None:
                 self._create_process()
                 self.train(self.train_mode)
@@ -101,7 +105,9 @@ class RemoteAgent(Agent):
         """Non-blocking forward. To use together with `is_running`"""
         with torch.no_grad():
             self._is_running = True
-            assert workspace.is_shared, "You must use a shared workspace when using a Remote Agent"
+            assert (
+                workspace.is_shared
+            ), "You must use a shared workspace when using a Remote Agent"
             if self.process is None:
                 self._create_process()
             if not workspace == self.last_workspace:
@@ -201,7 +207,9 @@ class NRemoteAgent(Agent):
             workspace = Workspace()
             _agent = copy.deepcopy(agent)
             agent(workspace, **extra_kwargs)
-            shared_workspace = workspace._convert_to_shared_workspace(n_repeat=1, time_size=time_size)
+            shared_workspace = workspace._convert_to_shared_workspace(
+                n_repeat=1, time_size=time_size
+            )
             return _agent, shared_workspace
 
         workspace = Workspace()
@@ -209,7 +217,9 @@ class NRemoteAgent(Agent):
         agent(workspace, **extra_kwargs)
         b = workspace.batch_size()
         batch_dims = [(k * b, k * b + b) for k, a in enumerate(agents)]
-        shared_workspace = workspace._convert_to_shared_workspace(n_repeat=num_processes, time_size=time_size)
+        shared_workspace = workspace._convert_to_shared_workspace(
+            n_repeat=num_processes, time_size=time_size
+        )
         agents = [RemoteAgent(a) for a in agents]
         return NRemoteAgent(agents, batch_dims), shared_workspace
 
