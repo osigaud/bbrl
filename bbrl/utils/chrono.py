@@ -1,16 +1,15 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-"""
-Author: Olivier Sigaud
+# This source code is licensed under the MIT license found in the
+# LICENSE file in the root directory of this source tree.
+#
 
-Module: Chrono
-
-Description: Class to display time spent in human format rather than seconds
-"""
 import time
 
 
 class Chrono:
+    """
+    Description: Class to display time spent in human format rather than seconds
+    """
+
     def __init__(self):
         self.name = "Chrono"
         self.start = time.time()
