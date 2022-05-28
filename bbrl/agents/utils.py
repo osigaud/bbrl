@@ -5,7 +5,7 @@
 import torch
 import torch.nn as nn
 
-from bbrl.agents.agent import Agent, TAgent
+from bbrl.agents.agent import Agent
 
 
 class Agents(Agent):
@@ -154,7 +154,7 @@ class PrintAgent(Agent):
             print(n, " = ", self.get((n, t)))
 
 
-class EpisodesDone(TAgent):
+class EpisodesDone(Agent):
     """
     If done is encountered at time t, then done=True for all timeteps t'>=t
     It allows to simulate a single episode agent based on an autoreset agent
