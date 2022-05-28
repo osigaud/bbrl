@@ -2,6 +2,11 @@
 
 `bbrl`- A Flexible and Simple Library for Reinforcement Learning inspired from SaLinA
 
+BBRL stands for "BlackBoard Reinforcement Learning". Initially, [the BBRL library](https://github.com/osigaud/bbrl) was a fork of [the SaLinA library](https://github.com/facebookresearch/salina). 
+But SaLinA is a general model for sequential learning whereas BBRL is dedicated to RL, thus it focuses on a subset of SaLinA. 
+Morevover, BBRL is designed for education purpose (in particular, to teach various RL algorithms, concepts and phenomena). 
+Thus the fork slowly drifted away from SaLinA and became independent after a few months, even if some parts of the code are still inherited from SaLinA.
+
 **Documentation**:[Read the docs](https://bbrl.readthedocs.io/en/latest/)
 
 ## TL;DR.
@@ -12,7 +17,7 @@
 
 # Citing `bbrl`
 
-BBRL being inspired from SaLinA, please use this bibtex if you want to cite this repository in your publications:
+BBRL being inspired from SaLinA, please use this bibtex if you want to cite BBRL in your publications:
 
 Link to the paper: [SaLinA: Sequential Learning of Agents](https://arxiv.org/abs/2110.07910)
 
