@@ -158,12 +158,3 @@ class Agent(nn.Module):
         :return: the resulting pytorch network
         """
         return torch.load(filename)
-
-
-class TAgent(Agent):
-    """`TAgent` is used as a convention to represent agents
-    that use a time index in their `__call__` function (not mandatory)
-    """
-
-    def forward(self, t, **kwargs):
-        raise NotImplementedError

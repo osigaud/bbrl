@@ -6,7 +6,7 @@ import numpy as np
 import torch
 
 import gym
-from bbrl.agents.agent import TAgent
+from bbrl.agents.agent import Agent
 
 
 def _convert_action(action):
@@ -74,7 +74,7 @@ def _torch_cat_dict(d):
     return r
 
 
-class GymAgent(TAgent):
+class GymAgent(Agent):
     """Create an Agent from a gym environment"""
 
     def __init__(
