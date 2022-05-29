@@ -50,7 +50,7 @@ Link to the paper: [SaLinA: Sequential Learning of Agents](https://arxiv.org/abs
 
 - Building a simple Neural RL agent in interaction with an environment: A [notebook with code](https://colab.research.google.com/drive/1Ui481r47fNHCQsQfKwdoNEVrEiqAEokh?usp=sharing)
 
-- More details about the interaction model: [AutoResetGymAgent and episodes](https://colab.research.google.com/drive/1W9Y-3fa6LsPeR6cBC1vgwBjKfgMwZvP5?usp=sharing)
+- More details about the interaction model: [AutoResetGymAgent, multiple environments and episodes](https://colab.research.google.com/drive/1W9Y-3fa6LsPeR6cBC1vgwBjKfgMwZvP5?usp=sharing)
 
 
 ## Learning RL with `bbrl` in your favorite coding environment
