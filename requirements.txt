@@ -1,7 +1,8 @@
+protobuf==3.20.1
 torch>=1.9.0
 torchvision
 gym==0.21.0
-git+https://github.com/osigaud/my_gym.git
+my_gym @ git+https://github.com/osigaud/my_gym.git
 tensorboard
 tqdm
 hydra-core
