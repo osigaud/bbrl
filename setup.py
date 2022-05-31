@@ -16,5 +16,7 @@ setup(
     test_suite="tests",
     description="RL library inspired from salina",
     author="Olivier Sigaud",
+    author_email="Olivier.Sigaud@isir.upmc.fr",
+    url="https://github.com/osigaud/bbrl.git",
     license="MIT",
 )
