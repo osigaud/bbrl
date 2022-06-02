@@ -69,6 +69,7 @@ class ReplayBuffer:
                 # print("insertion standard:", indexes)
                 # print(v.detach().shape)
                 self._insert(k, indexes, v)
+                self.position = self.position + batch_size
             else:
                 # The case where the batch cannot be inserted before the end of the replay buffer
                 # A part is at the end, the other part is in the beginning
@@ -92,7 +93,6 @@ class ReplayBuffer:
                 # print("insertion full computed:", indexes)
                 self._insert(k, indexes, v)
                 self.position = batch_begin_size
-        self.position = self.position + batch_size
 
     def size(self):
         if self.is_full:
@@ -102,8 +102,7 @@ class ReplayBuffer:
 
     def print_obs(self):
         print(f"position: {self.position}")
-        for k, v in self.variables:
-            print(f"key:{k}, values:{v}")
+        print(self.variables["env/env_obs"])
 
     def get_shuffled(self, batch_size):
         who = torch.randint(
