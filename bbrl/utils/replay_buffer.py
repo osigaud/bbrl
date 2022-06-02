@@ -18,7 +18,7 @@ class ReplayBuffer:
 
     def init_workspace(self, all_tensors):
         """
-        Create a the array to stores workspace based on the given all_tensors keys.
+        Create an array to stores workspace based on the given all_tensors keys.
         shape of stores tensors : [key] => [self.max_size][time_size][key_dim]
         Makes a copy of the input content
         """
@@ -33,7 +33,6 @@ class ReplayBuffer:
                 s[1] = _s[0]
 
                 tensor = torch.zeros(*s, dtype=v.dtype, device=self.device)
-                # print(f"[ReplayBuffer] Var {k} size={s} dtype={v.dtype} device={self.device}")
                 self.variables[k] = tensor
             self.is_full = False
             self.position = 0
@@ -100,6 +99,11 @@ class ReplayBuffer:
             return self.max_size
         else:
             return self.position
+
+    def print_obs(self):
+        print(f"position: {self.position}")
+        for k, v in self.variables:
+            print(f"key:{k}, values:{v}")
 
     def get_shuffled(self, batch_size):
         who = torch.randint(
