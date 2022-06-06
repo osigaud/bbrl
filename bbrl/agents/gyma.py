@@ -91,7 +91,7 @@ class GymAgent(Agent):
             make_env_fn ([function that returns a gym.Env]): The function to create a single gym environments
             make_env_args (dict): The arguments of the function that creates a gym.Env
             n_envs ([int]): The number of environments to create.
-            input (str, optional): [the name of the action variable in the workspace]. Defaults to "action".
+            action_string (str, optional): [the name of the action variable in the workspace]. Defaults to "action".
             output (str, optional): [the output prefix of the environment]. Defaults to "env/".
             use_seed (bool, optional): [If True, then the seed is chained to the environments,
             and each environment will have its own seed]. Defaults to True.

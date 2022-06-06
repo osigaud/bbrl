@@ -16,12 +16,14 @@ class Agent(nn.Module):
         """To create a new Agent
 
         Args:
-            name ([type], optional): An agent can have a name that will allow to perform operations on agents that are composed into more complex agents.
+            name ([type], optional): An agent can have a name that will allow to perform operations
+            on agents that are composed into more complex agents.
         """
         super().__init__()
         self._name = name
         self.__trace_file = None
         self.verbose = verbose
+        self.workspace = None
 
     def seed(self, seed: int):
         """Provide a seed to this agent. Useful is the agent is stochastic.
@@ -92,7 +94,8 @@ class Agent(nn.Module):
         """Returns the value of a particular variable in the agent workspace
 
         Args:
-            index (str or tuple(str,int)): if str, returns the variable workspace[str]. If tuple(var_name,t), returns workspace[var_name] at time t
+            index (str or tuple(str,int)): if str, returns the variable workspace[str].
+            If tuple(var_name,t), returns workspace[var_name] at time t
         """
         if self.__trace_file is not None:
             t = time.time()
