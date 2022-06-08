@@ -11,24 +11,12 @@ from bbrl.utils.replay_buffer import ReplayBuffer
 from bbrl.agents import Agents, TemporalAgent, PrintAgent
 from bbrl.agents.agent import Agent
 from bbrl.agents.gyma import AutoResetGymAgent
-from bbrl import instantiate_class, get_class, get_arguments
+from bbrl import get_class, get_arguments
 import hydra
 
 from bbrl.utils.chrono import Chrono
 
 # HYDRA_FULL_ERROR = 1
-
-
-class AutoResetEnvAgent(AutoResetGymAgent):
-    # Create the environment agent
-    # This agent implements N gym environments with auto-reset
-    def __init__(self, cfg, n_envs):
-        super().__init__(get_class(cfg.gym_env), get_arguments(cfg.gym_env), n_envs)
-        env = instantiate_class(cfg.gym_env)
-        env.seed(cfg.algorithm.seed)
-        self.observation_space = env.observation_space
-        self.action_space = env.action_space
-        del env
 
 
 class ActionAgent(Agent):
@@ -47,7 +35,12 @@ def make_gym_env(env_name):
 
 def run_rb(cfg):
 
-    train_env_agent = AutoResetEnvAgent(cfg, n_envs=cfg.algorithm.n_envs)
+    train_env_agent = AutoResetGymAgent(
+        get_class(cfg.gym_env),
+        get_arguments(cfg.gym_env),
+        cfg.algorithm.n_envs,
+        cfg.algorithm.seed,
+    )
     action_agent = ActionAgent()
 
     # Compose both previous agents

@@ -82,9 +82,9 @@ class GymAgent(Agent):
         make_env_fn=None,
         make_env_args={},
         n_envs=None,
+        seed=None,
         action_string="action",
         output="env/",
-        use_seed=True,
     ):
         """Create an agent from a Gym environment
 
@@ -94,15 +94,16 @@ class GymAgent(Agent):
             n_envs ([int]): The number of environments to create.
             action_string (str, optional): [the name of the action variable in the workspace]. Defaults to "action".
             output (str, optional): [the output prefix of the environment]. Defaults to "env/".
-            use_seed (bool, optional): [If True, then the seed is chained to the environments,
+            seed (int): the seed used to initialize the environment
             and each environment will have its own seed]. Defaults to True.
         """
         super().__init__()
-        self.use_seed = use_seed
         assert n_envs > 0
         self.envs = None
         self.env_args = make_env_args
-        self._seed = 0
+        self._seed = seed
+        assert self._seed is not None, "[GymAgent] seeds must be specified"
+
         self.n_envs = n_envs
         self.output = output
         self.input = action_string
@@ -112,28 +113,17 @@ class GymAgent(Agent):
         self.finished = torch.tensor([True for _ in range(n_envs)])
         self.truncated = torch.tensor([False for _ in range(n_envs)])
 
-    def _common_init(self, n):
-        # TODO: en l'état ce assert ne sert à rien car on initialise seed à 0. Revoir le modèle de seed
-        assert self._seed is not None, "[GymAgent] seeds must be specified"
-        self.envs = [self.make_env_fn(**self.env_args) for _ in range(n)]
-        if self.use_seed:
-            for k in range(n):
-                self.envs[k].seed(self._seed + k)
+        self.envs = [self.make_env_fn(**self.env_args) for _ in range(self.n_envs)]
+        for k in range(self.n_envs):
+            self.envs[k].seed(self._seed + k)
+
+        self.observation_space = self.envs[0].observation_space
+        self.action_space = self.envs[0].action_space
         self.finished = torch.tensor([True for _ in self.envs])
         self.truncated = torch.tensor([True for _ in self.envs])
         self.timestep = torch.tensor([0 for _ in self.envs])
         self.cumulated_reward = {}
-
-    def _initialize_envs(self, n):
-        self._common_init(n)
         self.last_frame = {}
-
-    def seed(self, seed):
-        self._seed = seed
-        if self.use_seed:
-            if self.envs is not None:
-                for k, e in enumerate(self.envs):
-                    e.seed(self._seed + k)
 
     def _common_reset(self, k, save_render):
         env = self.envs[k]
@@ -142,7 +132,6 @@ class GymAgent(Agent):
         observation = _format_frame(o)
 
         if isinstance(observation, torch.Tensor):
-            # next_obs = {"env_next_obs": observation}
             observation = {"env_obs": observation}
 
         else:
@@ -157,7 +146,6 @@ class GymAgent(Agent):
 
         ret = {
             **observation,
-            # **next_obs,
             "done": torch.tensor([False]),
             "truncated": torch.tensor([False]),
             "timestep": torch.tensor([self.timestep[k]]),
@@ -247,8 +235,6 @@ class GymAgent(Agent):
         If t==0, environments are reset
         If save_render is True, then the output of env.render(mode="image") is written as env/rendering
         """
-        if self.envs is None:
-            self._initialize_envs(self.n_envs)
 
         if t == 0:
             self.timestep = torch.tensor([0 for _ in self.envs])
@@ -305,9 +291,9 @@ class AutoResetGymAgent(GymAgent):
         make_env_fn=None,
         make_env_args={},
         n_envs=None,
+        seed=None,
         action_string="action",
         output="env/",
-        use_seed=True,
     ):
         """Create an agent from a Gym environment  with Autoreset
 
@@ -324,15 +310,12 @@ class AutoResetGymAgent(GymAgent):
             make_env_fn=make_env_fn,
             make_env_args=make_env_args,
             n_envs=n_envs,
+            seed=seed,
             action_string=action_string,
             output=output,
-            use_seed=use_seed,
         )
-
-    def _initialize_envs(self, n):
-        self._common_init(n)
-        self.is_running = [False for _ in range(n)]
-        self.previous_reward = [0 for _ in range(n)]
+        self.is_running = [False for _ in range(self.n_envs)]
+        self.previous_reward = [0 for _ in range(self.n_envs)]
 
     def _reset(self, k, save_render):
         self.is_running[k] = True
@@ -353,8 +336,6 @@ class AutoResetGymAgent(GymAgent):
         """
         Perform one step by reading the `action`
         """
-        if self.envs is None:
-            self._initialize_envs(self.n_envs)
 
         observations = []
         rewards = []
@@ -388,15 +369,15 @@ class NoAutoResetGymAgent(GymAgent):
         make_env_fn=None,
         make_env_args={},
         n_envs=None,
+        seed=None,
         action_string="action",
         output="env/",
-        use_seed=True,
     ):
         super().__init__(
             make_env_fn=make_env_fn,
             make_env_args=make_env_args,
             n_envs=n_envs,
+            seed=seed,
             action_string=action_string,
             output=output,
-            use_seed=use_seed,
         )

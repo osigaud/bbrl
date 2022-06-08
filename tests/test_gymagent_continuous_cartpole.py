@@ -143,30 +143,6 @@ class Logger:
         self.add_log("a2c_loss", a2c_loss, epoch)
 
 
-class AutoResetEnvAgent(AutoResetGymAgent):
-    # Create the environment agent
-    # This agent implements N gym environments with auto-reset
-    def __init__(self, cfg, n_envs):
-        super().__init__(get_class(cfg.gym_env), get_arguments(cfg.gym_env), n_envs)
-        env = instantiate_class(cfg.gym_env)
-        env.seed(cfg.algorithm.seed)
-        self.observation_space = env.observation_space
-        self.action_space = env.action_space
-        del env
-
-
-class NoAutoResetEnvAgent(NoAutoResetGymAgent):
-    # Create the environment agent
-    # This agent implements N gym environments without auto-reset
-    def __init__(self, cfg, n_envs):
-        super().__init__(get_class(cfg.gym_env), get_arguments(cfg.gym_env), n_envs)
-        env = instantiate_class(cfg.gym_env)
-        env.seed(cfg.algorithm.seed)
-        self.observation_space = env.observation_space
-        self.action_space = env.action_space
-        del env
-
-
 # Create the A2C Agent
 def create_a2c_agent(cfg, train_env_agent, eval_env_agent):
     observation_size, n_actions = train_env_agent.get_obs_and_actions_sizes()
@@ -224,8 +200,18 @@ def run_a2c(cfg, max_grad_norm=0.5):
     best_reward = -10e9
 
     # 2) Create the environment agent
-    train_env_agent = AutoResetEnvAgent(cfg, n_envs=cfg.algorithm.n_envs)
-    eval_env_agent = NoAutoResetEnvAgent(cfg, n_envs=cfg.algorithm.nb_evals)
+    train_env_agent = AutoResetGymAgent(
+        get_class(cfg.gym_env),
+        get_arguments(cfg.gym_env),
+        cfg.algorithm.n_envs,
+        cfg.algorithm.seed,
+    )
+    eval_env_agent = NoAutoResetGymAgent(
+        get_class(cfg.gym_env),
+        get_arguments(cfg.gym_env),
+        cfg.algorithm.n_envs,
+        cfg.algorithm.seed,
+    )
 
     # 3) Create the A2C Agent
     a2c_agent, eval_agent, critic_agent = create_a2c_agent(
