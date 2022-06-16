@@ -92,7 +92,7 @@ Have a look at the [bbrl_examples](https://github.com/osigaud/bbrl_example.git) 
 
 ### Development
 
-See [contributing](CONTRIBUTING.md)**
+See [contributing](CONTRIBUTING.md)
 
 ## Dependencies
 
