@@ -90,7 +90,7 @@ Have a look at the [bbrl_examples](https://github.com/osigaud/bbrl_example.git) 
 
 [Read the docs](https://bbrl.readthedocs.io/en/latest/)
 
-###For development
+### Development
 
 See [contributing](CONTRIBUTING.md)**
 
