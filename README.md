@@ -1,6 +1,6 @@
 # BBRL
 
-`bbrl`- A Flexible and Simple Library for Reinforcement Learning inspired from SaLinA
+`bbrl`- A Flexible and Simple Library for Reinforcement Learning deriving from SaLinA
 
 BBRL stands for "BlackBoard Reinforcement Learning". Initially, this library was a fork of [the SaLinA library](https://github.com/facebookresearch/salina). 
 But SaLinA is a general model for sequential learning whereas BBRL is dedicated to RL, thus it focuses on a subset of SaLinA. 
@@ -44,7 +44,23 @@ Link to the paper: [SaLinA: Sequential Learning of Agents](https://arxiv.org/abs
 * March 2022:
 * * Forked SaLinA and started to modify the model
 
-## Detailed documentation with notebooks
+## Documentation
+
+### Main differences to SaLinA
+
+- BBRL only contains core classes to implement RL algorithms
+
+- Because both notations coexist in the literature, the GymAgent classes support the case where doing action $a_t$ in state $s_t$ results in reward $r_t$, and the case where it results in reward $r_{t+1}$.
+
+- Some output string were corrected, some variable were renamed and some comments were improved to favor code readability.
+
+- A few small bugs in SaLinA were fixed:
+
+* The replay buffer was rejecting samples that did not fit inside when the number of added samples was beyond the limit. This has been corrected to implement the standard FIFO behavior of replay buffer.
+
+* When using an AutoResetGymAgent and no replay buffer, transitions from an episode to the next were considered as standard steps in an episode. We added a mechanism to properly filter them out, using an additional `get_transitions()` function in the Workspace class.
+
+### Starting with notebooks
 
 - Getting started: The [BBRL model, and a simple agent-environment interaction](https://colab.research.google.com/drive/1_yp-JKkxh_P8Yhctulqm0IrLbE41oK1p?usp=sharing)
 
@@ -53,11 +69,11 @@ Link to the paper: [SaLinA: Sequential Learning of Agents](https://arxiv.org/abs
 - More details about the interaction model: [AutoResetGymAgent, multiple environments and episodes](https://colab.research.google.com/drive/1W9Y-3fa6LsPeR6cBC1vgwBjKfgMwZvP5?usp=sharing)
 
 
-## Learning RL with `bbrl` in your favorite coding environment
+### Learning RL with `bbrl` in your favorite coding environment
 
 Have a look at the [bbrl_examples](https://github.com/osigaud/bbrl_example.git) library.
 
-## Code Documentation: (will come soon)
+### Code Documentation: (will come soon)
 
 [Read the docs](https://bbrl.readthedocs.io/en/latest/)
 
