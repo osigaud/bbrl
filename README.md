@@ -90,15 +90,13 @@ Have a look at the [bbrl_examples](https://github.com/osigaud/bbrl_example.git) 
 
 [Read the docs](https://bbrl.readthedocs.io/en/latest/)
 
-**For development, see [contributing](CONTRIBUTING.md)**
+###For development
+
+See [contributing](CONTRIBUTING.md)**
 
 ## Dependencies
 
 `bbrl` utilizes `pytorch`, `hydra` for configuring experiments, and `gym` for reinforcement learning algorithms.
-
-## Note on the logger
-
-We provide a simple Logger that logs in both tensorboard format, but also as pickle files that can be re-read to make tables and figures. See [logger](bbrl/utils/logger.py). This logger can be easily replaced by any other logger.
 
 ## License
 
