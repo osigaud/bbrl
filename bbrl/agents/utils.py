@@ -147,6 +147,9 @@ class PrintAgent(Agent):
         super().__init__(name=name)
         self.names = names
 
+    def reset(self):
+        self.names = ()
+
     def forward(self, t, **kwargs):
         if self.names == ():
             self.names = self.workspace.keys()
