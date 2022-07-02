@@ -266,8 +266,8 @@ def plot_pendulum_critic_q(
             obs = th.from_numpy(obs.astype(np.float32))
 
             if action is None:
-                action = 0
-            value = agent.predict_value(obs, action)
+                action = th.Tensor([0])
+            value = agent.predict_value(obs[0], action)
 
             portrait[definition - (1 + index_td), index_t] = value.item()
 
@@ -337,8 +337,8 @@ def plot_cartpole_critic_q(
             obs = th.from_numpy(obs.astype(np.float32))
 
             if action is None:
-                action = 0
-            value = agent.predict_value(obs, action)
+                action = th.Tensor([0])
+            value = agent.predict_value(obs[0], action)
 
             portrait[definition - (1 + index_y), index_x] = value.item()
 
@@ -407,8 +407,8 @@ def plot_any_env_critic_q(
             obs = th.from_numpy(obs.astype(np.float32))
 
             if action is None:
-                action = 0
-            value = agent.predict_value(obs, action)
+                action = th.Tensor([0])
+            value = agent.predict_value(obs[0], action)
 
             portrait[definition - (1 + index_y), index_x] = value.item()
 
