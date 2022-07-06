@@ -58,19 +58,19 @@ class ReplayBuffer:
         for k, v in new_data.items():
             if batch_size is None:
                 batch_size = v.size()[1]
+            print(f"{k}: batch size : {batch_size}")
+            print("pos", self.position)
             if self.position + batch_size < self.max_size:
                 # The case where the batch can be inserted before the end of the replay buffer
                 if indexes is None:
                     indexes = torch.arange(batch_size) + self.position
                     arange = torch.arange(batch_size)
+                    self.position = self.position + batch_size
                 indexes = indexes.to(dtype=torch.long, device=v.device)
                 arange = arange.to(dtype=torch.long, device=v.device)
                 print("insertion standard:", indexes)
-                print(v.detach().shape)
-                print(f"{k}: batch size : {batch_size}")
-                print("pos", self.position)
+                print("v shape", v.detach().shape)
                 self._insert(k, indexes, v)
-                self.position = self.position + batch_size
             else:
                 # The case where the batch cannot be inserted before the end of the replay buffer
                 # A part is at the end, the other part is in the beginning
@@ -89,11 +89,11 @@ class ReplayBuffer:
                     # print("insertion intermediate computed:", indexes)
                     indexes = torch.cat((indexes, torch.arange(batch_begin_size)), 0)
                     arange = torch.cat((arange, torch.arange(batch_begin_size)), 0)
+                    self.position = batch_begin_size
                 indexes = indexes.to(dtype=torch.long, device=v.device)
                 arange = arange.to(dtype=torch.long, device=v.device)
-                # print("insertion full computed:", indexes)
+                print("insertion full computed:", indexes)
                 self._insert(k, indexes, v)
-                self.position = batch_begin_size
 
     def size(self):
         if self.is_full:
