@@ -58,7 +58,6 @@ class ReplayBuffer:
         for k, v in new_data.items():
             if batch_size is None:
                 batch_size = v.size()[1]
-            # print(f"{k}: batch size", batch_size, indexes, self.position)
             if self.position + batch_size < self.max_size:
                 # The case where the batch can be inserted before the end of the replay buffer
                 if indexes is None:
@@ -66,8 +65,10 @@ class ReplayBuffer:
                     arange = torch.arange(batch_size)
                 indexes = indexes.to(dtype=torch.long, device=v.device)
                 arange = arange.to(dtype=torch.long, device=v.device)
-                # print("insertion standard:", indexes)
-                # print(v.detach().shape)
+                print("insertion standard:", indexes)
+                print(v.detach().shape)
+                print(f"{k}: batch size : {batch_size}")
+                print("pos", self.position)
                 self._insert(k, indexes, v)
                 self.position = self.position + batch_size
             else:
