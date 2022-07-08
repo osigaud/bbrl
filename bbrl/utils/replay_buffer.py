@@ -79,10 +79,9 @@ class ReplayBuffer:
                 batch_end_size = self.max_size - self.position
                 # the number of data at the beginning of the RB
                 batch_begin_size = batch_size - batch_end_size
-                print(f"{k}: batch size : {batch_size}")
-                print("pos", self.position)
-                print("insertion full:", indexes)
                 if indexes is None:
+                    print(f"{k}: batch size : {batch_size}")
+                    print("pos", self.position)
                     # the part of the indexes at the end of the RB
                     indexes = torch.arange(batch_end_size) + self.position
                     arange = torch.arange(batch_end_size)
@@ -90,10 +89,10 @@ class ReplayBuffer:
                     # print("insertion intermediate computed:", indexes)
                     indexes = torch.cat((indexes, torch.arange(batch_begin_size)), 0)
                     arange = torch.cat((arange, torch.arange(batch_begin_size)), 0)
+                    print("insertion full:", indexes)
                     self.position = batch_begin_size
                 indexes = indexes.to(dtype=torch.long, device=v.device)
                 arange = arange.to(dtype=torch.long, device=v.device)
-                print("insertion full post:", indexes)
                 self._insert(k, indexes, v)
 
     def size(self):
