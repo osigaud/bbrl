@@ -58,8 +58,8 @@ class ReplayBuffer:
         for k, v in new_data.items():
             if batch_size is None:
                 batch_size = v.size()[1]
-                print(f"{k}: batch size : {batch_size}")
-                print("pos", self.position)
+                # print(f"{k}: batch size : {batch_size}")
+                # print("pos", self.position)
             if self.position + batch_size < self.max_size:
                 # The case where the batch can be inserted before the end of the replay buffer
                 if indexes is None:
@@ -68,8 +68,8 @@ class ReplayBuffer:
                     self.position = self.position + batch_size
                 indexes = indexes.to(dtype=torch.long, device=v.device)
                 arange = arange.to(dtype=torch.long, device=v.device)
-                print("insertion standard:", indexes)
-                # print("v shape", v.detach().shape)
+                # print("insertion standard:", indexes)
+                # # print("v shape", v.detach().shape)
                 self._insert(k, indexes, v)
             else:
                 # The case where the batch cannot be inserted before the end of the replay buffer
@@ -80,8 +80,8 @@ class ReplayBuffer:
                 # the number of data at the beginning of the RB
                 batch_begin_size = batch_size - batch_end_size
                 if indexes is None:
-                    print(f"{k}: batch size : {batch_size}")
-                    print("pos", self.position)
+                    # print(f"{k}: batch size : {batch_size}")
+                    # print("pos", self.position)
                     # the part of the indexes at the end of the RB
                     indexes = torch.arange(batch_end_size) + self.position
                     arange = torch.arange(batch_end_size)
@@ -89,7 +89,7 @@ class ReplayBuffer:
                     # print("insertion intermediate computed:", indexes)
                     indexes = torch.cat((indexes, torch.arange(batch_begin_size)), 0)
                     arange = torch.cat((arange, torch.arange(batch_begin_size)), 0)
-                    print("insertion full:", indexes)
+                    # print("insertion full:", indexes)
                     self.position = batch_begin_size
                 indexes = indexes.to(dtype=torch.long, device=v.device)
                 arange = arange.to(dtype=torch.long, device=v.device)
