@@ -88,7 +88,7 @@ Have a look at the [bbrl_examples](https://github.com/osigaud/bbrl_example.git) 
 
 ### Code Documentation: (will come soon)
 
-[Read the docs](docs/index.html)
+[Read the docs](https://github.com/osigaud/bbrl/docs/index.html)
 
 ### Development
 
