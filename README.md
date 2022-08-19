@@ -38,6 +38,9 @@ Link to the paper: [SaLinA: Sequential Learning of Agents](https://arxiv.org/abs
 
 ## News
 
+* August 2022:
+* * Major updates of the notebook-based documentation
+
 * May 2022:
 * * First commit of the BBRL repository
 
@@ -62,25 +65,45 @@ Link to the paper: [SaLinA: Sequential Learning of Agents](https://arxiv.org/abs
 
 ### Starting with notebooks
 
-- Getting started: The [BBRL model, and a simple agent-environment interaction code](https://colab.research.google.com/drive/1_yp-JKkxh_P8Yhctulqm0IrLbE41oK1p?usp=sharing)
+There are two kinds of notebooks:
 
-- Building a simple Neural RL agent in interaction with an environment: [A notebook with code](https://colab.research.google.com/drive/1Ui481r47fNHCQsQfKwdoNEVrEiqAEokh?usp=sharing)
+- some are just for reading, they explain the main concepts and design choices behind BBRL
+
+- some are designed for learning about RL algorithms and practicing with BBRL. Ideally, these notebooks should be studied in the provided order.
+
+#### Reading notebooks
+
+- Getting started: The [BBRL model](https://colab.research.google.com/drive/1_yp-JKkxh_P8Yhctulqm0IrLbE41oK1p?usp=sharing)
 
 - Explanations about [the NoAutoResetGymAgent](https://colab.research.google.com/drive/1EX5O03mmWFp9wCL_Gb_-p08JktfiL2l5?usp=sharing)
 
+- Explanations about [the AutoResetGymAgent](https://colab.research.google.com/drive/1W9Y-3fa6LsPeR6cBC1vgwBjKfgMwZvP5?usp=sharing)
+
+- [Different Reward Indexing Schemes](https://colab.research.google.com/drive/1Cld72_FBA1aMS2U4EsyV3LGZIlQC_PsC?usp=sharing)
+
 - [Dealing with TimeLimits](https://colab.research.google.com/drive/1erLbRKvdkdDy0Zn1X_JhC01s1QAt4BBj?usp=sharing)
 
-- Explanations about [the AutoResetGymAgent, multiple environments and episodes](https://colab.research.google.com/drive/1W9Y-3fa6LsPeR6cBC1vgwBjKfgMwZvP5?usp=sharing)
+#### Coding your first RL algorithms with BBRL
 
-### Coding your first RL algorithms with BBRL
+- [A simple agent-environment interaction code](https://colab.research.google.com/drive/1gSdkOBPkIQi_my9TtwJ-qWZQS0b2X7jt?usp=sharing)
+
+- [Building a simple Neural RL agent in interaction with a gym environment](https://colab.research.google.com/drive/1Ui481r47fNHCQsQfKwdoNEVrEiqAEokh?usp=sharing)
 
 - [Coding DQN using a NoAutoResetGymAgent](https://colab.research.google.com/drive/1raeuB6uUVUpl-4PLArtiAoGnXj0sGjSV?usp=sharing)
 
 - [Coding DQN using an AutoResetGymAgent](https://colab.research.google.com/drive/1H9_gkenmb_APnbygme1oEdhqMLSDc_bM?usp=sharing)
 
+- [Coding DPPG and TD3 using an AutoResetGymAgent](https://colab.research.google.com/drive/1APBtDiaFwQHKE2rfTZioGfDM8C41e7Il?usp=sharing)
+
+- [Coding basic Policy Gradient algorithms and REINFORCE]
+
 - [A basic version of the A2C algorithm](https://colab.research.google.com/drive/1yAQlrShysj4Q9EBpYM8pBsp2aXInhP7x?usp=sharing)
 
 - [A more advanced version of the A2C algorithm](https://colab.research.google.com/drive/1C_mgKSTvFEF04qNc_Ljj0cZPucTJDFlO?usp=sharing) dealing with discrete and continuous actions.
+
+- [Coding PPO](https://colab.research.google.com/drive/1KTxeRA3e0Npxa8Fa9y1OMcJCeQa41o_N?usp=sharing)
+
+- [Coding SAC](https://colab.research.google.com/drive/1EiYsRh-fbwBUnMnAimwhFVtN_CiK5Nu8?usp=sharing)
 
 ### Learning RL with `bbrl` in your favorite coding environment
 
