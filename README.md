@@ -75,13 +75,13 @@ There are two kinds of notebooks:
 
 - Getting started: The [BBRL model](https://colab.research.google.com/drive/1_yp-JKkxh_P8Yhctulqm0IrLbE41oK1p?usp=sharing)
 
-- Explanations about [the NoAutoResetGymAgent](https://colab.research.google.com/drive/1EX5O03mmWFp9wCL_Gb_-p08JktfiL2l5?usp=sharing)
+- Explanations about the [NoAutoResetGymAgent](https://colab.research.google.com/drive/1EX5O03mmWFp9wCL_Gb_-p08JktfiL2l5?usp=sharing)
 
-- Explanations about [the AutoResetGymAgent](https://colab.research.google.com/drive/1W9Y-3fa6LsPeR6cBC1vgwBjKfgMwZvP5?usp=sharing)
+- Explanations about the [AutoResetGymAgent](https://colab.research.google.com/drive/1W9Y-3fa6LsPeR6cBC1vgwBjKfgMwZvP5?usp=sharing)
 
 - [Different Reward Indexing Schemes](https://colab.research.google.com/drive/1Cld72_FBA1aMS2U4EsyV3LGZIlQC_PsC?usp=sharing)
 
-- [Dealing with TimeLimits](https://colab.research.google.com/drive/1erLbRKvdkdDy0Zn1X_JhC01s1QAt4BBj?usp=sharing)
+- [Dealing with Time Limits](https://colab.research.google.com/drive/1erLbRKvdkdDy0Zn1X_JhC01s1QAt4BBj?usp=sharing)
 
 #### Coding your first RL algorithms with BBRL
 
@@ -95,7 +95,7 @@ There are two kinds of notebooks:
 
 - [Coding DPPG and TD3 using an AutoResetGymAgent](https://colab.research.google.com/drive/1APBtDiaFwQHKE2rfTZioGfDM8C41e7Il?usp=sharing)
 
-- [Coding basic Policy Gradient algorithms and REINFORCE]
+- [Coding basic Policy Gradient algorithms and REINFORCE](https://colab.research.google.com/drive/1alYfNRLQAsx0Kn4lOndy-aNaK1Oznd0Y?usp=sharing)
 
 - [A basic version of the A2C algorithm](https://colab.research.google.com/drive/1yAQlrShysj4Q9EBpYM8pBsp2aXInhP7x?usp=sharing)
 
