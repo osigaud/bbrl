@@ -111,7 +111,7 @@ Have a look at the [bbrl_examples](https://github.com/osigaud/bbrl_example.git) 
 
 ### Code Documentation: (will come soon)
 
-[Read the docs](https://github.com/osigaud/blob/master/bbrl/html/bbrl/index.html)
+[Read the docs](https://github.com/osigaud/bbrl/blob/master/html/bbrl/index.html)
 
 ### Development
 
