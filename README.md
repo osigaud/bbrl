@@ -109,9 +109,9 @@ There are two kinds of notebooks:
 
 Have a look at the [bbrl_examples](https://github.com/osigaud/bbrl_example.git) library.
 
-### Code Documentation: (will come soon)
+### Code Documentation:
 
-[Read the docs](https://htmlpreview.github.io/?https://github.com/osigaud/bbrl/blob/master/docs/bbrl/workspace.html)
+[Generated with pdoc](https://htmlpreview.github.io/?https://github.com/osigaud/bbrl/blob/master/docs/bbrl/index.html)
 
 ### Development
 
