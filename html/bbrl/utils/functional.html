@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>bbrl.utils.functional API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>bbrl.utils.functional</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python"># This source code is licensed under the MIT license found in the
+# LICENSE file in the root directory of this source tree.
+#
+
+import torch
+
+
+def _index(tensor_3d, tensor_2d):
+    x, y, z = tensor_3d.size()
+    t = tensor_3d.reshape(x * y, z)
+    tt = tensor_2d.reshape(x * y)
+    v = t[torch.arange(x * y), tt]
+    v = v.reshape(x, y)
+    return v
+
+
+def cumulated_reward(reward, done):
+    T, B = done.size()
+    done = done.detach().clone()
+
+    v_done, index_done = done.float().max(0)
+    assert v_done.eq(
+        1.0
+    ).all(), &#34;[agents.rl.functional.cumulated_reward] Computing cumulated reward over unfinished trajectories&#34;
+    arange = torch.arange(T, device=done.device).unsqueeze(-1).repeat(1, B)
+    index_done = index_done.unsqueeze(0).repeat(T, 1)
+
+    mask = arange.le(index_done)
+    reward = (reward * mask.float()).sum(0)
+    return reward.mean().item()
+
+
+def temporal_difference(critic, reward, must_bootstrap, discount_factor):
+    target = discount_factor * critic[1:].detach() * must_bootstrap.float() + reward[1:]
+    td = target - critic[:-1]
+    to_add = torch.zeros(1, td.size()[1]).to(td.device)
+    td = torch.cat([td, to_add], dim=0)
+    return td
+
+
+def doubleqlearning_temporal_difference(
+    q, action, q_target, reward, must_bootstrap, discount_factor
+):
+    action_max = q.max(-1)[1]
+    q_target_max = _index(q_target, action_max).detach()[1:]
+
+    mb = must_bootstrap.float()
+    target = reward[1:] + discount_factor * q_target_max * mb
+
+    q = _index(q, action)[:-1]
+    td = target - q
+    to_add = torch.zeros(1, td.size()[1], device=td.device)
+    td = torch.cat([td, to_add], dim=0)
+    return td
+
+
+def gae(critic, reward, must_bootstrap, discount_factor, gae_coef):
+    mb = must_bootstrap.float()
+    td = reward[1:] + discount_factor * mb * critic[1:].detach() - critic[:-1]
+    # handling td0 case
+    if gae_coef == 0.0:
+        return td
+
+    td_shape = td.shape[0]
+    gae_val = td[-1]
+    gaes = [gae_val]
+    for t in range(td_shape - 2, -1, -1):
+        gae_val = td[t] + discount_factor * gae_coef * mb[:-1][t] * gae_val
+        gaes.append(gae_val)
+    gaes = list([g.unsqueeze(0) for g in reversed(gaes)])
+    gaes = torch.cat(gaes, dim=0)
+    return gaes
+
+
+def compute_reinforce_loss(
+    reward, action_probabilities, baseline, action, done, discount_factor
+):
+
+    batch_size = reward.size()[1]
+
+    # Find the first occurrence of done for each element in the batch
+    v_done, trajectories_length = done.float().max(0)
+    trajectories_length += 1
+    assert v_done.eq(1.0).all()
+    max_trajectories_length = trajectories_length.max().item()
+    # Shorten trajectories for faster computation
+    reward = reward[:max_trajectories_length]
+    action_probabilities = action_probabilities[:max_trajectories_length]
+    baseline = baseline[:max_trajectories_length]
+    action = action[:max_trajectories_length]
+
+    # Create a binary mask to mask useless values (of size max_trajectories_length x batch_size)
+    arange = (
+        torch.arange(max_trajectories_length, device=done.device)
+        .unsqueeze(-1)
+        .repeat(1, batch_size)
+    )
+    mask = arange.lt(
+        trajectories_length.unsqueeze(0).repeat(max_trajectories_length, 1)
+    )
+    reward = reward * mask
+
+    # Compute discounted cumulated reward
+    cum_reward = [torch.zeros_like(reward[-1])]
+    for t in range(max_trajectories_length - 1, 0, -1):
+        cum_reward.append(discount_factor + cum_reward[-1] + reward[t])
+    cum_reward.reverse()
+    cum_reward = torch.cat([c.unsqueeze(0) for c in cum_reward])
+
+    # baseline loss
+    g = baseline - cum_reward
+    baseline_loss = (g) ** 2
+    baseline_loss = (baseline_loss * mask).mean()
+
+    # policy loss
+    log_probabilities = _index(action_probabilities, action).log()
+    policy_loss = log_probabilities * -g.detach()
+    policy_loss = policy_loss * mask
+    policy_loss = policy_loss.mean()
+
+    # entropy loss
+    entropy = torch.distributions.Categorical(action_probabilities).entropy() * mask
+    entropy_loss = entropy.mean()
+
+    return {
+        &#34;baseline_loss&#34;: baseline_loss,
+        &#34;policy_loss&#34;: policy_loss,
+        &#34;entropy_loss&#34;: entropy_loss,
+    }</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="bbrl.utils.functional.compute_reinforce_loss"><code class="name flex">
+<span>def <span class="ident">compute_reinforce_loss</span></span>(<span>reward, action_probabilities, baseline, action, done, discount_factor)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_reinforce_loss(
+    reward, action_probabilities, baseline, action, done, discount_factor
+):
+
+    batch_size = reward.size()[1]
+
+    # Find the first occurrence of done for each element in the batch
+    v_done, trajectories_length = done.float().max(0)
+    trajectories_length += 1
+    assert v_done.eq(1.0).all()
+    max_trajectories_length = trajectories_length.max().item()
+    # Shorten trajectories for faster computation
+    reward = reward[:max_trajectories_length]
+    action_probabilities = action_probabilities[:max_trajectories_length]
+    baseline = baseline[:max_trajectories_length]
+    action = action[:max_trajectories_length]
+
+    # Create a binary mask to mask useless values (of size max_trajectories_length x batch_size)
+    arange = (
+        torch.arange(max_trajectories_length, device=done.device)
+        .unsqueeze(-1)
+        .repeat(1, batch_size)
+    )
+    mask = arange.lt(
+        trajectories_length.unsqueeze(0).repeat(max_trajectories_length, 1)
+    )
+    reward = reward * mask
+
+    # Compute discounted cumulated reward
+    cum_reward = [torch.zeros_like(reward[-1])]
+    for t in range(max_trajectories_length - 1, 0, -1):
+        cum_reward.append(discount_factor + cum_reward[-1] + reward[t])
+    cum_reward.reverse()
+    cum_reward = torch.cat([c.unsqueeze(0) for c in cum_reward])
+
+    # baseline loss
+    g = baseline - cum_reward
+    baseline_loss = (g) ** 2
+    baseline_loss = (baseline_loss * mask).mean()
+
+    # policy loss
+    log_probabilities = _index(action_probabilities, action).log()
+    policy_loss = log_probabilities * -g.detach()
+    policy_loss = policy_loss * mask
+    policy_loss = policy_loss.mean()
+
+    # entropy loss
+    entropy = torch.distributions.Categorical(action_probabilities).entropy() * mask
+    entropy_loss = entropy.mean()
+
+    return {
+        &#34;baseline_loss&#34;: baseline_loss,
+        &#34;policy_loss&#34;: policy_loss,
+        &#34;entropy_loss&#34;: entropy_loss,
+    }</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.functional.cumulated_reward"><code class="name flex">
+<span>def <span class="ident">cumulated_reward</span></span>(<span>reward, done)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def cumulated_reward(reward, done):
+    T, B = done.size()
+    done = done.detach().clone()
+
+    v_done, index_done = done.float().max(0)
+    assert v_done.eq(
+        1.0
+    ).all(), &#34;[agents.rl.functional.cumulated_reward] Computing cumulated reward over unfinished trajectories&#34;
+    arange = torch.arange(T, device=done.device).unsqueeze(-1).repeat(1, B)
+    index_done = index_done.unsqueeze(0).repeat(T, 1)
+
+    mask = arange.le(index_done)
+    reward = (reward * mask.float()).sum(0)
+    return reward.mean().item()</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.functional.doubleqlearning_temporal_difference"><code class="name flex">
+<span>def <span class="ident">doubleqlearning_temporal_difference</span></span>(<span>q, action, q_target, reward, must_bootstrap, discount_factor)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def doubleqlearning_temporal_difference(
+    q, action, q_target, reward, must_bootstrap, discount_factor
+):
+    action_max = q.max(-1)[1]
+    q_target_max = _index(q_target, action_max).detach()[1:]
+
+    mb = must_bootstrap.float()
+    target = reward[1:] + discount_factor * q_target_max * mb
+
+    q = _index(q, action)[:-1]
+    td = target - q
+    to_add = torch.zeros(1, td.size()[1], device=td.device)
+    td = torch.cat([td, to_add], dim=0)
+    return td</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.functional.gae"><code class="name flex">
+<span>def <span class="ident">gae</span></span>(<span>critic, reward, must_bootstrap, discount_factor, gae_coef)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def gae(critic, reward, must_bootstrap, discount_factor, gae_coef):
+    mb = must_bootstrap.float()
+    td = reward[1:] + discount_factor * mb * critic[1:].detach() - critic[:-1]
+    # handling td0 case
+    if gae_coef == 0.0:
+        return td
+
+    td_shape = td.shape[0]
+    gae_val = td[-1]
+    gaes = [gae_val]
+    for t in range(td_shape - 2, -1, -1):
+        gae_val = td[t] + discount_factor * gae_coef * mb[:-1][t] * gae_val
+        gaes.append(gae_val)
+    gaes = list([g.unsqueeze(0) for g in reversed(gaes)])
+    gaes = torch.cat(gaes, dim=0)
+    return gaes</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.functional.temporal_difference"><code class="name flex">
+<span>def <span class="ident">temporal_difference</span></span>(<span>critic, reward, must_bootstrap, discount_factor)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def temporal_difference(critic, reward, must_bootstrap, discount_factor):
+    target = discount_factor * critic[1:].detach() * must_bootstrap.float() + reward[1:]
+    td = target - critic[:-1]
+    to_add = torch.zeros(1, td.size()[1]).to(td.device)
+    td = torch.cat([td, to_add], dim=0)
+    return td</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="bbrl.utils" href="index.html">bbrl.utils</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="bbrl.utils.functional.compute_reinforce_loss" href="#bbrl.utils.functional.compute_reinforce_loss">compute_reinforce_loss</a></code></li>
+<li><code><a title="bbrl.utils.functional.cumulated_reward" href="#bbrl.utils.functional.cumulated_reward">cumulated_reward</a></code></li>
+<li><code><a title="bbrl.utils.functional.doubleqlearning_temporal_difference" href="#bbrl.utils.functional.doubleqlearning_temporal_difference">doubleqlearning_temporal_difference</a></code></li>
+<li><code><a title="bbrl.utils.functional.gae" href="#bbrl.utils.functional.gae">gae</a></code></li>
+<li><code><a title="bbrl.utils.functional.temporal_difference" href="#bbrl.utils.functional.temporal_difference">temporal_difference</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>
