@@ -71,7 +71,7 @@ There are two kinds of notebooks:
 
 - some are designed for learning about RL algorithms and practicing with BBRL. Ideally, these notebooks should be studied in the provided order.
 
-#### Reading notebooks
+#### Explanatory notebooks
 
 - Getting started: The [BBRL model](https://colab.research.google.com/drive/1_yp-JKkxh_P8Yhctulqm0IrLbE41oK1p?usp=sharing)
 
@@ -111,7 +111,7 @@ Have a look at the [bbrl_examples](https://github.com/osigaud/bbrl_example.git) 
 
 ### Code Documentation: (will come soon)
 
-[Read the docs](https://htmlpreview.github.io/?https://github.com/osigaud/bbrl/blob/master/docs/bbrl/index.html)
+[Read the docs](https://htmlpreview.github.io/?https://github.com/osigaud/bbrl/blob/master/docs/bbrl/workspace.html)
 
 ### Development
 
