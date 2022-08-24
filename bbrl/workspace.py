@@ -651,7 +651,7 @@ class Workspace:
         return mini_workspace
 
     def get_transitions(self) -> Workspace:
-        """ Return a new workspace containing the transitions of the current workspace. 
+        """Return a new workspace containing the transitions of the current workspace.
             Each key of the current workspace have dimensions [n_step, n_env, key_dim]
             {
                 Key1 :
@@ -661,10 +661,10 @@ class Workspace:
                         ...
                     ]
                 ...
-                
+
             }
 
-            Return a workspace of transitions with the following structure : 
+            Return a workspace of transitions with the following structure :
             Each key of the returned workspace have dimensions [2, n_transitions, key_dim]
             key[0][0], key[1][0] = (step_1, step_2) # for env 1
             key[0][1], key[1][1] = (step_1, step_2) # for env 2
