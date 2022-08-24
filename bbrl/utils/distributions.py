@@ -1,4 +1,6 @@
-"""Probability distributions."""
+""" Probability distributions
+This file has been imported from Stable baselines 3 and adapted to the BBRL context """
+
 import numpy as np
 
 from abc import ABC, abstractmethod
