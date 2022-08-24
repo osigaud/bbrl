@@ -651,17 +651,33 @@ class Workspace:
         return mini_workspace
 
     def get_transitions(self) -> Workspace:
-        """
-        Takes in a workspace from salina:
-        [(step1),(step2),(step3), ... ]
-        return a workspace of transitions :
-        [
-            [step1,step2],
-            [step2,step3]
+        """ Return a new workspace containing the transitions of the current workspace. 
+            Each key of the current workspace have dimensions [n_step, n_env, key_dim]
+            {
+                Key1 :
+                    [
+                        [step1, step1, step1], # for env 1,2,3 ...
+                        [step2, step2, step2], # for env 1,2,3 ...
+                        ...
+                    ]
+                ...
+                
+            }
+
+            Return a workspace of transitions with the following structure : 
+            Each key of the returned workspace have dimensions [2, n_transitions, key_dim]
+            key[0][0], key[1][0] = (step_1, step_2) # for env 1
+            key[0][1], key[1][1] = (step_1, step_2) # for env 2
+            key[0][2], key[1][2] = (step_2, step_3) # for env 1
+            key[0][3], key[1][3] = (step_2, step_3) # for env 2
             ...
-        ]
-        Filters every transitions [step_final,step_initial]
+
+            Filters every transitions [step_final, step_initial]
+
+        Returns:
+            [Workspace]: The resulting workspace of transitions
         """
+
         transitions = {}
         done = self["env/done"][:-1]
         for key in self.keys():
