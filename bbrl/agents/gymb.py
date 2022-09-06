@@ -125,7 +125,7 @@ class GymAgent(Agent):
         self.cumulated_reward = {}
         self.last_frame = {}
 
-    def _common_reset(self, k, save_render):
+    def _common_reset(self, k, save_render, render):
         env = self.envs[k]
         self.cumulated_reward[k] = 0.0
         o = env.reset()
@@ -137,11 +137,12 @@ class GymAgent(Agent):
         else:
             assert isinstance(observation, dict)
         if save_render:
-            env.render(mode="human")
-            # image = env.render(mode="image")
+            images = env.render(mode="rgb_array_list")
             # print("image in reset", image)
             # image = image.unsqueeze(0)
-            # observation["rendering"] = image
+            observation["rendering"] = images
+        elif render:
+            env.render(mode="human")
 
         self.finished[k] = False
         self.truncated[k] = False
@@ -156,12 +157,12 @@ class GymAgent(Agent):
         }
         return _torch_type(ret), observation
 
-    def _reset(self, k, save_render):
-        full_obs, observation = self._common_reset(k, save_render)
+    def _reset(self, k, save_render, render):
+        full_obs, observation = self._common_reset(k, save_render, render)
         self.last_frame[k] = observation
         return full_obs
 
-    def _make_step(self, env, action, k, save_render):
+    def _make_step(self, env, action, k, save_render, render):
         action = _convert_action(action)
 
         obs, reward, done, info = env.step(action)
@@ -176,11 +177,12 @@ class GymAgent(Agent):
         else:
             assert isinstance(observation, dict)
         if save_render:
-            env.render(mode="human")
-            # image = env.render(mode="image")
-            # print("image in make_step", image)
+            images = env.render(mode="rgb_array_list")
+            # print("image in reset", image)
             # image = image.unsqueeze(0)
-            # observation["rendering"] = image
+            observation["rendering"] = images
+        elif render:
+            env.render(mode="human")
         ret = {
             **observation,
             "done": torch.tensor([done]),
@@ -191,7 +193,7 @@ class GymAgent(Agent):
         rew = _torch_type({"reward": torch.tensor([reward]).float()})
         return _torch_type(ret), rew, done, truncated, observation
 
-    def _step(self, k, action, save_render):
+    def _step(self, k, action, save_render, render):
         if self.finished[k]:
             assert k in self.last_frame
             rew = _torch_type({"reward": torch.tensor([0.0]).float()})
@@ -209,7 +211,7 @@ class GymAgent(Agent):
             )
         self.timestep[k] += 1
         full_obs, reward, done, truncated, observation = self._make_step(
-            self.envs[k], action, k, save_render
+            self.envs[k], action, k, save_render, render
         )
 
         self.last_frame[k] = observation
@@ -236,7 +238,7 @@ class GymAgent(Agent):
         for k in rewards:
             self.set((self.output + k, t), rewards[k].to(self.ghost_params.device))
 
-    def forward(self, t=0, save_render=False, **kwargs):
+    def forward(self, t=0, save_render=False, render=False, **kwargs):
         """Do one step by reading the `action` at t-1
         If t==0, environments are reset
         If save_render is True, then the output of env.render(mode="image") is written as env/rendering
@@ -246,7 +248,7 @@ class GymAgent(Agent):
             self.timestep = torch.tensor([0 for _ in self.envs])
             observations = []
             for k, e in enumerate(self.envs):
-                obs = self._reset(k, save_render)
+                obs = self._reset(k, save_render, render)
                 observations.append(obs)
             self.set_obs(observations, t)
         else:
@@ -256,7 +258,7 @@ class GymAgent(Agent):
             observations = []
             rewards = []
             for k, e in enumerate(self.envs):
-                obs, reward = self._step(k, action[k], save_render)
+                obs, reward = self._step(k, action[k], save_render, render)
                 observations.append(obs)
                 rewards.append(reward)
             self.set_reward(rewards, t - 1)
@@ -323,22 +325,22 @@ class AutoResetGymAgent(GymAgent):
         self.is_running = [False for _ in range(self.n_envs)]
         self.previous_reward = [0 for _ in range(self.n_envs)]
 
-    def _reset(self, k, save_render):
+    def _reset(self, k, save_render, render):
         self.is_running[k] = True
-        full_obs, _ = self._common_reset(k, save_render)
+        full_obs, _ = self._common_reset(k, save_render, render)
         return full_obs
 
-    def _step(self, k, action, save_render):
+    def _step(self, k, action, save_render, render):
         self.timestep[k] += 1
         full_obs, reward, done, truncated, _ = self._make_step(
-            self.envs[k], action, k, save_render
+            self.envs[k], action, k, save_render, render
         )
         if done:
             self.is_running[k] = False
             self.truncated[k] = truncated
         return full_obs, reward
 
-    def forward(self, t=0, save_render=False, **kwargs):
+    def forward(self, t=0, save_render=False, render=False, **kwargs):
         """
         Perform one step by reading the `action`
         """
@@ -347,7 +349,7 @@ class AutoResetGymAgent(GymAgent):
         rewards = []
         for k, env in enumerate(self.envs):
             if not self.is_running[k] or t == 0:
-                observations.append(self._reset(k, save_render))
+                observations.append(self._reset(k, save_render, render))
 
                 if t > 0:
                     rew = self.previous_reward[k]
@@ -356,7 +358,7 @@ class AutoResetGymAgent(GymAgent):
                 assert t > 0
                 action = self.get((self.input, t - 1))
                 assert action.size()[0] == self.n_envs, "Incompatible number of envs"
-                full_obs, reward = self._step(k, action[k], save_render)
+                full_obs, reward = self._step(k, action[k], save_render, render)
                 self.previous_reward[k] = reward
                 observations.append(full_obs)
                 rewards.append(reward)
