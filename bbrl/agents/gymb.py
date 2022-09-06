@@ -137,7 +137,9 @@ class GymAgent(Agent):
         else:
             assert isinstance(observation, dict)
         if save_render:
-            image = env.render(mode="image").unsqueeze(0)
+            image = env.render(mode="image")
+            print("image in reset", image)
+            image = image.unsqueeze(0)
             observation["rendering"] = image
 
         self.finished[k] = False
@@ -173,7 +175,9 @@ class GymAgent(Agent):
         else:
             assert isinstance(observation, dict)
         if save_render:
-            image = env.render(mode="image").unsqueeze(0)
+            image = env.render(mode="image")
+            print("image in make_step", image)
+            image = image.unsqueeze(0)
             observation["rendering"] = image
         ret = {
             **observation,

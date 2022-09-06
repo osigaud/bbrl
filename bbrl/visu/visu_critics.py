@@ -21,7 +21,7 @@ def plot_critic(agent, env, directory, env_name, best_reward, plot=False) -> Non
             plot_env = plot_pendulum_critic_q
         else:
             env_string = env_name
-            plot_env = plot_any_env_critic_q
+            plot_env = plot_standard_critic_q
         plot_env(agent, env, env_string, directory, figure_name, plot, action=None)
     else:
         if "cartpole" in env_name.lower():
@@ -32,7 +32,7 @@ def plot_critic(agent, env, directory, env_name, best_reward, plot=False) -> Non
             plot_env = plot_pendulum_critic_v
         else:
             env_string = env_name
-            plot_env = plot_any_env_critic_v
+            plot_env = plot_standard_critic_v
         plot_env(agent, env, env_string, directory, figure_name, plot)
 
 
@@ -162,7 +162,7 @@ def plot_cartpole_critic_v(
     final_show(save_figure, plot, directory, figure_name, x_label, y_label, title)
 
 
-def plot_any_env_critic_v(
+def plot_standard_critic_v(
     agent,
     env,
     env_string,
@@ -360,7 +360,7 @@ def plot_cartpole_critic_q(
     final_show(save_figure, plot, directory, figure_name, x_label, y_label, title)
 
 
-def plot_any_env_critic_q(
+def plot_standard_critic_q(
     agent,
     env,
     env_string,
