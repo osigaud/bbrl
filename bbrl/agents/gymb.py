@@ -137,10 +137,10 @@ class GymAgent(Agent):
         else:
             assert isinstance(observation, dict)
         if save_render:
-            images = env.render(mode="rgb_array_list")
+            image = env.render(mode="rgb_array")
             # print("image in reset", image)
             # image = image.unsqueeze(0)
-            observation["rendering"] = images
+            observation["rendering"] = image
         elif render:
             env.render(mode="human")
 
@@ -177,10 +177,10 @@ class GymAgent(Agent):
         else:
             assert isinstance(observation, dict)
         if save_render:
-            images = env.render(mode="rgb_array_list")
+            image = env.render(mode="rgb_array")
             # print("image in reset", image)
             # image = image.unsqueeze(0)
-            observation["rendering"] = images
+            observation["rendering"] = image
         elif render:
             env.render(mode="human")
         ret = {
