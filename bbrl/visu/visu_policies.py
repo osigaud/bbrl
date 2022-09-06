@@ -154,6 +154,11 @@ def plot_standard_policy(
     portrait = np.zeros((definition, definition))
     state_min = env.observation_space.low
     state_max = env.observation_space.high
+    for i in range(len(state_min)):
+        if state_min[i] == -np.inf:
+            state_min[i] = -1e20
+        if state_max[i] == np.inf:
+            state_max[i] = 1e20
 
     for index_x, x in enumerate(
         np.linspace(state_min[0], state_max[0], num=definition)
@@ -163,7 +168,9 @@ def plot_standard_policy(
         ):
             obs = np.array([x])
             obs = np.append(obs, y)
-            for _ in range(state_min.size() - 2):
+            print(state_min)
+            nb = range(len(state_min) - 2)
+            for _ in nb:
                 z = random.random() - 0.5
                 obs = np.append(obs, z)
             obs = th.from_numpy(obs.astype(np.float32))

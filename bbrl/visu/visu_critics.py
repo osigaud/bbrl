@@ -170,7 +170,6 @@ def plot_standard_critic_v(
     figure_name,
     plot=True,
     save_figure=True,
-    stochastic=None,
 ):
     """
     Visualization of the critic in a N-dimensional state space
@@ -183,7 +182,6 @@ def plot_standard_critic_v(
     :param directory: the directory where to save the figure
     :param figure_name: the name of the file where to plot the function
     :param save_figure: whether the plot should be saved into a file
-    :param stochastic: whether we plot the deterministic or stochastic version
     :return: nothing
     """
     if env.observation_space.shape[0] <= 2:
@@ -193,6 +191,11 @@ def plot_standard_critic_v(
     portrait = np.zeros((definition, definition))
     state_min = env.observation_space.low
     state_max = env.observation_space.high
+    for i in range(len(state_min)):
+        if state_min[i] == -np.inf:
+            state_min[i] = -1e20
+        if state_max[i] == np.inf:
+            state_max[i] = 1e20
 
     for index_x, x in enumerate(
         np.linspace(state_min[0], state_max[0], num=definition)
@@ -202,9 +205,10 @@ def plot_standard_critic_v(
         ):
             obs = np.array([x])
             obs = np.append(obs, y)
-            for z in range(state_min.size() - 2):
-                z1 = random.random() - 0.5
-                obs = np.append(obs, z1)
+            nb = range(len(state_min) - 2)
+            for _ in nb:
+                z = random.random() - 0.5
+                obs = np.append(obs, z)
             obs = obs.reshape(1, -1)
             obs = th.from_numpy(obs.astype(np.float32))
             value = agent.model(obs).squeeze(-1)
@@ -391,6 +395,11 @@ def plot_standard_critic_q(
     portrait = np.zeros((definition, definition))
     state_min = env.observation_space.low
     state_max = env.observation_space.high
+    for i in range(len(state_min)):
+        if state_min[i] == -np.inf:
+            state_min[i] = -1e20
+        if state_max[i] == np.inf:
+            state_max[i] = 1e20
 
     for index_x, x in enumerate(
         np.linspace(state_min[0], state_max[0], num=definition)
@@ -400,7 +409,8 @@ def plot_standard_critic_q(
         ):
             obs = np.array([x])
             obs = np.append(obs, y)
-            for _ in range(state_min.size() - 2):
+            nb = range(len(state_min) - 2)
+            for _ in nb:
                 z = random.random() - 0.5
                 obs = np.append(obs, z)
             obs = obs.reshape(1, -1)
