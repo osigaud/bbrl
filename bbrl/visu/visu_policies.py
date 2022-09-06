@@ -168,7 +168,6 @@ def plot_standard_policy(
         ):
             obs = np.array([x])
             obs = np.append(obs, y)
-            print(state_min)
             nb = range(len(state_min) - 2)
             for _ in nb:
                 z = random.random() - 0.5
