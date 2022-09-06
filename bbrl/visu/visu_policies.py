@@ -163,10 +163,9 @@ def plot_standard_policy(
         ):
             obs = np.array([x])
             obs = np.append(obs, y)
-            z1 = random.random() - 0.5
-            z2 = random.random() - 0.5
-            obs = np.append(obs, z1)
-            obs = np.append(obs, z2)
+            for _ in range(state_min.size() - 2):
+                z = random.random() - 0.5
+                obs = np.append(obs, z)
             obs = th.from_numpy(obs.astype(np.float32))
             action = agent.predict_action(obs, stochastic)
 

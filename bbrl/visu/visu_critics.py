@@ -400,9 +400,9 @@ def plot_standard_critic_q(
         ):
             obs = np.array([x])
             obs = np.append(obs, y)
-            for z in range(state_min.size() - 2):
-                z1 = random.random() - 0.5
-                obs = np.append(obs, z1)
+            for _ in range(state_min.size() - 2):
+                z = random.random() - 0.5
+                obs = np.append(obs, z)
             obs = obs.reshape(1, -1)
             obs = th.from_numpy(obs.astype(np.float32))
 
