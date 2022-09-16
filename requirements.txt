@@ -2,14 +2,14 @@ protobuf==3.20.1
 torch>=1.9.0
 torchvision
 gym==0.21.0
-my_gym @ git+https://github.com/osigaud/my_gym.git
+bbrl_gym >= 0.1.0
 tensorboard
 tqdm
 hydra-core
 numpy
 pandas
 opencv-python
-xformers>=0.0.3
+# xformers>=0.0.3
 omegaconf
 matplotlib
 seaborn
