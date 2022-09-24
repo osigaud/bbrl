@@ -103,7 +103,7 @@ There are two kinds of notebooks:
 
 - [Coding PPO](https://colab.research.google.com/drive/1KTxeRA3e0Npxa8Fa9y1OMcJCeQa41o_N?usp=sharing)
 
-- [Coding SAC](https://colab.research.google.com/drive/1EiYsRh-fbwBUnMnAimwhFVtN_CiK5Nu8?usp=sharing) (not ready yet)
+- [Coding SAC](https://colab.research.google.com/drive/1EiYsRh-fbwBUnMnAimwhFVtN_CiK5Nu8?usp=sharing)
 
 ### Learning RL with `bbrl` in your favorite coding environment
 
