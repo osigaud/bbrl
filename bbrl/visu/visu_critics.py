@@ -488,7 +488,7 @@ def plot_lunarlander_critic_q(
             obs = th.from_numpy(obs.astype(np.float32))
 
             if action is None:
-                action = th.Tensor([0, 0, 0])
+                action = th.Tensor([0, 0])
             value = agent.predict_value(obs[0], action)
 
             portrait[definition - (1 + index_y), index_x] = value.item()
