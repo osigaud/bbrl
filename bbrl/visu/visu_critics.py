@@ -10,7 +10,9 @@ import torch as th
 from bbrl.visu.common import final_show
 
 
-def plot_critic(agent, env, directory, env_name, best_reward, plot=False) -> None:
+def plot_critic(
+    agent, env, directory, env_name, best_reward, plot=False, save_fig=True, action=None
+) -> None:
     figure_name = f"critic_{env_name}_{best_reward}.png"
     if agent.is_q_function:
         if "cartpole" in env_name.lower():
@@ -25,7 +27,7 @@ def plot_critic(agent, env, directory, env_name, best_reward, plot=False) -> Non
         else:
             env_string = env_name
             plot_env = plot_standard_critic_q
-        plot_env(agent, env, env_string, directory, figure_name, plot, action=None)
+        plot_env(agent, env, env_string, directory, figure_name, plot, save_fig, action)
     else:
         if "cartpole" in env_name.lower():
             env_string = "CartPole"
@@ -39,7 +41,7 @@ def plot_critic(agent, env, directory, env_name, best_reward, plot=False) -> Non
         else:
             env_string = env_name
             plot_env = plot_standard_critic_v
-        plot_env(agent, env, env_string, directory, figure_name, plot)
+        plot_env(agent, env, env_string, directory, figure_name, plot, save_fig)
 
 
 def plot_pendulum_critic_v(
@@ -303,6 +305,9 @@ def plot_standard_critic_v(
     final_show(save_figure, plot, directory, figure_name, x_label, y_label, title)
 
 
+# ------------------------- q functions -------------------------------
+
+
 def plot_pendulum_critic_q(
     agent,
     env,
@@ -483,7 +488,7 @@ def plot_lunarlander_critic_q(
             obs = th.from_numpy(obs.astype(np.float32))
 
             if action is None:
-                action = th.Tensor([0])
+                action = th.Tensor([0, 0, 0])
             value = agent.predict_value(obs[0], action)
 
             portrait[definition - (1 + index_y), index_x] = value.item()
