@@ -191,7 +191,15 @@ def plot_lunarlander_policy(
         # Add a point at the center
         plt.scatter([0], [0])
         x_label, y_label = getattr(env.observation_space, "names", ["x", "y"])
-        final_show(save_figure, plot, directory, figure_name, x_label, y_label, title)
+        final_show(
+            save_figure,
+            plot,
+            directory,
+            figure_name + str(act_dim),
+            x_label,
+            y_label,
+            title,
+        )
 
 
 def plot_standard_policy(
