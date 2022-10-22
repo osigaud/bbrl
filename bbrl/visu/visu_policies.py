@@ -161,8 +161,10 @@ def plot_lunarlander_policy(
     state_min = [-1.5, -1.5, -5.0, -5.0, -3.14, -5.0, -0.0, -0.0]
     state_max = [1.5, 1.5, 5.0, 5.0, 3.14, 5.0, 1.0, 1.0]
     directory += "/policies/"
-
-    action_dim = env.action_space.shape[0]
+    if env.is_continuous_action():
+        action_dim = env.action_space.shape[0]
+    else:
+        action_dim = 0
     for act_dim in range(action_dim):
         for index_x, x in enumerate(
             np.linspace(state_min[0], state_max[0], num=definition)
