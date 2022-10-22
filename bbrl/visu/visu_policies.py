@@ -180,7 +180,10 @@ def plot_lunarlander_policy(
                     obs = np.append(obs, z)
                 obs = th.from_numpy(obs.astype(np.float32))
                 action = agent.predict_action(obs, stochastic)
-                act = action[act_dim]
+                if action_dim == 1:
+                    act = action.item()
+                else:
+                    act = action[act_dim]
 
                 portrait[definition - (1 + index_y), index_x] = act
 
