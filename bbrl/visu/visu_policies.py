@@ -160,6 +160,7 @@ def plot_lunarlander_policy(
     portrait = np.zeros((definition, definition))
     state_min = [-1.5, -1.5, -5.0, -5.0, -3.14, -5.0, -0.0, -0.0]
     state_max = [1.5, 1.5, 5.0, 5.0, 3.14, 5.0, 1.0, 1.0]
+    directory += "/policies/"
 
     action_dim = env.action_space.shape[0]
     for act_dim in range(action_dim):
@@ -191,7 +192,6 @@ def plot_lunarlander_policy(
 
         title = f"Actor dim {act_dim}"
         plt.colorbar(label="action")
-        directory += "/policies/"
         # Add a point at the center
         plt.scatter([0], [0])
         x_label, y_label = getattr(env.observation_space, "names", ["x", "y"])
@@ -199,7 +199,7 @@ def plot_lunarlander_policy(
             save_figure,
             plot,
             directory,
-            figure_name + str(act_dim) + ".png",
+            figure_name + "_" + str(act_dim) + ".png",
             x_label,
             y_label,
             title,
