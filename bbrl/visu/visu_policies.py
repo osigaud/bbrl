@@ -22,7 +22,7 @@ def plot_policy(
     else:
         plot_env = plot_standard_policy
     save_figure = True
-    figure_name = f"policy_{env_name}_{best_reward}.png"
+    figure_name = f"policy_{env_name}_{best_reward}"
     plot_env(agent, env, directory, figure_name, plot, save_figure, stochastic)
 
 
@@ -72,7 +72,9 @@ def plot_pendulum_policy(
     # Add a point at the center
     plt.scatter([0], [0])
     x_label, y_label = getattr(env.observation_space, "names", ["x", "y"])
-    final_show(save_figure, plot, directory, figure_name, x_label, y_label, title)
+    final_show(
+        save_figure, plot, directory, figure_name + ".png", x_label, y_label, title
+    )
 
 
 def plot_cartpole_policy(
@@ -130,7 +132,9 @@ def plot_cartpole_policy(
     # Add a point at the center
     plt.scatter([0], [0])
     x_label, y_label = getattr(env.observation_space, "names", ["x", "y"])
-    final_show(save_figure, plot, directory, figure_name, x_label, y_label, title)
+    final_show(
+        save_figure, plot, directory, figure_name + ".png", x_label, y_label, title
+    )
 
 
 def plot_lunarlander_policy(
@@ -158,7 +162,6 @@ def plot_lunarlander_policy(
     state_max = [1.5, 1.5, 5.0, 5.0, 3.14, 5.0, 1.0, 1.0]
 
     action_dim = env.action_space.shape[0]
-    print("action_dim", action_dim)
     for act_dim in range(action_dim):
         for index_x, x in enumerate(
             np.linspace(state_min[0], state_max[0], num=definition)
@@ -174,7 +177,6 @@ def plot_lunarlander_policy(
                     obs = np.append(obs, z)
                 obs = th.from_numpy(obs.astype(np.float32))
                 action = agent.predict_action(obs, stochastic)
-                print("action", action)
                 act = action[act_dim]
 
                 portrait[definition - (1 + index_y), index_x] = act
@@ -197,7 +199,7 @@ def plot_lunarlander_policy(
             save_figure,
             plot,
             directory,
-            figure_name + str(act_dim),
+            figure_name + str(act_dim) + ".png",
             x_label,
             y_label,
             title,
@@ -264,4 +266,6 @@ def plot_standard_policy(
     # Add a point at the center
     plt.scatter([0], [0])
     x_label, y_label = getattr(env.observation_space, "names", ["x", "y"])
-    final_show(save_figure, plot, directory, figure_name, x_label, y_label, title)
+    final_show(
+        save_figure, plot, directory, figure_name + ".png", x_label, y_label, title
+    )
