@@ -157,38 +157,41 @@ def plot_lunarlander_policy(
     state_min = [-1.5, -1.5, -5.0, -5.0, -3.14, -5.0, -0.0, -0.0]
     state_max = [1.5, 1.5, 5.0, 5.0, 3.14, 5.0, 1.0, 1.0]
 
-    for index_x, x in enumerate(
-        np.linspace(state_min[0], state_max[0], num=definition)
-    ):
-        for index_y, y in enumerate(
-            np.linspace(state_min[2], state_max[1], num=definition)
+    action_dim = env.action_space.shape[0]
+    for act_dim in range(action_dim):
+        for index_x, x in enumerate(
+            np.linspace(state_min[0], state_max[0], num=definition)
         ):
-            obs = np.array([x])
-            obs = np.append(obs, y)
-            nb = range(len(state_min) - 2)
-            for _ in nb:
-                z = random.random() - 0.5
-                obs = np.append(obs, z)
-            obs = th.from_numpy(obs.astype(np.float32))
-            action = agent.predict_action(obs, stochastic)
+            for index_y, y in enumerate(
+                np.linspace(state_min[2], state_max[1], num=definition)
+            ):
+                obs = np.array([x])
+                obs = np.append(obs, y)
+                nb = range(len(state_min) - 2)
+                for _ in nb:
+                    z = random.random() - 0.5
+                    obs = np.append(obs, z)
+                obs = th.from_numpy(obs.astype(np.float32))
+                action = agent.predict_action(obs, stochastic)
+                act = action.item()[act_dim]
 
-            portrait[definition - (1 + index_y), index_x] = action.item()
+                portrait[definition - (1 + index_y), index_x] = act
 
-    plt.figure(figsize=(10, 10))
-    plt.imshow(
-        portrait,
-        cmap="inferno",
-        extent=[state_min[0], state_max[0], state_min[2], state_max[2]],
-        aspect="auto",
-    )
+        plt.figure(figsize=(10, 10))
+        plt.imshow(
+            portrait,
+            cmap="inferno",
+            extent=[state_min[0], state_max[0], state_min[2], state_max[2]],
+            aspect="auto",
+        )
 
-    title = "Actor"
-    plt.colorbar(label="action")
-    directory += "/policies/"
-    # Add a point at the center
-    plt.scatter([0], [0])
-    x_label, y_label = getattr(env.observation_space, "names", ["x", "y"])
-    final_show(save_figure, plot, directory, figure_name, x_label, y_label, title)
+        title = f"Actor dim {act_dim}"
+        plt.colorbar(label="action")
+        directory += "/policies/"
+        # Add a point at the center
+        plt.scatter([0], [0])
+        x_label, y_label = getattr(env.observation_space, "names", ["x", "y"])
+        final_show(save_figure, plot, directory, figure_name, x_label, y_label, title)
 
 
 def plot_standard_policy(
