@@ -164,7 +164,7 @@ def plot_lunarlander_policy(
     if env.is_continuous_action():
         action_dim = env.action_space.shape[0]
     else:
-        action_dim = 0
+        action_dim = 1
     for act_dim in range(action_dim):
         for index_x, x in enumerate(
             np.linspace(state_min[0], state_max[0], num=definition)
