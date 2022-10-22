@@ -158,6 +158,7 @@ def plot_lunarlander_policy(
     state_max = [1.5, 1.5, 5.0, 5.0, 3.14, 5.0, 1.0, 1.0]
 
     action_dim = env.action_space.shape[0]
+    print("action_dim", action_dim)
     for act_dim in range(action_dim):
         for index_x, x in enumerate(
             np.linspace(state_min[0], state_max[0], num=definition)
@@ -173,7 +174,8 @@ def plot_lunarlander_policy(
                     obs = np.append(obs, z)
                 obs = th.from_numpy(obs.astype(np.float32))
                 action = agent.predict_action(obs, stochastic)
-                act = action.item()[act_dim]
+                print("action", action)
+                act = action[act_dim]
 
                 portrait[definition - (1 + index_y), index_x] = act
 
