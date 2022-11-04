@@ -8,10 +8,7 @@
 from setuptools import find_packages, setup
 
 setup(
-    name="bbrl",
     packages=[package for package in find_packages() if package.startswith("bbrl")],
-    version="0.1.6",
-    install_requires=open("requirements.txt", "r").read().splitlines(),
     tests_require=["pytest==4.4.1"],
     test_suite="tests",
     description="RL library inspired from salina",
