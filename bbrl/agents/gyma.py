@@ -260,7 +260,7 @@ class GymAgent(Agent):
         if self.is_continuous_state():
             state_dim = self.observation_space.shape[0]
         elif self.is_discrete_state():
-            state_dim = self.observation_space.n
+            state_dim = 1  # self.observation_space.n
         return state_dim, action_dim
 
 
