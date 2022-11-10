@@ -16,4 +16,6 @@ setup(
     author_email="Olivier.Sigaud@isir.upmc.fr",
     url="https://github.com/osigaud/bbrl.git",
     license="MIT",
+    use_scm_version=True,
+    setup_requires=['setuptools_scm'],
 )
