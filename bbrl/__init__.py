@@ -5,6 +5,8 @@
 # LICENSE file in the root directory of this source tree.
 #
 
+from ._version import __version__, __version_tuple__
+
 trace_workspace = False
 trace = []
 trace_maximum_size = 10000

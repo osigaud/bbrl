@@ -38,7 +38,7 @@ def play(env: gym.Env, agent: torch.nn.Module):
             while not done:
                 obs = torch.Tensor(obs)
                 action = agent.predict_action(obs, False)
-                obs, reward, done, info = env.step(action.squeeze(-1).numpy())
+                obs, reward, done, info = env.step(action.numpy())
                 sum_reward += reward
                 env.render()
     finally:
