@@ -257,8 +257,8 @@ def plot_standard_critic_v(
     :param save_figure: whether the plot should be saved into a file
     :return: nothing
     """
-    if env.observation_space.shape[0] <= 2:
-        msg = f"Observation space dim {env.observation_space.shape[0]}, should be > 2"
+    if env.observation_space.shape[0] < 2:
+        msg = f"Observation space dim {env.observation_space.shape[0]}, should be >= 2"
         raise (ValueError(msg))
     definition = 100
     portrait = np.zeros((definition, definition))
@@ -535,8 +535,8 @@ def plot_standard_critic_q(
     :param action: the action for which we want to plot the value
     :return: nothing
     """
-    if env.observation_space.shape[0] <= 2:
-        msg = f"Observation space dim {env.observation_space.shape[0]}, should be > 2"
+    if env.observation_space.shape[0] < 2:
+        msg = f"Observation space dim {env.observation_space.shape[0]}, should be >= 2"
         raise (ValueError(msg))
     definition = 100
     portrait = np.zeros((definition, definition))

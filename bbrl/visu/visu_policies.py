@@ -227,8 +227,8 @@ def plot_standard_policy(
     :param stochastic: whether one wants to plot a deterministic or stochastic policy
     :return: nothing
     """
-    if env.observation_space.shape[0] <= 2:
-        msg = f"Observation space dim {env.observation_space.shape[0]}, should be > 2"
+    if env.observation_space.shape[0] < 2:
+        msg = f"Observation space dim {env.observation_space.shape[0]}, should be >= 2"
         raise (ValueError(msg))
     definition = 100
     portrait = np.zeros((definition, definition))
@@ -244,7 +244,7 @@ def plot_standard_policy(
         np.linspace(state_min[0], state_max[0], num=definition)
     ):
         for index_y, y in enumerate(
-            np.linspace(state_min[2], state_max[1], num=definition)
+            np.linspace(state_min[1], state_max[1], num=definition)
         ):
             obs = np.array([x])
             obs = np.append(obs, y)
@@ -261,7 +261,7 @@ def plot_standard_policy(
     plt.imshow(
         portrait,
         cmap="inferno",
-        extent=[state_min[0], state_max[0], state_min[2], state_max[2]],
+        extent=[state_min[0], state_max[0], state_min[1], state_max[1]],
         aspect="auto",
     )
 
