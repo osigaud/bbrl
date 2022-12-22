@@ -105,6 +105,8 @@ There are two kinds of notebooks:
 
 - [Coding SAC](https://colab.research.google.com/drive/1EiYsRh-fbwBUnMnAimwhFVtN_CiK5Nu8?usp=sharing)
 
+- [Coding TQC](https://colab.research.google.com/drive/1Lg9_M9YwI_E6Xm1on8GY9TLYxLItTSuw?usp=sharing)
+
 ### Learning RL with `bbrl` in your favorite coding environment
 
 Have a look at the [bbrl_examples](https://github.com/osigaud/bbrl_example.git) library.
