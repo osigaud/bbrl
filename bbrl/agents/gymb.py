@@ -4,10 +4,10 @@
 
 import numpy as np
 import torch
-
+import copy
 import gym
 from bbrl.agents.agent import Agent
-
+from typing import Tuple, Union
 
 def _convert_action(action):
     if len(action.size()) == 0:
@@ -95,7 +95,6 @@ class GymAgent(Agent):
             action_string (str, optional): [the name of the action variable in the workspace]. Defaults to "action".
             output (str, optional): [the output prefix of the environment]. Defaults to "env/".
             seed (int): the seed used to initialize the environment
-            and each environment will have its own seed]. Defaults to True.
         """
         super().__init__()
         assert n_envs > 0
@@ -309,10 +308,9 @@ class AutoResetGymAgent(GymAgent):
             make_env_fn ([function that returns a gym.Env]): The function to create a single gym environments
             make_env_args (dict): The arguments of the function that creates a gym.Env
             n_envs ([int]): The number of environments to create.
+            seed (int, optional): [the seed used to initialize the environment].
             action_string (str, optional): [the name of the action variable in the workspace]. Defaults to "action".
             output (str, optional): [the output prefix of the environment]. Defaults to "env/".
-            use_seed (bool, optional): [If True, then the seed is chained to the environments,
-            and each environment will have its own seed]. Defaults to True.
         """
         super().__init__(
             make_env_fn=make_env_fn,
@@ -389,3 +387,221 @@ class NoAutoResetGymAgent(GymAgent):
             action_string=action_string,
             output=output,
         )
+
+
+# --------------------------- part added from the code of Folco Bertini and Nikola Matevski --------------------
+
+class RunningMeanStd:
+    def __init__(self, epsilon: float = 1e-4, shape: Tuple[int, ...] = ()):
+        """
+        Calulates the running mean and std of a data stream
+        https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance
+        :param epsilon: helps with arithmetic issues
+        :param shape: the shape of the data stream's output
+        """
+        self.mean = torch.zeros(shape, dtype=torch.float32)
+        self.var = torch.ones(shape, dtype=torch.float32)
+        self.count = epsilon
+        self.steps = 0
+        self.update_threshold = 4
+        self.buffer = None
+
+    def copy(self) -> "RunningMeanStd":
+        """
+        :return: Return a copy of the current object.
+        """
+        new_object = RunningMeanStd(shape=self.mean.shape)
+        new_object.mean = copy.deepcopy(self.mean)
+        new_object.var = copy.deepcopy(self.var)
+        new_object.count = float(self.count)
+        return new_object
+
+    def combine(self, other: "RunningMeanStd") -> None:
+        """
+        Combine stats from another ``RunningMeanStd`` object.
+        :param other: The other object to combine with.
+        """
+        self.update_from_moments(other.mean, other.var, other.count)
+
+    def update(self, arr: torch.Tensor) -> None:
+        self.steps += 1
+        if self.buffer is None:
+            self.buffer = copy.deepcopy(arr)
+        else:
+            self.buffer = torch.concat((self.buffer, copy.deepcopy(arr)), dim=0)
+        if self.steps > self.update_threshold:
+            batch_mean = torch.mean(self.buffer, dim=0)
+            batch_var = torch.var(self.buffer, dim=0)
+            batch_count = self.buffer.size(0)
+            self.steps = 0
+            self.buffer = None
+            self.update_from_moments(batch_mean, batch_var, batch_count)
+
+    def update_from_moments(
+        self,
+        batch_mean: torch.Tensor,
+        batch_var: torch.Tensor,
+        batch_count: Union[int, float],
+    ) -> None:
+        delta = batch_mean - self.mean
+        tot_count = self.count + batch_count
+
+        new_mean = self.mean + delta * batch_count / tot_count
+        m_a = self.var * self.count
+        m_b = batch_var * batch_count
+        m_2 = (
+            m_a
+            + m_b
+            + torch.square(delta)
+            * self.count
+            * batch_count
+            / (self.count + batch_count)
+        )
+        new_var = m_2 / (self.count + batch_count)
+
+        new_count = batch_count + self.count
+
+        self.mean = new_mean
+        self.var = new_var
+        self.count = new_count
+
+
+
+class NormalizedNoAutoResetGymAgent(NoAutoResetGymAgent):
+    """The same as AutoResetGymAgent, but normalizes observations"""
+
+    def __init__(
+        self,
+        make_env_fn=None,
+        make_env_args={},
+        n_envs=None,
+        seed=None,
+        action_string="action",
+        output="env/",
+        obs_rms=None,
+    ):
+        super().__init__(
+            make_env_fn=make_env_fn,
+            make_env_args=make_env_args,
+            n_envs=n_envs,
+            seed=seed,
+            action_string=action_string,
+            output=output,
+        )
+        self.clip_obs = 10.0
+        self.epsilon = 1e-08
+        self.obs_rms = obs_rms
+
+    def normalize_obs(self, obs: np.ndarray) -> np.ndarray:
+        """
+        Helper to normalize observation.
+        :param obs:
+        :return: normalized observation
+        """
+        obs_ = copy.deepcopy(obs)
+        obs_rms = self.obs_rms
+        return np.clip(
+            (obs_ - obs_rms.mean) / np.sqrt(obs_rms.var + self.epsilon),
+            -self.clip_obs,
+            self.clip_obs,
+        )
+
+    def _reset(self, k, save_render, render):
+        full_obs, observation = self._common_reset(k, save_render, render)
+        self.last_frame[k] = observation
+
+        full_obs["env_obs"] = self.normalize_obs(full_obs["env_obs"])
+
+        return full_obs
+
+    def _step(self, k, action, save_render, render):
+        if self.finished[k]:
+            assert k in self.last_frame
+            rew = _torch_type({"reward": torch.tensor([0.0]).float()})
+            return (
+                {
+                    **self.last_frame[k],
+                    "done": torch.tensor([True]),
+                    "truncated": torch.tensor([self.truncated[k]]),
+                    "cumulated_reward": torch.tensor(
+                        [self.cumulated_reward[k]]
+                    ).float(),
+                    "timestep": torch.tensor([self.timestep[k]]),
+                },
+                rew,
+            )
+        self.timestep[k] += 1
+        full_obs, reward, done, truncated, observation = self._make_step(
+            self.envs[k], action, k, save_render, render
+        )
+
+        self.last_frame[k] = observation
+        if done:
+            self.finished[k] = True
+            self.truncated[k] = truncated
+
+        full_obs["env_obs"] = self.normalize_obs(full_obs["env_obs"])
+
+        return full_obs, reward
+
+
+class NormalizedAutoResetGymAgent(AutoResetGymAgent):
+    """The same as AutoResetGymAgent, but normalizes observations"""
+
+    def __init__(
+        self,
+        make_env_fn=None,
+        make_env_args={},
+        n_envs=None,
+        seed=None,
+        action_string="action",
+        output="env/",
+    ):
+        super().__init__(
+            make_env_fn=make_env_fn,
+            make_env_args=make_env_args,
+            n_envs=n_envs,
+            seed=seed,
+            action_string=action_string,
+            output=output,
+        )
+        self.clip_obs = 10.0
+        self.epsilon = 1e-08
+        self.obs_rms = RunningMeanStd(shape=self.observation_space.shape)
+
+    def normalize_obs(self, obs: np.ndarray) -> np.ndarray:
+        """
+        Helper to normalize observation.
+        :param obs:
+        :return: normalized observation
+        """
+        obs_ = copy.deepcopy(obs)
+        obs_rms = self.obs_rms
+
+        return np.clip(
+            (obs_ - obs_rms.mean) / np.sqrt(obs_rms.var + self.epsilon),
+            -self.clip_obs,
+            self.clip_obs,
+        )
+
+    def _reset(self, k, save_render, render):
+        self.is_running[k] = True
+        full_obs, _ = self._common_reset(k, save_render, render)
+
+        self.obs_rms.update(full_obs["env_obs"])
+        full_obs["env_obs"] = self.normalize_obs(full_obs["env_obs"])
+        return full_obs
+
+    def _step(self, k, action, save_render, render):
+        self.timestep[k] += 1
+        full_obs, reward, done, truncated, _ = self._make_step(
+            self.envs[k], action, k, save_render, render
+        )
+        if done:
+            self.is_running[k] = False
+            self.truncated[k] = truncated
+
+        self.obs_rms.update(full_obs["env_obs"])
+        full_obs["env_obs"] = self.normalize_obs(full_obs["env_obs"])
+
+        return full_obs, reward
