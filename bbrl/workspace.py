@@ -616,8 +616,8 @@ class Workspace:
                 * Let us consider that workspace batch_size is B and time_size is T
                 * For n_times iterations:
                     * We sample a time window of size n_timesteps
-                    * We then sample a n_batch_elements elements on the batch size
-                    * =>> we obtain a worspace of size n_batch_elements x n_timesteps
+                    * We then sample n_batch_elements elements on the batch size
+                    * =>> we obtain a workspace of size n_batch_elements x n_timesteps
                 * We concatenate all the workspaces collected (over the batch dimension)
 
         Args:
