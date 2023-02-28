@@ -454,7 +454,7 @@ class Workspace:
         return workspace
 
     def select_batch_n(self, n):
-        """Return a new Workspace of batch_size==n by randomly sampling over the batch dimensions"""
+        """Return a new Workspace of batch_size n by randomly sampling over the batch dimensions"""
         who = torch.randint(low=0, high=self.batch_size(), size=(n,))
         return self.select_batch(who)
 
@@ -481,7 +481,7 @@ class Workspace:
         batch_dims: Optional[tuple[int, int]] = None,
     ) -> torch.Tensor:
         """Return workspace[var_name][from_time:to_time]"""
-        assert from_time >= 0 and to_time >= 0 and to_time > from_time
+        assert 0 <= from_time < to_time and to_time >= 0
 
         v = self.variables[var_name]
         if isinstance(v, SlicedTemporalTensor):
@@ -599,7 +599,7 @@ class Workspace:
         """
         `t` is a tensor of size `batch_size` that provides one time index for each element of the workspace.
         Then the function returns a new workspace by aggregating `window_size` timesteps starting from index `t`
-        This methods allows to sample multiple windows in the Workspace.
+        This method allows to sample multiple windows in the Workspace.
         Note that the function may be quite slow.
         """
         _vars = {k: v.get_full(batch_dims=None) for k, v in self.variables.items()}
