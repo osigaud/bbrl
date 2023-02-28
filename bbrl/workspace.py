@@ -622,7 +622,7 @@ class Workspace:
 
         Args:
             n_times ([type]): The number of sub workspaces to sample (and concatenate)
-            n_batch_elements ([type]): <=workspace.batch_size(): nb of batch elements to sample for each subworkspace
+            n_batch_elements ([type]): <=workspace.batch_size(): nb of batch elements to sample for each sub workspace
             n_timesteps ([type]): <=workspace.time_size(): the number of timesteps to keep
 
         Returns:
