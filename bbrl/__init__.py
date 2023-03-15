@@ -6,6 +6,8 @@
 #
 
 from ._version import __version__, __version_tuple__
+from .agents.agent import Agent, TimeAgent, SerializableAgent
+from .agents.seeding import SeedableAgent
 
 trace_workspace = False
 trace = []

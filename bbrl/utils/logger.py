@@ -7,7 +7,6 @@ import pickle
 import time
 
 import numpy as np
-import pandas as pd
 
 from omegaconf import DictConfig
 from torch.utils.tensorboard import SummaryWriter
@@ -242,6 +241,7 @@ class Log:
         return x, y
 
     def to_dataframe(self, with_hps=False):
+        import pandas as pd
         max_len = np.max([len(k) for v, k in self.values.items()])
         nv = {}
         for k, v in self.values.items():
@@ -381,6 +381,7 @@ class Logs:
         return len(self.logs)
 
     def to_dataframe(self):
+        import pandas as pd
         rdf = None
         for log in tqdm(self.logs):
             df = log.to_dataframe(with_hps=True)

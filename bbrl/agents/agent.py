@@ -2,8 +2,11 @@
 # LICENSE file in the root directory of this source tree.
 #
 
+from typing import Any
 import copy
 import time
+from abc import ABC
+import pickle
 
 import torch
 import torch.nn as nn
@@ -161,3 +164,80 @@ class Agent(nn.Module):
         :return: the resulting pytorch network
         """
         return torch.load(filename)
+
+
+
+class TimeAgent(Agent, ABC):
+    """
+    `TimeAgent` is used as a convention to represent agents that
+    use a time index in their `__call__` function (not mandatory)
+    """
+
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+
+    def forward(self, t: int, *args, **kwargs) -> Any:
+        raise NotImplementedError(
+            "Your TemporalAgent must override forward with a time index"
+        )
+
+
+class SerializableAgent(Agent, ABC):
+    """
+    `SerializableAgent` is used as a convention to represent agents that are serializable (not mandatory)
+    You can override the serialize method to return the agent without the attributes that are not serializable.
+    """
+
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+
+    def serialize(self) -> "SerializableAgent":
+        """
+        Return the `SerializableAgent` without the unsersializable attributes
+        """
+        try:
+            return self
+        except Exception as e:
+            raise NotImplementedError(
+                "Could not serialize your {c} SerializableAgent because of {e}\n"
+                "You have to override the serialize method".format(
+                    c=self.__class__.__name__, e=e
+                )
+            )
+
+    def save(self, filename: str) -> None:
+        """Save the agent to a file
+
+        Args:
+            filename (str): The filename to use
+        """
+        try:
+            with open(filename, "wb") as f:
+                pickle.dump(self.serialize(), f, pickle.DEFAULT_PROTOCOL)
+        except Exception as e:
+            raise Exception(
+                "Could not save agent to file {filename} because of {e} \n"
+                "Make sure to have properly overriden the serialize method.".format(
+                    filename=filename, e=e
+                )
+            )
+
+
+def load(filename: str) -> Agent:
+    """Load the agent from a file
+
+    Args:
+        filename (str): The filename to use
+
+    Returns:
+        bbrl2.Agent: The agent or a subclass of it
+    """
+    try:
+        with open(filename, "rb") as f:
+            return pickle.load(f)
+    except Exception as e:
+        raise Exception(
+            "Could not load agent from file {filename} because of {e}".format(
+                filename=filename, e=e
+            )
+        )
