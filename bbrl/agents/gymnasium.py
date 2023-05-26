@@ -208,7 +208,6 @@ class ParallelGymAgent(GymAgent):
         Args:
             make_env_fn ([function that returns a gymnasium.Env]): The function to create a single gymnasium environment
             num_envs ([int]): The number of environments to create.
-            make_env_args (dict): The arguments of the function that creates a gymnasium.Env
             input_string (str, optional): [the name of the action variable in the workspace]. Defaults to "action".
             output_string (str, optional): [the output prefix of the environment]. Defaults to "env/".
             max_episode_steps (int, optional): Max number of steps per episode. Defaults to None (never ends)
@@ -249,6 +248,12 @@ class ParallelGymAgent(GymAgent):
             )
 
     def _reset(self, k: int) -> Dict[str, Tensor]:
+        """Resets the kth environment
+
+        :param k: The environment index
+        :raises ValueError: if the returned observation is not a torch Tensor or a dict
+        :return: The first observation
+        """
         env: Env = self.envs[k]
         self.cumulated_reward[k] = 0.0
 
@@ -274,6 +279,7 @@ class ParallelGymAgent(GymAgent):
             **observation,
             "terminated": torch.tensor([False]),
             "truncated": torch.tensor([False]),
+            "done": torch.tensor([False]),
             "reward": torch.tensor([0.0]).float(),
             "cumulated_reward": torch.tensor([self.cumulated_reward[k]]),
             "timestep": torch.tensor([self._timestep[k]]),
@@ -305,6 +311,7 @@ class ParallelGymAgent(GymAgent):
             **observation,
             "terminated": torch.tensor([terminated]),
             "truncated": torch.tensor([truncated]),
+            "done": torch.tensor([truncated or terminated]),
             "reward": torch.tensor([reward]).float(),
             "cumulated_reward": torch.tensor([self.cumulated_reward[k]]),
             "timestep": torch.tensor([self._timestep[k]]),

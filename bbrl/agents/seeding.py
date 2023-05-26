@@ -19,7 +19,7 @@ class SeedableAgent(Agent, ABC):
         super().__init__(*args, **kwargs)
         self._seed = None
 
-    def seed(self, seed: int) -> None:
+    def seed(self, seed: int):
         """Provide a seed to this agent. Useful if the agent is stochastic.
 
         Args:
@@ -35,6 +35,7 @@ class SeedableAgent(Agent, ABC):
                 )
             )
         self._seed = seed
+        return self
 
 
 class SeedableAgentLast(SeedableAgent, ABC):

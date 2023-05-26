@@ -2,14 +2,13 @@
 # LICENSE file in the root directory of this source tree.
 #
 
-# import gym
 import torch
-from gym.utils import seeding
-
-# from torch.utils.data import DataLoader
-
 from bbrl.agents.agent import Agent
+from typing import Any, Optional, Tuple
+import numpy as np
 
+
+RNG = RandomNumberGenerator = np.random.Generator
 
 class ShuffledDatasetAgent(Agent):
     """An agent that read a dataset in a shuffle order, in an infinite way."""
@@ -29,8 +28,12 @@ class ShuffledDatasetAgent(Agent):
         self.ghost_params = torch.nn.Parameter(torch.randn(()))
 
     def seed(self, seed=None):
-        self.np_random, seed = seeding.np_random(seed)
-        return [seed]
+        assert not(seed is not None and not (isinstance(seed, int) and 0 <= seed)), f"Seed must be a non-negative integer or omitted, not {seed}"
+
+        seed_seq = np.random.SeedSequence(seed)
+        np_seed = seed_seq.entropy
+        self.np_random = RandomNumberGenerator(np.random.PCG64(seed_seq))
+        return [np_seed]
 
     def forward(self, **kwargs):
         """Write a batch of data at timestep==0 in the workspace"""
