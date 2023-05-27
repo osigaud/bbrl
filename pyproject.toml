@@ -16,3 +16,6 @@ requires = ["setuptools>=45", "setuptools_scm[toml]>=6.2"]
 
 [project.urls]
 repository = "https://github.com/osigaud/bbrl.git"
+
+[tool.setuptools.dynamic]
+dependencies = { file="requirements.txt" }
