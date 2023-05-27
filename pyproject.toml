@@ -1,2 +1,18 @@
+[project]
+name = "bbrl"
+license = {text = "MIT"}
+authors = [
+    { name = "Olivier Sigaud",  email = "Olivier.Sigaud@isir.upmc.fr" }
+]
+description = "RL library inspired from salina"
+dynamic = ["version", "readme", "dependencies"]
+
 [tool.setuptools_scm]
-write_to = "bbrl/_version.py"
+write_to = "src/bbrl/_version.py"
+fallback_version = "0.0.0-dev"
+
+[build-system]
+requires = ["setuptools>=45", "setuptools_scm[toml]>=6.2"]
+
+[project.urls]
+repository = "https://github.com/osigaud/bbrl.git"
