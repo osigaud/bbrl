@@ -210,7 +210,6 @@ class ParallelGymAgent(GymAgent):
             num_envs ([int]): The number of environments to create.
             input_string (str, optional): [the name of the action variable in the workspace]. Defaults to "action".
             output_string (str, optional): [the output prefix of the environment]. Defaults to "env/".
-            max_episode_steps (int, optional): Max number of steps per episode. Defaults to None (never ends)
         """
         super().__init__(*args, **kwargs)
         assert num_envs > 0, "n_envs must be > 0"
@@ -240,12 +239,6 @@ class ParallelGymAgent(GymAgent):
             if type(wrapper) == AutoResetWrapper:
                 self._is_autoreset = True
             wrapper = wrapper.env
-
-        if self._is_autoreset and self._max_episode_steps is None:
-            raise ValueError(
-                "AutoResetWrapper without max_episode_steps argument given will (probably) never"
-                "stop the GymAgent if wrapped with a TemporalAgent"
-            )
 
     def _reset(self, k: int) -> Dict[str, Tensor]:
         """Resets the kth environment

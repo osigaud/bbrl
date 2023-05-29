@@ -5,10 +5,16 @@
 import copy
 from typing import Callable, List, Union
 
-import gym
 import torch
-from gym.spaces import Box, Discrete
-from gym.wrappers import TimeLimit
+
+try:
+    from gym.spaces import Box, Discrete
+    from gym.wrappers import TimeLimit
+except ModuleNotFoundError:
+    class Box: pass
+    class Discrete: pass
+    class TimeLimit: pass
+
 from omegaconf import DictConfig
 
 from bbrl.agents.agent import Agent
@@ -35,6 +41,7 @@ def get_env_dimensions(env) -> tuple:
 
 
 def make_gym_env(max_episode_steps, env_name):
+    import gym
     return TimeLimit(gym.make(env_name), max_episode_steps=max_episode_steps)
 
 

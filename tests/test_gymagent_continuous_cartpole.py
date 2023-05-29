@@ -4,8 +4,14 @@
 import sys
 import os
 
-import gym
-import my_gym
+try:
+    import gym
+    import my_gym
+    from bbrl.agents.gymb import AutoResetGymAgent, NoAutoResetGymAgent
+    no_gym = False
+except ImportError:
+    no_gym = True
+
 import time
 
 import torch
@@ -19,7 +25,6 @@ from bbrl.workspace import Workspace
 
 from bbrl.agents.agent import Agent
 from bbrl.agents import Agents, TemporalAgent
-from bbrl.agents.gymb import AutoResetGymAgent, NoAutoResetGymAgent
 
 from bbrl.utils.chrono import Chrono
 from bbrl.utils.functional import gae

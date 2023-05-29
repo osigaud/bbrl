@@ -2,15 +2,20 @@ import sys
 import os
 
 import torch
-import gym
-import my_gym
-
 from omegaconf import DictConfig
+
+try:
+    import gym
+    import my_gym
+    from bbrl.agents.gyma import AutoResetGymAgent
+    no_gym = False
+except ImportError:
+    no_gym = True
+
 from bbrl.workspace import Workspace
 from bbrl.utils.replay_buffer import ReplayBuffer
 from bbrl.agents import Agents, TemporalAgent, PrintAgent
 from bbrl.agents.agent import Agent
-from bbrl.agents.gyma import AutoResetGymAgent
 from bbrl import get_class, get_arguments
 import hydra
 

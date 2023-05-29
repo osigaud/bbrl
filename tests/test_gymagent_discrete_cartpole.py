@@ -4,7 +4,6 @@
 import sys
 import os
 
-import gym
 import time
 
 import torch
@@ -17,7 +16,18 @@ from bbrl.workspace import Workspace
 
 from bbrl.agents.agent import Agent
 from bbrl.agents import Agents, TemporalAgent
-from bbrl.agents.gymb import AutoResetGymAgent, NoAutoResetGymAgent
+
+try:
+    import gym
+    import my_gym
+    no_gym = False
+    from bbrl.agents.gymb import AutoResetGymAgent, NoAutoResetGymAgent
+except ImportError:
+    no_gym = True
+    class AutoResetGymAgent:
+        pass
+    class NoAutoResetGymAgent:
+        pass
 
 from bbrl.utils.utils import is_vec_of_ones
 
