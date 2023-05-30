@@ -5,7 +5,7 @@ authors = [
     { name = "Olivier Sigaud",  email = "Olivier.Sigaud@isir.upmc.fr" }
 ]
 description = "RL library inspired from salina"
-dynamic = ["version", "readme", "dependencies"]
+dynamic = ["version", "readme"]
 
 [tool.setuptools_scm]
 write_to = "src/bbrl/_version.py"
@@ -16,6 +16,3 @@ requires = ["setuptools>=45", "setuptools_scm[toml]>=6.2"]
 
 [project.urls]
 repository = "https://github.com/osigaud/bbrl.git"
-
-[tool.setuptools.dynamic]
-dependencies = { file="requirements.txt" }
