@@ -1,5 +1,5 @@
 dist/
 bbrl.egg-info/
 __pycache__
-bbrl/_version.py
+src/bbrl/_version.py
 
