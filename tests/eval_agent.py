@@ -7,8 +7,12 @@ import torch
 import torch.nn as nn
 import numpy as np
 
-import gym
-import my_gym
+try:
+    import gym
+    import my_gym
+    no_gym = False
+except ImportError:
+    no_gym = True
 
 from torch.distributions.normal import Normal
 

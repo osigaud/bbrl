@@ -40,7 +40,7 @@ class SlicedTemporalTensor:
             "Incompatible size:" + str(self.size) + " vs " + str(value.size())
         )
         assert self.device == value.device, "Incompatible device"
-        assert self.dtype == value.dtype, "Incompatible type"
+        assert self.dtype == value.dtype, f"Incompatible type ({self.dtype} vs {value.dtype})"
         while len(self.tensors) <= t:
             self.tensors.append(
                 torch.zeros(*self.size, device=self.device, dtype=self.dtype)
@@ -650,7 +650,7 @@ class Workspace:
             mini_workspace = to_aggregate[0]
         return mini_workspace
 
-    def get_transitions(self) -> Workspace:
+    def get_transitions(self, no_final_state=False) -> Workspace:
         """Return a new workspace containing the transitions of the current workspace.
             Each key of the current workspace have dimensions [n_step, n_env, key_dim]
             {
@@ -672,22 +672,32 @@ class Workspace:
             key[0][3], key[1][3] = (step_2, step_3) # for env 2
             ...
 
-            Filters every transitions [step_final, step_initial]
+            Filters every transitions [step_final, step_initial] unless no_final_state is True
 
+        Parameters:
+            no_final_state: To be set to True if the workspace does not contain final states
         Returns:
             [Workspace]: The resulting workspace of transitions
         """
 
+        # Prepares the transitions
         transitions = {}
-        done = self["env/done"][:-1]
-        for key in self.keys():
-            array = self[key]
+        if no_final_state:
+            # No need to filter transitions here
+            for key in self.keys():
+                array = self[key]
+                transitions[key] = torch.stack([array[:-1], array[1:]])
+        else:
+            done = self["env/done"][:-1]
+            for key in self.keys():
+                array = self[key]
 
-            # remove transitions (s_terminal -> s_initial)
-            x = array[:-1][~done]
-            x_next = array[1:][~done]
-            transitions[key] = torch.stack([x, x_next])
+                # remove transitions (s_terminal -> s_initial)
+                x = array[:-1][~done]
+                x_next = array[1:][~done]
+                transitions[key] = torch.stack([x, x_next])
 
+        # Fill up the workspace
         workspace = Workspace()
         for k, v in transitions.items():
             workspace.set_full(k, v)

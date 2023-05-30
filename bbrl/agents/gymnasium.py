@@ -15,10 +15,11 @@ from typing import (
     Optional,
     Union,
 )
-
+import logging
 import numpy as np
 import torch
 from torch import nn, Tensor
+import gymnasium as gym
 import gymnasium.spaces as spaces
 from gymnasium import Env, Space, make
 from gymnasium.core import ActType, ObsType
@@ -91,6 +92,7 @@ def _format_frame(
             assert False
 
 
+
 def _torch_type(d: Dict[str, Tensor]) -> Dict[str, Tensor]:
     return {k: d[k].float() if torch.is_floating_point(d[k]) else d[k] for k in d}
 
@@ -111,6 +113,7 @@ class GymAgent(TimeAgent, SeedableAgent, SerializableAgent, ABC):
         input_string: str = "action",
         output_string: str = "env/",
         reward_at_t: bool = False,
+        include_last_state: bool = True,
         **kwargs,
     ):
         """Initialize the generic GymAgent
@@ -122,10 +125,14 @@ class GymAgent(TimeAgent, SeedableAgent, SerializableAgent, ABC):
         :param reward_at_t: The reward for transitioning from $s_t$ to $s_{t+1}$
             is $r_t$ if reward_at_t is True, and $r_{t+1}$ otherwise (default
             False).
+        :param include_last_state: By default (False), the final state is not
+            included when using an auto-reset environment. Setting to True allows
+            to preserve it.
         """
         super().__init__(*args, **kwargs)
 
         self.reward_at_t = reward_at_t
+        self.include_last_state = include_last_state
         self.ghost_params: nn.Parameter = nn.Parameter(torch.randn(()))
 
         self.input: str = input_string
@@ -155,13 +162,16 @@ class GymAgent(TimeAgent, SeedableAgent, SerializableAgent, ABC):
                         obs,
                     )
 
-                # Just use 0 for reward at $t$
-                if k == "reward":
-                    obs = torch.zeros_like(obs)
-            self.set(
-                (self.output + k, t),
-                obs,
-            )
+                # Just use 0 for reward at $t$ for now
+                obs = torch.zeros_like(obs)
+            try:
+                self.set(
+                    (self.output + k, t),
+                    obs,
+                )
+            except Exception:
+                logging.error("Error while setting %s", self.output + k)
+                raise
 
     def get_observation_space(self) -> Space[ObsType]:
         """Return the observation space of the environment"""
@@ -199,7 +209,6 @@ class ParallelGymAgent(GymAgent):
         self,
         make_env_fn: Callable[[Optional[Dict[str, Any]]], Env],
         num_envs: int,
-        make_env_args: Optional[Dict[str, Any]] = None,
         *args,
         **kwargs,
     ):
@@ -214,7 +223,7 @@ class ParallelGymAgent(GymAgent):
         super().__init__(*args, **kwargs)
         assert num_envs > 0, "n_envs must be > 0"
 
-        self.make_env_fn: Callable[[Optional[Dict[str, Any]]], Env] = make_env_fn
+        self.make_env_fn: Callable[[], Env] = make_env_fn
         self.num_envs: int = num_envs
 
         self.envs: List[Env] = []
@@ -222,13 +231,12 @@ class ParallelGymAgent(GymAgent):
 
         self._timestep: Tensor
         self._is_autoreset: bool = False
-        self._last_frame: Dict[int] = {}
+        self._last_frame = [None for _ in range(num_envs)]
 
-        args: Dict[str, Any] = make_env_args if make_env_args is not None else {}
         self._initialize_envs(num_envs=num_envs, make_env_args=args)
 
     def _initialize_envs(self, num_envs, make_env_args: Dict[str, Any]):
-        self.envs = [self.make_env_fn(**make_env_args) for _ in range(num_envs)]
+        self.envs = [self.make_env_fn() for _ in range(num_envs)]
         self._timestep = torch.zeros(len(self.envs), dtype=torch.long)
         self.observation_space = self.envs[0].observation_space
         self.action_space = self.envs[0].action_space
@@ -238,7 +246,65 @@ class ParallelGymAgent(GymAgent):
         while type(wrapper) is not type(unwrapped_env):
             if type(wrapper) == AutoResetWrapper:
                 self._is_autoreset = True
+            else:
+                # Do not include last state if not auto-reset
+                self.include_last_state = False
             wrapper = wrapper.env
+
+    @staticmethod
+    def _format_frame(frame):
+        observation = _format_frame(frame)
+
+        if isinstance(observation, Tensor):
+            return {"env_obs": observation}
+
+        if isinstance(observation, dict):
+            return observation
+        
+        raise ValueError(
+            f"Observation must be a torch.Tensor or a dict, not {type(observation)}"
+        )
+
+    def _format_obs(self, k: int, obs, info, *, terminated=False, truncated=False, reward=0):
+        observation: Union[Tensor, Dict[str, Tensor]] = ParallelGymAgent._format_frame(obs)
+
+        done = terminated or truncated
+
+        if done and self.include_last_state:
+            # Create a new frame to be inserted after this step,
+            # containing the first observation of the next episode
+            self._last_frame[k] = {
+                **observation,
+                "terminated": torch.tensor([False]),
+                "truncated": torch.tensor([False]),
+                "done": torch.tensor([False]),
+                "reward": torch.tensor([0]).float(),
+                "cumulated_reward": torch.tensor([0]).float(),
+                "timestep": torch.tensor([0]),
+            }
+            # Use the final observation instead
+            observation = ParallelGymAgent._format_frame(info["final_observation"])
+
+        ret: Dict[str, Tensor] = {
+            **observation,
+            "terminated": torch.tensor([terminated]),
+            "truncated": torch.tensor([truncated]),
+            "done": torch.tensor([done]),
+            "reward": torch.tensor([reward]).float(),
+            "cumulated_reward": torch.tensor([self.cumulated_reward[k]]),
+            "timestep": torch.tensor([self._timestep[k]]),
+        }
+
+        # Resets the cumulated reward and timestep
+        if done and self._is_autoreset:
+            self.cumulated_reward[k] = 0.
+            if self._is_autoreset and self.include_last_state:
+                self._timestep[k] = 0
+            else:
+                self._timestep[k] = 1
+
+        return _torch_type(ret)
+
 
     def _reset(self, k: int) -> Dict[str, Tensor]:
         """Resets the kth environment
@@ -248,69 +314,26 @@ class ParallelGymAgent(GymAgent):
         :return: The first observation
         """
         env: Env = self.envs[k]
-        self.cumulated_reward[k] = 0.0
-
-        s: int = self._timestep_from_reset * self.num_envs * self._nb_reset * self._seed
-
-        s += (k + 1) * (self._timestep[k].item() + 1 if self._is_autoreset else 1)
-
-        o, info = env.reset(seed=s)
-        observation: Union[Tensor, Dict[str, Tensor]] = _format_frame(o)
 
         self._timestep[k] = 0
+        self.cumulated_reward[k] = 0.0
 
-        if isinstance(observation, Tensor):
-            observation = {"env_obs": observation}
-        elif isinstance(observation, dict):
-            pass
-        else:
-            raise ValueError(
-                f"Observation must be a torch.Tensor or a dict, not {type(observation)}"
-            )
+        # Computes a new seed for this environment
+        s: int = self._timestep_from_reset * self.num_envs * self._nb_reset * self._seed
+        s += (k + 1) * (self._timestep[k].item() + 1 if self._is_autoreset else 1)
 
-        ret: Dict[str, Tensor] = {
-            **observation,
-            "terminated": torch.tensor([False]),
-            "truncated": torch.tensor([False]),
-            "done": torch.tensor([False]),
-            "reward": torch.tensor([0.0]).float(),
-            "cumulated_reward": torch.tensor([self.cumulated_reward[k]]),
-            "timestep": torch.tensor([self._timestep[k]]),
-        }
-        self._last_frame[k] = ret
-        return _torch_type(ret)
+        return self._format_obs(k, *env.reset(seed=s))
 
     def _step(self, k: int, action: Tensor):
         env = self.envs[k]
-        action: Union[int, np.ndarray[int]] = _convert_action(action)
 
+        action: Union[int, np.ndarray[int]] = _convert_action(action)
         obs, reward, terminated, truncated, info = env.step(action)
 
-        self.cumulated_reward[k] += reward
-        observation: Union[Tensor, Dict[str, Tensor]] = _format_frame(obs)
-
-        if isinstance(observation, Tensor):
-            observation = {"env_obs": observation}
-        elif isinstance(observation, dict):
-            pass
-        else:
-            raise ValueError(
-                f"Observation must be a torch.Tensor or a dict, not {type(observation)}"
-            )
-
         self._timestep[k] += 1
+        self.cumulated_reward[k] += reward
 
-        ret: Dict[str, Tensor] = {
-            **observation,
-            "terminated": torch.tensor([terminated]),
-            "truncated": torch.tensor([truncated]),
-            "done": torch.tensor([truncated or terminated]),
-            "reward": torch.tensor([reward]).float(),
-            "cumulated_reward": torch.tensor([self.cumulated_reward[k]]),
-            "timestep": torch.tensor([self._timestep[k]]),
-        }
-        self._last_frame[k] = ret
-        return _torch_type(ret)
+        return self._format_obs(k, obs, info, terminated=terminated, truncated=truncated, reward=reward)
 
     def forward(self, t: int = 0, **kwargs) -> None:
         """Do one step by reading the `action` at t-1
@@ -328,10 +351,13 @@ class ParallelGymAgent(GymAgent):
             assert action.size()[0] == self.num_envs, "Incompatible number of envs"
 
             for k, env in enumerate(self.envs):
-                if self._is_autoreset or not self._last_frame[k]["terminated"]:
+                if self._last_frame[k] is None:
                     observations.append(self._step(k, action[k]))
                 else:
+                    # Use last frame
                     observations.append(self._last_frame[k])
+                    self._last_frame[k] = None
+
         self.set_obs(observations=_torch_cat_dict(observations), t=t)
 
 
