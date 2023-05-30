@@ -86,7 +86,7 @@ def test_gymnasium_agent():
     assert (workspace["env/env_obs"] == torch.Tensor([0,0])).all()
 
     env(workspace, t=1)
-    assert (workspace["env/env_obs"] == torch.Tensor([[0,0], [1, 1]])).all()
+    assert (workspace["env/env_obs"] == torch.Tensor([[0,0], [1, 2]])).all()
 
 
 def check(workspace, scenarios,):

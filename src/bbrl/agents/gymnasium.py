@@ -233,9 +233,9 @@ class ParallelGymAgent(GymAgent):
         self._is_autoreset: bool = False
         self._last_frame = [None for _ in range(num_envs)]
 
-        self._initialize_envs(num_envs=num_envs, make_env_args=args)
+        self._initialize_envs(num_envs=num_envs)
 
-    def _initialize_envs(self, num_envs, make_env_args: Dict[str, Any]):
+    def _initialize_envs(self, num_envs):
         self.envs = [self.make_env_fn() for _ in range(num_envs)]
         self._timestep = torch.zeros(len(self.envs), dtype=torch.long)
         self.observation_space = self.envs[0].observation_space
@@ -246,10 +246,11 @@ class ParallelGymAgent(GymAgent):
         while type(wrapper) is not type(unwrapped_env):
             if type(wrapper) == AutoResetWrapper:
                 self._is_autoreset = True
-            else:
-                # Do not include last state if not auto-reset
-                self.include_last_state = False
             wrapper = wrapper.env
+
+        if not self._is_autoreset:
+            # Do not include last state if not auto-reset
+            self.include_last_state = False
 
     @staticmethod
     def _format_frame(frame):
