@@ -348,6 +348,7 @@ class ParallelGymAgent(GymAgent):
         if t == 0:
             for k, env in enumerate(self.envs):
                 observations.append(self._reset(k))
+                self._last_frame[k] = None
         else:
             action = self.get((self.input, t - 1))
             assert action.size()[0] == self.num_envs, "Incompatible number of envs"
