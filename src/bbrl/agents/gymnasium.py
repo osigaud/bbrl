@@ -163,7 +163,8 @@ class GymAgent(TimeAgent, SeedableAgent, SerializableAgent, ABC):
                     )
 
                 # Just use 0 for reward at $t$ for now
-                obs = torch.zeros_like(obs)
+                if k == "reward":
+                    obs = torch.zeros_like(obs)
             try:
                 self.set(
                     (self.output + k, t),
@@ -353,11 +354,18 @@ class ParallelGymAgent(GymAgent):
 
             for k, env in enumerate(self.envs):
                 if self._last_frame[k] is None:
-                    observations.append(self._step(k, action[k]))
+                    frame = self._step(k, action[k])
                 else:
                     # Use last frame
-                    observations.append(self._last_frame[k])
+                    frame = self._last_frame[k]
                     self._last_frame[k] = None
+                
+                observations.append(frame)
+
+                # Reproduce the last frame if over (but with 0 reward)
+                if not self._is_autoreset and frame["done"]:
+                    self._last_frame[k] = {key: value for key, value in frame.items()}
+                    self._last_frame[k]["reward"] = torch.Tensor([0.])
 
         self.set_obs(observations=_torch_cat_dict(observations), t=t)
 
