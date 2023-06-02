@@ -200,6 +200,18 @@ class GymAgent(TimeAgent, SeedableAgent, SerializableAgent, ABC):
             state_dim = 1  # self.observation_space.n
         return state_dim, action_dim
 
+    def is_continuous_action(self):
+        return isinstance(self.action_space, gym.spaces.Box)
+
+    def is_discrete_action(self):
+        return isinstance(self.action_space, gym.spaces.Discrete)
+
+    def is_continuous_state(self):
+        return isinstance(self.observation_space, gym.spaces.Box)
+
+    def is_discrete_state(self):
+        return isinstance(self.observation_space, gym.spaces.Discrete)
+
 class ParallelGymAgent(GymAgent):
     """Create an Agent from a gymnasium environment
 
