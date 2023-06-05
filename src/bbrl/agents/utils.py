@@ -154,7 +154,16 @@ class PrintAgent(Agent):
         if self.names == ():
             self.names = self.workspace.keys()
         for n in self.names:
-            print(n, " = ", self.get((n, t)))
+            try:
+                value = self.get((n, t))
+                print(n, " = ", value)
+            except KeyError as e:
+                print("Be sure to:")
+                print(" — use the correct variable name / time step / workspace")
+                print(" — your print agent is called after the variable is written by another agent at the same time step")
+                if t == 0:
+                    print(f" — if you use r_t representation, your key {n} is not yet written at time t=0")
+                raise KeyError("Variable ", n, " not found", e)
 
 
 class EpisodesDone(Agent):
