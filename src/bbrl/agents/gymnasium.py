@@ -25,8 +25,10 @@ from gymnasium import Env, Space, make
 from gymnasium.core import ActType, ObsType
 from gymnasium.vector import VectorEnv
 from gymnasium.wrappers import AutoResetWrapper
+from gymnasium.wrappers.monitoring.video_recorder import VideoRecorder
 
-from bbrl import SeedableAgent, SerializableAgent, TimeAgent
+from bbrl import SeedableAgent, SerializableAgent, TimeAgent, Agent
+from bbrl.workspace import Workspace
 
 
 def make_env(env_name, autoreset=False, **kwargs):
@@ -42,6 +44,32 @@ def make_env(env_name, autoreset=False, **kwargs):
     if autoreset:
         env = AutoResetWrapper(env)
     return env
+
+def record_video(env: Env, agent: Agent, path: str):
+    """Record a video for a given gymnasium environment and a BBRL agent
+
+    :param env: The environment (created with `render_mode="rgb_array"`)
+    :param agent: The BBRL agent
+    :param path: The path of the video
+    """
+    with torch.no_grad():
+        workspace = Workspace()
+        obs, _ = env.reset()
+        workspace.set("env/env_obs", 0, torch.Tensor(obs).unsqueeze(0))
+        t = 0
+        done = False
+        video_recorder = VideoRecorder(env, path, enabled=True)
+        video_recorder.capture_frame()
+
+        while not done:
+            agent(t=0, workspace=workspace)
+            action = workspace.get("action", 0).squeeze(0).numpy()
+            obs, reward, terminated, truncated, info = env.step(action)
+            video_recorder.capture_frame()
+            done = terminated or truncated
+            t += 1
+            
+        video_recorder.close()
 
 def _convert_action(action: Tensor) -> Union[int, np.ndarray]:
     if len(action.size()) == 0:
