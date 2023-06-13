@@ -5,7 +5,6 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 #
-import copy
 from abc import ABC
 from typing import (
     Any,
@@ -34,16 +33,18 @@ from bbrl.workspace import Workspace
 def make_env(env_name, autoreset=False, **kwargs):
     """Utility function to create an environment
 
-    Other parameters are forwarded to the gymnasium `make` 
+    Other parameters are forwarded to the gymnasium `make`
 
     :param env_name: The environment name
-    :param autoreset: if True, wrap the environment into an AutoResetWrapper, defaults to False
+    :param autoreset: if True, wrap the environment into an AutoResetWrapper,
+        defaults to False
     """
 
     env = make(env_name, **kwargs)
     if autoreset:
         env = AutoResetWrapper(env)
     return env
+
 
 def record_video(env: Env, agent: Agent, path: str):
     """Record a video for a given gymnasium environment and a BBRL agent
@@ -62,14 +63,16 @@ def record_video(env: Env, agent: Agent, path: str):
         video_recorder.capture_frame()
 
         while not done:
-            agent(t=0, workspace=workspace)
-            action = workspace.get("action", 0).squeeze(0).numpy()
+            workspace.set("env/env_obs", t, torch.Tensor(obs).unsqueeze(0))
+            agent(t=t, workspace=workspace)
+            action = workspace.get("action", t).squeeze(0).numpy()
             obs, reward, terminated, truncated, info = env.step(action)
             video_recorder.capture_frame()
             done = terminated or truncated
             t += 1
-            
+
         video_recorder.close()
+
 
 def _convert_action(action: Tensor) -> Union[int, np.ndarray]:
     if len(action.size()) == 0:
@@ -118,7 +121,6 @@ def _format_frame(
             return o
         except TypeError:
             assert False
-
 
 
 def _torch_type(d: Dict[str, Tensor]) -> Dict[str, Tensor]:
@@ -186,7 +188,7 @@ class GymAgent(TimeAgent, SeedableAgent, SerializableAgent, ABC):
             if self.reward_at_t and k in ["reward", "cumulated_reward"]:
                 if t > 0:
                     self.set(
-                        (self.output + k, t-1),
+                        (self.output + k, t - 1),
                         obs,
                     )
 
@@ -220,7 +222,7 @@ class GymAgent(TimeAgent, SeedableAgent, SerializableAgent, ABC):
             action_dim = self.action_space.shape[0]
         elif isinstance(self.action_space, spaces.Discrete):
             action_dim = self.action_space.n
-        
+
         state_dim = 0
         if isinstance(self.observation_space, spaces.Box):
             state_dim = self.observation_space.shape[0]
@@ -240,10 +242,12 @@ class GymAgent(TimeAgent, SeedableAgent, SerializableAgent, ABC):
     def is_discrete_state(self):
         return isinstance(self.observation_space, gym.spaces.Discrete)
 
+
 class ParallelGymAgent(GymAgent):
     """Create an Agent from a gymnasium environment
 
-    To create an auto-reset ParallelGymAgent, use the gymnasium `AutoResetWrapper` in the make_env_fn
+    To create an auto-reset ParallelGymAgent, use the gymnasium
+    `AutoResetWrapper` in the make_env_fn
     """
 
     def __init__(
@@ -256,10 +260,12 @@ class ParallelGymAgent(GymAgent):
         """Create an agent from a Gymnasium environment
 
         Args:
-            make_env_fn ([function that returns a gymnasium.Env]): The function to create a single gymnasium environment
-            num_envs ([int]): The number of environments to create.
-            input_string (str, optional): [the name of the action variable in the workspace]. Defaults to "action".
-            output_string (str, optional): [the output prefix of the environment]. Defaults to "env/".
+            make_env_fn ([function that returns a gymnasium.Env]): The function
+            to create a single gymnasium environment num_envs ([int]): The
+            number of environments to create. input_string (str, optional): [the
+            name of the action variable in the workspace]. Defaults to "action".
+            output_string (str, optional): [the output prefix of the
+            environment]. Defaults to "env/".
         """
         super().__init__(*args, **kwargs)
         assert num_envs > 0, "n_envs must be > 0"
@@ -302,13 +308,17 @@ class ParallelGymAgent(GymAgent):
 
         if isinstance(observation, dict):
             return observation
-        
+
         raise ValueError(
             f"Observation must be a torch.Tensor or a dict, not {type(observation)}"
         )
 
-    def _format_obs(self, k: int, obs, info, *, terminated=False, truncated=False, reward=0):
-        observation: Union[Tensor, Dict[str, Tensor]] = ParallelGymAgent._format_frame(obs)
+    def _format_obs(
+        self, k: int, obs, info, *, terminated=False, truncated=False, reward=0
+    ):
+        observation: Union[Tensor, Dict[str, Tensor]] = ParallelGymAgent._format_frame(
+            obs
+        )
 
         done = terminated or truncated
 
@@ -339,7 +349,7 @@ class ParallelGymAgent(GymAgent):
 
         # Resets the cumulated reward and timestep
         if done and self._is_autoreset:
-            self.cumulated_reward[k] = 0.
+            self.cumulated_reward[k] = 0.0
             if self._is_autoreset and self.include_last_state:
                 self._timestep[k] = 0
             else:
@@ -347,12 +357,12 @@ class ParallelGymAgent(GymAgent):
 
         return _torch_type(ret)
 
-
     def _reset(self, k: int) -> Dict[str, Tensor]:
         """Resets the kth environment
 
         :param k: The environment index
-        :raises ValueError: if the returned observation is not a torch Tensor or a dict
+        :raises ValueError: if the returned observation is not a torch Tensor or
+            a dict
         :return: The first observation
         """
         env: Env = self.envs[k]
@@ -375,7 +385,9 @@ class ParallelGymAgent(GymAgent):
         self._timestep[k] += 1
         self.cumulated_reward[k] += reward
 
-        return self._format_obs(k, obs, info, terminated=terminated, truncated=truncated, reward=reward)
+        return self._format_obs(
+            k, obs, info, terminated=terminated, truncated=truncated, reward=reward
+        )
 
     def forward(self, t: int = 0, **kwargs) -> None:
         """Do one step by reading the `action` at t-1
@@ -400,23 +412,24 @@ class ParallelGymAgent(GymAgent):
                     # Use last frame
                     frame = self._last_frame[k]
                     self._last_frame[k] = None
-                
+
                 observations.append(frame)
 
                 # Reproduce the last frame if over (but with 0 reward)
                 if not self._is_autoreset and frame["done"]:
                     self._last_frame[k] = {key: value for key, value in frame.items()}
-                    self._last_frame[k]["reward"] = torch.Tensor([0.])
+                    self._last_frame[k]["reward"] = torch.Tensor([0.0])
 
         self.set_obs(observations=_torch_cat_dict(observations), t=t)
 
 
 class VecGymAgent(GymAgent):
     """Multi-process
-    
+
     Use gymnasium VecEnv for multi-process support
     This constrains the environment to be of the auto-reset "type"
     """
+
     def __init__(
         self,
         make_envs_fn: Callable[[Optional[Dict[str, Any]]], VectorEnv],
@@ -471,4 +484,3 @@ class VecGymAgent(GymAgent):
             "cumulated_reward": self.cumulated_reward,
         }
         self.set_obs(observations=ret, t=t)
-
