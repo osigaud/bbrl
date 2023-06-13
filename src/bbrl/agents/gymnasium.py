@@ -20,7 +20,7 @@ import torch
 from torch import nn, Tensor
 import gymnasium as gym
 import gymnasium.spaces as spaces
-from gymnasium import Env, Space, make
+from gymnasium import Env, Space, Wrapper, make
 from gymnasium.core import ActType, ObsType
 from gymnasium.vector import VectorEnv
 from gymnasium.wrappers import AutoResetWrapper
@@ -288,12 +288,11 @@ class ParallelGymAgent(GymAgent):
         self.observation_space = self.envs[0].observation_space
         self.action_space = self.envs[0].action_space
 
-        unwrapped_env = self.envs[0].unwrapped
-        wrapper = self.envs[0]
-        while type(wrapper) is not type(unwrapped_env):
-            if type(wrapper) == AutoResetWrapper:
-                self._is_autoreset = True
-            wrapper = wrapper.env
+        # Check if we have an autoreset wrapper somewhere
+        _env = self.envs[0]
+        while isinstance(_env, Wrapper) and not self._is_autoreset:
+            self._is_autoreset = isinstance(_env, AutoResetWrapper)
+            _env = _env.env
 
         if not self._is_autoreset:
             # Do not include last state if not auto-reset

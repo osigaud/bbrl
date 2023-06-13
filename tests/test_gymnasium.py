@@ -177,7 +177,7 @@ add_scenarios(False, False, [
 
 @pytest.mark.parametrize("autoreset,include_last_state,reward_at_t,scenarios", SCENARIOS)
 def test_gymnasium_autoreset(autoreset, include_last_state, reward_at_t, scenarios):
-    make_env_fn = (lambda: AutoResetWrapper(MyEnv())) if autoreset else (lambda: MyEnv())
+    make_env_fn = (lambda: gym.Wrapper(AutoResetWrapper(MyEnv()))) if autoreset else (lambda: MyEnv())
 
     n_steps = len(scenarios[0]["action"])
 
