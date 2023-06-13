@@ -64,7 +64,7 @@ Link to the paper: [SaLinA: Sequential Learning of Agents](https://arxiv.org/abs
 
 * * The replay buffer was rejecting samples that did not fit inside when the number of added samples was beyond the limit. This has been corrected to implement the standard FIFO behavior of replay buffer.
 
-* * When using an AutoResetGymAgent and no replay buffer, transitions from an episode to the next were considered as standard steps in an episode. We added a mechanism to properly filter them out, using an additional `get_transitions()` function in the Workspace class.
+* * When using autoreset=True and no replay buffer, transitions from an episode to the next were considered as standard steps in an episode. We added a mechanism to properly filter them out, using an additional `get_transitions()` function in the Workspace class.
 
 ### Starting with notebooks
 
@@ -78,9 +78,9 @@ There are two kinds of notebooks:
 
 - Getting started: The [BBRL model](https://colab.research.google.com/drive/1_yp-JKkxh_P8Yhctulqm0IrLbE41oK1p?usp=sharing)
 
-- Explanations about the [NoAutoResetGymAgent](https://colab.research.google.com/drive/1EX5O03mmWFp9wCL_Gb_-p08JktfiL2l5?usp=sharing)
+- Explanations about using [autoreset=False](https://colab.research.google.com/drive/1EX5O03mmWFp9wCL_Gb_-p08JktfiL2l5?usp=sharing)
 
-- Explanations about the [AutoResetGymAgent](https://colab.research.google.com/drive/1W9Y-3fa6LsPeR6cBC1vgwBjKfgMwZvP5?usp=sharing)
+- Explanations about using [autoreset=True](https://colab.research.google.com/drive/1W9Y-3fa6LsPeR6cBC1vgwBjKfgMwZvP5?usp=sharing)
 
 - [Different Reward Indexing Schemes](https://colab.research.google.com/drive/1Cld72_FBA1aMS2U4EsyV3LGZIlQC_PsC?usp=sharing)
 
@@ -94,11 +94,11 @@ Most of the notebooks below can be run under jupyter notebook as well as under G
 
 - [Building a simple Neural RL agent in interaction with a gym environment](https://colab.research.google.com/drive/1Ui481r47fNHCQsQfKwdoNEVrEiqAEokh?usp=sharing)
 
-- [Coding DQN using a NoAutoResetGymAgent](http://master-dac.isir.upmc.fr/rld/rl/03-1-dqn-introduction.student.ipynb)
+- [Coding DQN using autoreset=False](http://master-dac.isir.upmc.fr/rld/rl/03-1-dqn-introduction.student.ipynb)
 
-- [Coding DQN using an AutoResetGymAgent](http://master-dac.isir.upmc.fr/rld/rl/03-2-dqn-full.student.ipynb)
+- [Coding DQN using autoreset=True](http://master-dac.isir.upmc.fr/rld/rl/03-2-dqn-full.student.ipynb)
 
-- [Coding DPPG and TD3 using an AutoResetGymAgent](http://master-dac.isir.upmc.fr/rld/rl/04-ddpg-td3.student.ipynb)
+- [Coding DPPG and TD3 using autoreset=True](http://master-dac.isir.upmc.fr/rld/rl/04-ddpg-td3.student.ipynb)
 
 - [Coding basic Policy Gradient algorithms and REINFORCE](http://master-dac.isir.upmc.fr/rld/rl/05-reinforce.student.ipynb)
 
