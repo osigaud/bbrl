@@ -38,6 +38,9 @@ Link to the paper: [SaLinA: Sequential Learning of Agents](https://arxiv.org/abs
 
 ## News
 
+* May-June 2022:
+* * Integrated the use of gymnasium. Turned google colab notebooks into colab compatible jupyter notebooks. Refactored all the notebooks. 
+
 * August 2022:
 * * Major updates of the notebook-based documentation
 
@@ -85,25 +88,29 @@ There are two kinds of notebooks:
 
 #### Coding your first RL algorithms with BBRL
 
+Most of the notebooks below can be run under jupyter notebook as well as under Google colaboratory. In any case, download it on your disk and run it with your favorite notebook environment.
+
 - [A simple agent-environment interaction code](https://colab.research.google.com/drive/1gSdkOBPkIQi_my9TtwJ-qWZQS0b2X7jt?usp=sharing)
 
 - [Building a simple Neural RL agent in interaction with a gym environment](https://colab.research.google.com/drive/1Ui481r47fNHCQsQfKwdoNEVrEiqAEokh?usp=sharing)
 
-- [Coding DQN using a NoAutoResetGymAgent](https://colab.research.google.com/drive/1raeuB6uUVUpl-4PLArtiAoGnXj0sGjSV?usp=sharing)
+- [Coding DQN using a NoAutoResetGymAgent](http://master-dac.isir.upmc.fr/rld/rl/03-1-dqn-introduction.student.ipynb)
 
-- [Coding DQN using an AutoResetGymAgent](https://colab.research.google.com/drive/1H9_gkenmb_APnbygme1oEdhqMLSDc_bM?usp=sharing)
+- [Coding DQN using an AutoResetGymAgent](http://master-dac.isir.upmc.fr/rld/rl/03-2-dqn-full.student.ipynb)
 
-- [Coding DPPG and TD3 using an AutoResetGymAgent](https://colab.research.google.com/drive/1APBtDiaFwQHKE2rfTZioGfDM8C41e7Il?usp=sharing)
+- [Coding DPPG and TD3 using an AutoResetGymAgent](http://master-dac.isir.upmc.fr/rld/rl/04-ddpg-td3.student.ipynb)
 
-- [Coding basic Policy Gradient algorithms and REINFORCE](https://colab.research.google.com/drive/1alYfNRLQAsx0Kn4lOndy-aNaK1Oznd0Y?usp=sharing)
+- [Coding basic Policy Gradient algorithms and REINFORCE](http://master-dac.isir.upmc.fr/rld/rl/05-reinforce.student.ipynb)
 
-- [A basic version of the A2C algorithm](https://colab.research.google.com/drive/1yAQlrShysj4Q9EBpYM8pBsp2aXInhP7x?usp=sharing)
+- [A basic version of the A2C algorithm](http://master-dac.isir.upmc.fr/rld/rl/06-1-a2c_basic.student.ipynb)
 
-- [A more advanced version of the A2C algorithm](https://colab.research.google.com/drive/1C_mgKSTvFEF04qNc_Ljj0cZPucTJDFlO?usp=sharing) dealing with discrete and continuous actions.
+- [A more advanced version of the A2C algorithm](http://master-dac.isir.upmc.fr/rld/rl/06-2-a2c_advanced.student.ipynb)
 
-- [Coding PPO](https://colab.research.google.com/drive/1KTxeRA3e0Npxa8Fa9y1OMcJCeQa41o_N?usp=sharing)
+- [The clip version of PPO](http://master-dac.isir.upmc.fr/rld/rl/07-1-ppo_clip.student.ipynb)
 
-- [Coding SAC](https://colab.research.google.com/drive/1EiYsRh-fbwBUnMnAimwhFVtN_CiK5Nu8?usp=sharing)
+- [The KL penalty version of PPO](http://master-dac.isir.upmc.fr/rld/rl/07-2-ppo_penalty.student.ipynb)
+
+- [Coding SAC](http://master-dac.isir.upmc.fr/rld/rl/08-sac.student.ipynb)
 
 - [Coding TQC](https://colab.research.google.com/drive/1Lg9_M9YwI_E6Xm1on8GY9TLYxLItTSuw?usp=sharing)
 
