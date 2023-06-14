@@ -452,8 +452,8 @@ class VecGymAgent(GymAgent):
         if t == 0:
             s: int = self._seed * self._nb_reset
             obs, infos = self.envs.reset(seed=s)
-            termination = torch.tensor([False] * self.envs.num_envs)
-            truncation = torch.tensor([False] * self.envs.num_envs)
+            terminated = torch.tensor([False] * self.envs.num_envs)
+            truncated = torch.tensor([False] * self.envs.num_envs)
             rewards = torch.tensor([0.0] * self.envs.num_envs)
             self.cumulated_reward = torch.zeros(self.envs.num_envs)
         else:
@@ -462,12 +462,12 @@ class VecGymAgent(GymAgent):
                 action.size()[0] == self.envs.num_envs
             ), "Incompatible number of actions"
             converted_action: Union[int, np.ndarray[int]] = _convert_action(action)
-            obs, rewards, termination, truncation, infos = self.envs.step(
+            obs, rewards, terminated, truncated, infos = self.envs.step(
                 converted_action
             )
             rewards = torch.tensor(rewards).float()
-            termination = torch.tensor(termination)
-            truncation = torch.tensor(truncation)
+            terminated = torch.tensor(terminated)
+            truncated = torch.tensor(truncated)
             self.cumulated_reward = self.cumulated_reward + rewards
 
         observation: Union[Tensor, Dict[str, Tensor]] = _format_frame(obs)
@@ -477,8 +477,9 @@ class VecGymAgent(GymAgent):
 
         ret: Dict[str, Tensor] = {
             "env_obs": observation.squeeze(0),
-            "terminated": termination,
-            "truncated": truncation,
+            "terminated": terminated,
+            "truncated": truncated,
+            "done": terminated or truncated,
             "reward": rewards,
             "cumulated_reward": self.cumulated_reward,
         }
