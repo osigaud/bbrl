@@ -6,6 +6,7 @@
 # LICENSE file in the root directory of this source tree.
 #
 from abc import ABC
+from pathlib import Path
 from typing import (
     Any,
     Callable,
@@ -53,6 +54,10 @@ def record_video(env: Env, agent: Agent, path: str):
     :param agent: The BBRL agent
     :param path: The path of the video
     """
+
+    # Creates the containing folder if needed
+    Path(path).parent.mkdir(exist_ok=True, parents=True)
+
     with torch.no_grad():
         workspace = Workspace()
         obs, _ = env.reset()
