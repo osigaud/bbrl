@@ -38,7 +38,7 @@ Link to the paper: [SaLinA: Sequential Learning of Agents](https://arxiv.org/abs
 
 ## News
 
-* May-June 2022:
+* May-June 2023:
 * * Integrated the use of gymnasium. Turned google colab notebooks into colab compatible jupyter notebooks. Refactored all the notebooks. 
 
 * August 2022:
@@ -106,9 +106,9 @@ Most of the notebooks below can be run under jupyter notebook as well as under G
 
 - [A more advanced version of the A2C algorithm](http://master-dac.isir.upmc.fr/rld/rl/06-2-a2c_advanced.student.ipynb)
 
-- [The clip version of PPO](http://master-dac.isir.upmc.fr/rld/rl/07-1-ppo_clip.student.ipynb)
+- [The KL penalty version of PPO](http://master-dac.isir.upmc.fr/rld/rl/07-1-ppo_penalty.student.ipynb)
 
-- [The KL penalty version of PPO](http://master-dac.isir.upmc.fr/rld/rl/07-2-ppo_penalty.student.ipynb)
+- [The clipped version of PPO](http://master-dac.isir.upmc.fr/rld/rl/07-2-ppo_clip.student.ipynb)
 
 - [Coding SAC](http://master-dac.isir.upmc.fr/rld/rl/08-sac.student.ipynb)
 
@@ -128,7 +128,7 @@ See [contributing](CONTRIBUTING.md)
 
 ## Dependencies
 
-`bbrl` utilizes `pytorch`, `hydra` for configuring experiments, and `gym` for reinforcement learning algorithms.
+`bbrl` utilizes `pytorch`, `hydra` for configuring experiments, and `gym` or `gymnasium` for reinforcement learning algorithms.
 
 ## License
 
