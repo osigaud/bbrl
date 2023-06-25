@@ -14,7 +14,7 @@ from bbrl.workspace import Workspace
 from bbrl.agents.gymnasium import ParallelGymAgent, make_env
 from gymnasium.wrappers import AutoResetWrapper
 
-class TestEnv(gym.Env):
+class MyEnv(gym.Env):
     """Simple test environment
     
     action 1: 0 -> 1 -> 2
@@ -25,6 +25,7 @@ class TestEnv(gym.Env):
     MOVES = {
         0: [2, 1],
         1: [0, 2],
+        2: [2, 2]
     }
     TARGET = 2
 
@@ -32,7 +33,7 @@ class TestEnv(gym.Env):
         self._max_steps = 5
         self.observation_space = spaces.Dict(
             {
-                "env_obs": spaces.Box(0, len(TestEnv.MOVES), shape=(1,), dtype=int),
+                "env_obs": spaces.Box(0, len(MyEnv.MOVES), shape=(1,), dtype=int),
             }
         )
 
@@ -52,11 +53,11 @@ class TestEnv(gym.Env):
 
     def step(self, action):
         # Move
-        self._agent_location = TestEnv.MOVES[self._agent_location][action]
+        self._agent_location = MyEnv.MOVES[self._agent_location][action]
         self._step += 1
 
         # An episode is done iff the agent has reached the target
-        terminated = self._agent_location == TestEnv.TARGET
+        terminated = self._agent_location == MyEnv.TARGET
         reward = 5 if terminated else -1
         observation = self._get_obs()
         info = self._get_info()
@@ -75,7 +76,7 @@ class ActorAgent(Agent):
 
 # TODO: VecGymAgent
 def test_gymnasium_agent():
-    make_env_fn = TestEnv
+    make_env_fn = MyEnv
 
     env = ParallelGymAgent(make_env_fn, 2)
     actor = ActorAgent([1, 1], [0, 1])
@@ -97,7 +98,7 @@ def check(workspace, scenarios,):
 
 SCENARIOS = []
     
-def add_scenarios(include_last_state, scenarios: List[Dict]):
+def add_scenarios(autoreset, include_last_state, scenarios: List[Dict]):
     # Check
     n_steps = None
     for ix, scenario in enumerate(scenarios):
@@ -107,7 +108,7 @@ def add_scenarios(include_last_state, scenarios: List[Dict]):
             else:
                 assert len(value) == n_steps
 
-        SCENARIOS.append([include_last_state, False, copy.deepcopy(scenarios)])
+        SCENARIOS.append([autoreset, include_last_state, False, copy.deepcopy(scenarios)])
 
         _scenarios = copy.deepcopy(scenarios)
         for scenario in _scenarios:
@@ -116,16 +117,16 @@ def add_scenarios(include_last_state, scenarios: List[Dict]):
             for reward, done in zip(scenario["env/reward"], scenario["env/done"]):
                 cumulated_reward += reward
                 scenario["env/cumulated_reward"].append(cumulated_reward)
-                if done:
+                if done and autoreset:
                     cumulated_reward = 0
 
             scenario["env/reward"] = scenario["env/reward"][1:] 
             scenario["env/reward"].append(0)
             scenario["env/cumulated_reward"] = scenario["env/cumulated_reward"][1:] 
-            scenario["env/cumulated_reward"].append(0)
-        SCENARIOS.append([include_last_state, True, _scenarios])
+            scenario["env/cumulated_reward"].append(scenario["env/cumulated_reward"][-1])
+        SCENARIOS.append([autoreset, include_last_state, True, _scenarios])
 
-add_scenarios(False, [
+add_scenarios(True, False, [
     # 0,2 / 0,1,2 / 0
     {
         "env/env_obs": [0, 0, 1, 0],
@@ -137,7 +138,7 @@ add_scenarios(False, [
     }
 ])
 
-add_scenarios(True, [
+add_scenarios(True, True, [
     # 0,2 / 0,1,2 / 0
     {
         "env/env_obs": [0, 2, 0, 1, 2, 0],
@@ -150,7 +151,7 @@ add_scenarios(True, [
 ])
 
 # Time-out
-add_scenarios(False, [
+add_scenarios(True, False, [
     {
         "env/env_obs": [0, 1, 0, 1, 0, 0],
         "action":      [1, 0, 1, 0, 1, 0],
@@ -161,9 +162,22 @@ add_scenarios(False, [
     }
 ])
 
-@pytest.mark.parametrize("include_last_state,reward_at_t,scenarios", SCENARIOS)
-def test_gymnasium_autoreset(include_last_state, reward_at_t, scenarios):
-    make_env_fn = lambda: AutoResetWrapper(TestEnv())
+# No autoreset
+add_scenarios(False, False, [
+    {
+        "env/env_obs": [0, 1, 2, 2],
+        "action":      [1, 1, 1, 1],
+        "env/done": [False, False, True, True],
+        "env/terminated": [False, False, True, True],
+        "env/truncated": [False, False, False, False],
+        "env/reward": [0, -1, 5, 0],
+    }
+])
+
+
+@pytest.mark.parametrize("autoreset,include_last_state,reward_at_t,scenarios", SCENARIOS)
+def test_gymnasium_autoreset(autoreset, include_last_state, reward_at_t, scenarios):
+    make_env_fn = (lambda: gym.Wrapper(AutoResetWrapper(MyEnv()))) if autoreset else (lambda: MyEnv())
 
     n_steps = len(scenarios[0]["action"])
 

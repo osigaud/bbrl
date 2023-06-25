@@ -686,7 +686,9 @@ class Workspace:
             # No need to filter transitions here
             for key in self.keys():
                 array = self[key]
-                transitions[key] = torch.stack([array[:-1], array[1:]])
+                x = array[:-1].view(-1, *array.shape[2:])
+                x_next = array[1:].view(-1, *array.shape[2:])
+                transitions[key] = torch.stack([x, x_next])
         else:
             done = self["env/done"][:-1]
             for key in self.keys():
