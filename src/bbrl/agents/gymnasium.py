@@ -13,6 +13,7 @@ from typing import (
     Dict,
     List,
     Optional,
+    Protocol,
     Union,
 )
 import logging
@@ -198,6 +199,10 @@ class GymAgent(TimeAgent, SeedableAgent, SerializableAgent, ABC):
         elif isinstance(self.observation_space, spaces.Discrete):
             state_dim = 1  # self.observation_space.n
         return state_dim, action_dim
+
+
+class EnvFactory(Protocol):
+    def __call__(self, Dict[str, Any])
 
 class ParallelGymAgent(GymAgent):
     """Create an Agent from a gymnasium environment
