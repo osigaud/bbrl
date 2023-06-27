@@ -32,21 +32,26 @@ from bbrl import SeedableAgent, SerializableAgent, TimeAgent, Agent
 from bbrl.workspace import Workspace
 
 
-def make_env(env_name, autoreset=False, **kwargs):
+def make_env(env_name, autoreset=False, wrappers: List=[], **kwargs):
     """Utility function to create an environment
 
     Other parameters are forwarded to the gymnasium `make`
 
     :param env_name: The environment name
+    :param wrappers: Wrappers applied to the base environment **in the order
+        they are provided**: that is, if wrappers=[W1, W2], the environment
+        (before the optional auto-wrapping) will be W2(W1(base_env))
     :param autoreset: if True, wrap the environment into an AutoResetWrapper,
         defaults to False
     """
 
     env = make(env_name, **kwargs)
+    for wrapper in wrappers:
+        env = wrapper(env)
+
     if autoreset:
         env = AutoResetWrapper(env)
     return env
-
 
 def record_video(env: Env, agent: Agent, path: str):
     """Record a video for a given gymnasium environment and a BBRL agent
