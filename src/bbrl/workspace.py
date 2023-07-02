@@ -60,7 +60,7 @@ class SlicedTemporalTensor:
         assert (
             batch_dims is None
         ), "Unable to use batch dimensions with SlicedTemporalTensor"
-        assert t < len(self.tensors), f"Temporal index out of bounds: {t}"
+        assert t < len(self.tensors), f"Temporal index out of bounds: {t} vs {len(self.tensors)}"
         return self.tensors[t]
 
     def get_full(self, batch_dims):
@@ -164,7 +164,7 @@ class CompactTemporalTensor:
         assert self.size[1:] == value.size(), "Incompatible size"
         assert self.device == value.device, "Incompatible device"
         assert self.dtype == value.dtype, "Incompatible type"
-        assert t < self.tensor.size()[0], "Temporal index out of bounds"
+        assert t < self.tensor.size()[0], "Temporal index out of bounds: {t} vs {self.tensor.size()[0]}"
         if batch_dims is None:
             self.tensor[t] = value
         else:
@@ -188,7 +188,7 @@ class CompactTemporalTensor:
         return CompactTemporalTensor(t)
 
     def get(self, t, batch_dims):
-        assert t < self.tensor.size()[0], f"Temporal index out of bounds: {t}"
+        assert t < self.tensor.size()[0], f"Temporal index out of bounds: {t} vs {self.tensor.size()[0]}"
         if batch_dims is None:
             return self.tensor[t]
         else:
