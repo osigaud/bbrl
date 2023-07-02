@@ -39,7 +39,7 @@ class SlicedTemporalTensor:
         assert self.size == value.size(), (
             "Incompatible size:" + str(self.size) + " vs " + str(value.size())
         )
-        assert self.device == value.device, "Incompatible device"
+        assert self.device == value.device, "Incompatible device:" + str(self.device)
         assert self.dtype == value.dtype, f"Incompatible type ({self.dtype} vs {value.dtype})"
         while len(self.tensors) <= t:
             self.tensors.append(
@@ -60,7 +60,7 @@ class SlicedTemporalTensor:
         assert (
             batch_dims is None
         ), "Unable to use batch dimensions with SlicedTemporalTensor"
-        assert t < len(self.tensors), "Temporal index out of bounds"
+        assert t < len(self.tensors), f"Temporal index out of bounds: {t}"
         return self.tensors[t]
 
     def get_full(self, batch_dims):
@@ -159,7 +159,7 @@ class CompactTemporalTensor:
             self.dtype = value.dtype
 
     def set(self, t, value, batch_dims):
-        assert False
+        assert False, "Should not be used"
         assert self.tensor is not None, "Tensor must be initialized"
         assert self.size[1:] == value.size(), "Incompatible size"
         assert self.device == value.device, "Incompatible device"
@@ -188,7 +188,7 @@ class CompactTemporalTensor:
         return CompactTemporalTensor(t)
 
     def get(self, t, batch_dims):
-        assert t < self.tensor.size()[0], "Temporal index out of bounds"
+        assert t < self.tensor.size()[0], f"Temporal index out of bounds: {t}"
         if batch_dims is None:
             return self.tensor[t]
         else:
@@ -252,7 +252,7 @@ class CompactSharedTensor:
             self.tensor[t, batch_dims[0] : batch_dims[1]] = value.detach()
 
     def get(self, t, batch_dims):
-        assert t < self.tensor.size()[0], "Temporal index out of bounds"
+        assert t < self.tensor.size()[0], f"Temporal index out of bounds: {t}, {self.tensor.size()[0]}"
         if batch_dims is None:
             return self.tensor[t]
         else:
@@ -353,7 +353,7 @@ class Workspace:
         self, var_name: str, t: int, batch_dims: Optional[tuple[int, int]] = None
     ) -> torch.Tensor:
         """Get the variable var_name at time t"""
-        assert var_name in self.variables, "Unknown variable '" + var_name + "'"
+        assert var_name in self.variables, f"Unknown variable: {var_name}"
         return self.variables[var_name].get(t, batch_dims=batch_dims)
 
     def clear(self, name=None):
@@ -392,7 +392,7 @@ class Workspace:
     ) -> torch.Tensor:
         """Return the complete tensor for var_name"""
         assert var_name in self.variables, (
-            "[Workspace.get_full] unknown variable '" + var_name + "'"
+            f"[Workspace.get_full] unknown variable: {var_name}"
         )
         return self.variables[var_name].get_full(batch_dims=batch_dims)
 
@@ -425,7 +425,7 @@ class Workspace:
         for k, v in self.variables.items():
             if _ts is None:
                 _ts = v.time_size()
-            assert _ts == v.time_size(), "Variables must have the same time size"
+            assert _ts == v.time_size(), f"Variables must have the same time size: {_ts} vs {v.time_size()}"
         return _ts
 
     def batch_size(self) -> int:
@@ -434,7 +434,7 @@ class Workspace:
         for k, v in self.variables.items():
             if _bs is None:
                 _bs = v.batch_size()
-            assert _bs == v.batch_size(), "Variables must have the same batch size"
+            assert _bs == v.batch_size(), f"Variables must have the same batch size: {_bs} vs {v.batch_size()}"
         return _bs
 
     def select_batch(self, batch_indexes: torch.LongTensor) -> Workspace:
@@ -445,7 +445,7 @@ class Workspace:
         for k, v in self.variables.items():
             if _bs is None:
                 _bs = v.batch_size()
-            assert _bs == v.batch_size(), "Variables must have the same batch size"
+            assert _bs == v.batch_size(), f"Variables must have the same batch size: {_bs} vs {v.batch_size()}"
 
         workspace = Workspace()
         for k, v in self.variables.items():
@@ -506,7 +506,7 @@ class Workspace:
         for w in workspaces:
             if ts is None:
                 ts = w.time_size()
-            assert ts == w.time_size(), "Workspaces must have the same time size"
+            assert ts == w.time_size(), f"Workspaces must have the same time size: {ts} vs {w.time_size()}"
 
         workspace = Workspace()
         for k in workspaces[0].keys():
@@ -523,10 +523,7 @@ class Workspace:
                 if _ts is None:
                     _ts = v.time_size()
                 assert _ts == v.time_size(), (
-                    "Variables must have the same time size: "
-                    + str(_ts)
-                    + " vs "
-                    + str(v.time_size())
+                    f"Variables must have the same time size: {_ts} vs {v.time_size()}"
                 )
 
         for k, v in self.variables.items():
