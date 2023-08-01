@@ -21,16 +21,19 @@ We propose a list of agents to reuse (see Documentation in the code)
 * NoAutoResetGymAgent: The same as the GymAgent
 
 ## brax_wrapper
+
 * AutoResetBraxAgent: An agent based on a BRAX environment with autoreset
 * NoAutoResetBraxAgent: An agent based on a BRAX environment without autoreset
 
 ## dataloader
+
 * ShuffledDatasetAgent: An agent to read random batches in a torch.utils.data.Dataset
 * DataLoaderAgent: An agent to do one pass over a complete dataset (based on a DataLoader)
 
 ## asynchronous
 
-* AsynchronousAgent: it is used to execute any agent asynchronously, the agent creating its own workspace at each execution
+* AsynchronousAgent: it is used to execute any agent asynchronously, the agent creating its own workspace at each
+  execution
 
 1. `agent=AsynchronousAgent(my_agent)`
 2. `agent(**execution_arguments)` (not workspace provided)

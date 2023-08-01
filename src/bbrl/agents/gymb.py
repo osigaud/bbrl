@@ -9,6 +9,7 @@ import gym
 from bbrl.agents.agent import Agent
 from typing import Tuple, Union
 
+
 def _convert_action(action):
     if len(action.size()) == 0:
         action = action.item()
@@ -391,6 +392,7 @@ class NoAutoResetGymAgent(GymAgent):
 
 # --------------------------- part added from the code of Folco Bertini and Nikola Matevski --------------------
 
+
 class RunningMeanStd:
     def __init__(self, epsilon: float = 1e-4, shape: Tuple[int, ...] = ()):
         """
@@ -464,7 +466,6 @@ class RunningMeanStd:
         self.mean = new_mean
         self.var = new_var
         self.count = new_count
-
 
 
 class NormalizedNoAutoResetGymAgent(NoAutoResetGymAgent):

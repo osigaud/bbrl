@@ -9,6 +9,7 @@ from abc import ABC
 
 from bbrl import Agent
 
+
 class SeedableAgent(Agent, ABC):
     """
     `SeedableAgent` is used as a convention to represent agents that

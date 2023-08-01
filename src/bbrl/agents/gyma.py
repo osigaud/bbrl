@@ -308,7 +308,9 @@ class AutoResetGymAgent(GymAgent):
 
     def _step(self, k, action, save_render, render):
         self.timestep[k] += 1
-        ret, done, truncated, _ = self._make_step(self.envs[k], action, k, save_render, render)
+        ret, done, truncated, _ = self._make_step(
+            self.envs[k], action, k, save_render, render
+        )
         if done:
             self.is_running[k] = False
             self.truncated[k] = truncated
@@ -353,7 +355,9 @@ class NoAutoResetGymAgent(GymAgent):
             output=output,
         )
 
+
 # --------------------------- part added from the code of Folco Bertini and Nikola Matevski --------------------
+
 
 class RunningMeanStd:
     def __init__(self, epsilon: float = 1e-4, shape: Tuple[int, ...] = ()):
@@ -506,6 +510,7 @@ class NormalizedNoAutoResetGymAgent(NoAutoResetGymAgent):
 
         ret["env_obs"] = self.normalize_obs(ret["env_obs"])
         return ret
+
 
 # not checked
 class NormalizedAutoResetGymAgent(AutoResetGymAgent):

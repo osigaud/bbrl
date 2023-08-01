@@ -11,9 +11,16 @@ try:
     from gym.spaces import Box, Discrete
     from gym.wrappers import TimeLimit
 except ModuleNotFoundError:
-    class Box: pass
-    class Discrete: pass
-    class TimeLimit: pass
+
+    class Box:
+        pass
+
+    class Discrete:
+        pass
+
+    class TimeLimit:
+        pass
+
 
 from omegaconf import DictConfig
 
@@ -42,6 +49,7 @@ def get_env_dimensions(env) -> tuple:
 
 def make_gym_env(max_episode_steps, env_name):
     import gym
+
     return TimeLimit(gym.make(env_name), max_episode_steps=max_episode_steps)
 
 
@@ -73,6 +81,7 @@ def set_value_with_key_path(nested_dict: DictConfig, key_path: str, value):
 
 
 # Salina additions ####
+
 
 # need to check if this function works well using cuda
 def vector_to_parameters(vec: torch.Tensor, parameters) -> None:

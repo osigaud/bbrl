@@ -32,7 +32,7 @@ from bbrl import SeedableAgent, SerializableAgent, TimeAgent, Agent
 from bbrl.workspace import Workspace
 
 
-def make_env(env_name, autoreset=False, wrappers: List=[], **kwargs):
+def make_env(env_name, autoreset=False, wrappers: List = [], **kwargs):
     """Utility function to create an environment
 
     Other parameters are forwarded to the gymnasium `make`
@@ -52,6 +52,7 @@ def make_env(env_name, autoreset=False, wrappers: List=[], **kwargs):
     if autoreset:
         env = AutoResetWrapper(env)
     return env
+
 
 def record_video(env: Env, agent: Agent, path: str):
     """Record a video for a given gymnasium environment and a BBRL agent

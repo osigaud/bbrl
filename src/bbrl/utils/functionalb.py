@@ -78,7 +78,6 @@ def gae(critic, reward, must_bootstrap, discount_factor, gae_coef):
 def compute_reinforce_loss(
     reward, action_probabilities, baseline, action, done, discount_factor
 ):
-
     batch_size = reward.size()[1]
 
     # Find the first occurrence of done for each element in the batch

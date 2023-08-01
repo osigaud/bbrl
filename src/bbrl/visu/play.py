@@ -3,14 +3,15 @@ import re
 import gym
 import torch
 
+
 def load_agent(path: Path, prefix: str):
     """Loads an agent in the given folder with the highest reward
-    
+
     Agent files should have the pattern '{prefix}_REWARD.agt'
     """
-    argmax_r, max_r = None, float('-inf')
+    argmax_r, max_r = None, float("-inf")
     for p in path.glob(f"{prefix}*.agt"):
-        m = re.match(fr".*/{prefix}(-?\d+\.\d+)\.agt", str(p))
+        m = re.match(rf".*/{prefix}(-?\d+\.\d+)\.agt", str(p))
         r = float(m.group(1))
         if r > max_r:
             max_r = r
@@ -21,14 +22,15 @@ def load_agent(path: Path, prefix: str):
         return torch.load(argmax_r)
     return None
 
+
 def play(env: gym.Env, agent: torch.nn.Module):
     """Render the agent"""
     if agent is None:
         print("No agent")
         return
 
-    sum_reward = 0.
-    
+    sum_reward = 0.0
+
     try:
         print(agent)
         with torch.no_grad():

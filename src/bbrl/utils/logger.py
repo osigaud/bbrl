@@ -242,6 +242,7 @@ class Log:
 
     def to_dataframe(self, with_hps=False):
         import pandas as pd
+
         max_len = np.max([len(k) for v, k in self.values.items()])
         nv = {}
         for k, v in self.values.items():
@@ -382,6 +383,7 @@ class Logs:
 
     def to_dataframe(self):
         import pandas as pd
+
         rdf = None
         for log in tqdm(self.logs):
             df = log.to_dataframe(with_hps=True)
@@ -468,7 +470,6 @@ def get_directories(directory, use_bz2=True):
 
 
 def read_directories(directories, use_bz2=True):
-
     logs = Logs()
     for dirpath in directories:
         log = read_log(dirpath, use_bz2)

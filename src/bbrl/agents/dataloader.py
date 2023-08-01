@@ -10,6 +10,7 @@ import numpy as np
 
 RNG = RandomNumberGenerator = np.random.Generator
 
+
 class ShuffledDatasetAgent(Agent):
     """An agent that read a dataset in a shuffle order, in an infinite way."""
 
@@ -28,7 +29,9 @@ class ShuffledDatasetAgent(Agent):
         self.ghost_params = torch.nn.Parameter(torch.randn(()))
 
     def seed(self, seed=None):
-        assert not(seed is not None and not (isinstance(seed, int) and 0 <= seed)), f"Seed must be a non-negative integer or omitted, not {seed}"
+        assert not (
+            seed is not None and not (isinstance(seed, int) and 0 <= seed)
+        ), f"Seed must be a non-negative integer or omitted, not {seed}"
 
         seed_seq = np.random.SeedSequence(seed)
         np_seed = seed_seq.entropy

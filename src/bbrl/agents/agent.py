@@ -166,7 +166,6 @@ class Agent(nn.Module):
         return torch.load(filename)
 
 
-
 class TimeAgent(Agent, ABC):
     """
     `TimeAgent` is used as a convention to represent agents that
