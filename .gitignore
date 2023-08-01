@@ -3,3 +3,5 @@ bbrl.egg-info/
 __pycache__
 src/bbrl/_version.py
 
+/build
+/.idea
