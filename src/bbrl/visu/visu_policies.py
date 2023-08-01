@@ -2,275 +2,113 @@
 # LICENSE file in the root directory of this source tree.
 #
 import random
+from typing import Union
 
 import matplotlib.pyplot as plt
 import numpy as np
-import torch as th
+import torch
+from gymnasium.spaces import flatdim
 
+from bbrl import Agent
+from bbrl.agents.gymnasium import GymAgent
 from bbrl.visu.common import final_show
+from bbrl.workspace import Workspace
 
 
 def plot_policy(
-    agent, env, directory, env_name, best_reward, plot=False, stochastic=False
-):
-    if "cartpole" in env_name.lower():
-        plot_env = plot_cartpole_policy
-    elif "pendulum" in env_name.lower():
-        plot_env = plot_pendulum_policy
-    elif "lunarlander" in env_name.lower():
-        plot_env = plot_lunarlander_policy
-    else:
-        plot_env = plot_standard_policy
-    save_figure = True
-    figure_name = f"policy_{env_name}_{best_reward}"
-    plot_env(agent, env, directory, figure_name, plot, save_figure, stochastic)
-
-
-def plot_pendulum_policy(
-    agent, env, directory, figure_name, plot=True, save_figure=True, stochastic=None
-):
+    actor: Agent,
+    env: GymAgent,
+    best_reward,
+    directory: str,
+    env_name: Union[str, None] = None,
+    plot: bool = False,
+    save_fig: bool = True,
+    definition: int = 100,
+    var_name_obs: str = "env/env_obs",
+    var_name_action: str = "action",
+) -> None:
     """
-    Plot an agent for the Pendulum environment
-    :param agent: the policy specifying the action to be plotted
-    :param env: the evaluation environment
-    :param figure_name: the name of the file to save the figure
-    :param directory: the path to the file to save the figure
-    :param plot: whether the plot should be interactive
-    :param save_figure: whether the figure should be saved
-    :param stochastic: whether one wants to plot a deterministic or stochastic policy
-    :return: nothing
+    Plot the policy of the agent
+    :param Agent actor: the agent
+    :param GymAgent env: the environment
+    :param Tensor best_reward: the best reward
+    :param str directory: the directory to save the figure
+    :param str env_name: the name of the environment
+    :param bool plot: if True, plot the figure
+    :param bool save_fig: if True, save the figure
+    :param int definition: the definition of the plot
+    :param str var_name_obs: the name of the observation variable red by the agent
+    :param str var_name_action: the name of the action variable written by the agent
+    :return: None
     """
-    if env.observation_space.shape[0] <= 2:
-        msg = f"Observation space dim {env.observation_space.shape[0]}, should be > 2"
-        raise (ValueError(msg))
-    definition = 100
-    portrait = np.zeros((definition, definition))
-    state_min = env.observation_space.low
-    state_max = env.observation_space.high
+    if env_name is None:
+        env_name = env.envs[0].unwrapped.spec.id
 
-    for index_t, t in enumerate(np.linspace(-np.pi, np.pi, num=definition)):
-        for index_td, td in enumerate(
-            np.linspace(state_min[2], state_max[2], num=definition)
-        ):
-            obs = np.array([[np.cos(t), np.sin(t), td]])
-            obs = th.from_numpy(obs.astype(np.float32))
-            action = agent.predict_action(obs, stochastic)
+    assert (
+        len(env.observation_space.shape) == 1
+    ), "Nested observation space not supported"
 
-            portrait[definition - (1 + index_td), index_t] = action.item()
-
-    plt.figure(figsize=(10, 10))
-    plt.imshow(
-        portrait,
-        cmap="inferno",
-        extent=[-np.pi, np.pi, state_min[2], state_max[2]],
-        aspect="auto",
-    )
-
-    title = "Pendulum Actor"
-    plt.colorbar(label="action")
-    directory += "/pendulum_policies/"
-    # Add a point at the center
-    plt.scatter([0], [0])
-    x_label, y_label = getattr(env.observation_space, "names", ["x", "y"])
-    final_show(
-        save_figure, plot, directory, figure_name + ".png", x_label, y_label, title
-    )
-
-
-def plot_cartpole_policy(
-    agent, env, directory, figure_name, plot=True, save_figure=True, stochastic=None
-):
-    """
-    Visualization of a policy in a N-dimensional state space
-    The N-dimensional state space is projected into its first two dimensions.
-    A FeatureInverter wrapper should be used to select which features to put first to plot them
-    :param agent: the policy agent to be plotted
-    :param env: the environment
-    :param figure_name: the name of the file to save the figure
-    :param directory: the path to the file to save the figure
-    :param plot: whether the plot should be interactive
-    :param save_figure: whether the figure should be saved
-    :param stochastic: whether one wants to plot a deterministic or stochastic policy
-    :return: nothing
-    """
-    if env.observation_space.shape[0] <= 2:
-        msg = f"Observation space dim {env.observation_space.shape[0]}, should be > 2"
-        raise (ValueError(msg))
-    definition = 100
-    portrait = np.zeros((definition, definition))
-    state_min = env.observation_space.low
-    state_max = env.observation_space.high
-
-    for index_x, x in enumerate(
-        np.linspace(state_min[0], state_max[0], num=definition)
-    ):
-        for index_y, y in enumerate(
-            np.linspace(state_min[2], state_max[2], num=definition)
-        ):
-            obs = np.array([x])
-            z1 = random.random() - 0.5
-            z2 = random.random() - 0.5
-            obs = np.append(obs, z1)
-            obs = np.append(obs, y)
-            obs = np.append(obs, z2)
-            obs = th.from_numpy(obs.astype(np.float32))
-            action = agent.predict_action(obs, stochastic)
-
-            portrait[definition - (1 + index_y), index_x] = action.item()
-
-    plt.figure(figsize=(10, 10))
-    plt.imshow(
-        portrait,
-        cmap="inferno",
-        extent=[state_min[0], state_max[0], state_min[2], state_max[2]],
-        aspect="auto",
-    )
-
-    title = "Cartpole Actor"
-    plt.colorbar(label="action")
-    directory += "/cartpole_policies/"
-    # Add a point at the center
-    plt.scatter([0], [0])
-    x_label, y_label = getattr(env.observation_space, "names", ["x", "y"])
-    final_show(
-        save_figure, plot, directory, figure_name + ".png", x_label, y_label, title
-    )
-
-
-def plot_lunarlander_policy(
-    agent, env, directory, figure_name, plot=True, save_figure=True, stochastic=None
-):
-    """
-    Visualization of a policy in a N-dimensional state space
-    The N-dimensional state space is projected into its first two dimensions.
-    A FeatureInverter wrapper should be used to select which features to put first to plot them
-    :param agent: the policy agent to be plotted
-    :param env: the environment
-    :param figure_name: the name of the file to save the figure
-    :param directory: the path to the file to save the figure
-    :param plot: whether the plot should be interactive
-    :param save_figure: whether the figure should be saved
-    :param stochastic: whether one wants to plot a deterministic or stochastic policy
-    :return: nothing
-    """
-    if env.observation_space.shape[0] <= 2:
-        msg = f"Observation space dim {env.observation_space.shape[0]}, should be > 2"
-        raise (ValueError(msg))
-    definition = 100
-    portrait = np.zeros((definition, definition))
-    state_min = [-1.5, -1.5, -5.0, -5.0, -3.14, -5.0, -0.0, -0.0]
-    state_max = [1.5, 1.5, 5.0, 5.0, 3.14, 5.0, 1.0, 1.0]
-    directory += "/policies/"
-    if env.is_continuous_action():
-        action_dim = env.action_space.shape[0]
-    else:
-        action_dim = 1
-    for act_dim in range(action_dim):
-        for index_x, x in enumerate(
-            np.linspace(state_min[0], state_max[0], num=definition)
-        ):
-            for index_y, y in enumerate(
-                np.linspace(state_min[2], state_max[1], num=definition)
-            ):
-                obs = np.array([x])
-                obs = np.append(obs, y)
-                nb = range(len(state_min) - 2)
-                for _ in nb:
-                    z = random.random() - 0.5
-                    obs = np.append(obs, z)
-                obs = th.from_numpy(obs.astype(np.float32))
-                action = agent.predict_action(obs, stochastic)
-                if action_dim == 1:
-                    act = action.item()
-                else:
-                    act = action[act_dim]
-
-                portrait[definition - (1 + index_y), index_x] = act
-
-        plt.figure(figsize=(10, 10))
-        plt.imshow(
-            portrait,
-            cmap="inferno",
-            extent=[state_min[0], state_max[0], state_min[2], state_max[2]],
-            aspect="auto",
-        )
-
-        title = f"Actor dim {act_dim}"
-        plt.colorbar(label="action")
-        # Add a point at the center
-        plt.scatter([0], [0])
-        x_label, y_label = getattr(env.observation_space, "names", ["x", "y"])
-        final_show(
-            save_figure,
-            plot,
-            directory,
-            figure_name + "_" + str(act_dim) + ".png",
-            x_label,
-            y_label,
-            title,
-        )
-
-
-def plot_standard_policy(
-    agent, env, directory, figure_name, plot=True, save_figure=True, stochastic=None
-):
-    """
-    Visualization of a policy in a N-dimensional state space
-    The N-dimensional state space is projected into its first two dimensions.
-    A FeatureInverter wrapper should be used to select which features to put first to plot them
-    :param agent: the policy agent to be plotted
-    :param env: the environment
-    :param figure_name: the name of the file to save the figure
-    :param directory: the path to the file to save the figure
-    :param plot: whether the plot should be interactive
-    :param save_figure: whether the figure should be saved
-    :param stochastic: whether one wants to plot a deterministic or stochastic policy
-    :return: nothing
-    """
     if env.observation_space.shape[0] < 2:
         msg = f"Observation space dim {env.observation_space.shape[0]}, should be >= 2"
         raise (ValueError(msg))
-    definition = 100
-    portrait = np.zeros((definition, definition))
+
     state_min = env.observation_space.low
     state_max = env.observation_space.high
+
     for i in range(len(state_min)):
         if state_min[i] == -np.inf:
             state_min[i] = -1e20
         if state_max[i] == np.inf:
             state_max[i] = 1e20
 
-    for index_x, x in enumerate(
-        np.linspace(state_min[0], state_max[0], num=definition)
-    ):
+    workspace = Workspace()
+
+    action_dim = flatdim(env.action_space)
+
+    all_obs = []
+    for index_x, x in enumerate(np.linspace(state_min[0], state_max[0], definition)):
         for index_y, y in enumerate(
-            np.linspace(state_min[1], state_max[1], num=definition)
+            np.linspace(state_min[1], state_max[1], definition)
         ):
-            obs = np.array([x])
-            obs = np.append(obs, y)
-            nb = range(len(state_min) - 2)
-            for _ in nb:
-                z = random.random() - 0.5
-                obs = np.append(obs, z)
-            obs = th.from_numpy(obs.astype(np.float32))
-            action = agent.predict_action(obs, stochastic)
+            # create possible states to observe
+            obs = [x, y]
+            for i in range(2, env.observation_space.shape[0]):
+                # TODO: generate randomness around mean
+                z = random.uniform(state_min[i], state_max[i])
+                obs.append(z)
+            all_obs.append(obs)
+    all_obs = torch.tensor([all_obs], dtype=torch.float32)
 
-            portrait[definition - (1 + index_y), index_x] = action.item()
+    workspace.set_full(var_name_obs, all_obs, batch_dims=None)
 
-    plt.figure(figsize=(10, 10))
-    plt.imshow(
-        portrait,
-        cmap="inferno",
-        extent=[state_min[0], state_max[0], state_min[1], state_max[1]],
-        aspect="auto",
+    # predictions ici de l'action selon la policy
+    actor(workspace, t=0)
+
+    # récupération des actions dans le workspace
+    portrait = (
+        workspace.get_full(var_name_action)
+        .reshape(definition, definition, action_dim)
+        .detach()
+        .numpy()
     )
 
-    title = "Actor"
-    plt.colorbar(label="action")
-    directory += "/policies/"
-    # Add a point at the center
-    plt.scatter([0], [0])
-    x_label, y_label = getattr(env.observation_space, "names", ["x", "y"])
-    final_show(
-        save_figure, plot, directory, figure_name + ".png", x_label, y_label, title
-    )
+    for dim in range(action_dim):
+        portrait = portrait[:, :, dim]
+
+        plt.figure(figsize=(10, 10))
+        plt.imshow(
+            portrait,
+            cmap="inferno",
+            extent=[state_min[0], state_max[0], state_min[1], state_max[1]],
+            aspect="auto",
+        )
+
+        figure_name: str = f"policy_{env_name}_dim_{dim}_{best_reward}.png"
+
+        title = "{} Actor (action dim: {})".format(env_name, dim)
+        plt.colorbar(label="action")
+        directory += "/policies/"
+        # Add a point at the center
+        plt.scatter([0], [0])
+        x_label, y_label = getattr(env.observation_space, "names", ["x", "y"])
+        final_show(save_fig, plot, directory, figure_name, x_label, y_label, title)

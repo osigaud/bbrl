@@ -1,587 +1,132 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 #
-import random
+
+import warnings
+from typing import Union
 
 import matplotlib.pyplot as plt
 import numpy as np
-import torch as th
+import torch
+from gymnasium import Space
+from gymnasium.core import ActType
 
+from bbrl import Agent
+from bbrl.agents.gymnasium import GymAgent
 from bbrl.visu.common import final_show
+from bbrl.workspace import Workspace
 
 
 def plot_critic(
-    agent, env, directory, env_name, best_reward, plot=False, save_fig=True, action=None
+    agent: Agent,
+    env: GymAgent,
+    best_reward,
+    directory: str,
+    env_name: Union[str, None] = None,
+    plot: bool = False,
+    save_fig: bool = True,
+    definition: int = 100,
+    action=None,
+    var_name_obs: str = "env/env_obs",
+    var_name_action: str = "action",
+    var_name_q_val: str = "q_values",
 ) -> None:
-    figure_name = f"critic_{env_name}_{best_reward}.png"
+    """
+    Plot the critic of an agent
+    :param Agent agent: the agent
+    :param GymAgent env: the environment
+    :param Tensor best_reward: the best reward
+    :param str directory: the directory to save the figure
+    :param str env_name: the name of the environment
+    :param bool plot: if True, plot the figure
+    :param bool save_fig: if True, save the figure
+    :param int definition: the definition of the plot
+    :param ActType action: the action to use if the agent is a q function
+    :param str var_name_obs: the name of the observation variable
+    :param str var_name_action: the name of the action variable
+    :param str var_name_q_val: the name of the q value variable
+    :return: None
+    """
+
+    if env_name is None:
+        env_name = env.envs[0].unwrapped.spec.id
+
+    figure_name: str = f"critic_{env_name}_{best_reward}.png"
+
+    if not agent.is_q_function and action is not None:
+        warnings.warn("action is ignored for non q function agent")
+    if agent.is_q_function and action is None:
+        warnings.warn("action is None for q function agent, using random action")
+
     if agent.is_q_function:
-        if "cartpole" in env_name.lower():
-            env_string = "CartPole"
-            plot_env = plot_cartpole_critic_q
-        elif "pendulum" in env_name.lower():
-            env_string = "Pendulum"
-            plot_env = plot_pendulum_critic_q
-        elif "lunarlander" in env_name.lower():
-            env_string = "LunarLander"
-            plot_env = plot_lunarlander_critic_q
-        else:
-            env_string = env_name
-            plot_env = plot_standard_critic_q
-        plot_env(agent, env, env_string, directory, figure_name, plot, save_fig, action)
-    else:
-        if "cartpole" in env_name.lower():
-            env_string = "CartPole"
-            plot_env = plot_cartpole_critic_v
-        elif "pendulum" in env_name.lower():
-            env_string = "Pendulum"
-            plot_env = plot_pendulum_critic_v
-        elif "lunarlander" in env_name.lower():
-            env_string = "LunarLander"
-            plot_env = plot_lunarlander_critic_v
-        else:
-            env_string = env_name
-            plot_env = plot_standard_critic_v
-        plot_env(agent, env, env_string, directory, figure_name, plot, save_fig)
+        action_space: Space[ActType] = env.get_action_space()
+        if action is None:
+            action = action_space.sample()
 
+    assert (
+        len(env.observation_space.shape) == 1
+    ), "Nested observation space not supported"
 
-def plot_pendulum_critic_v(
-    agent,
-    env,
-    env_string,
-    directory,
-    figure_name,
-    plot=True,
-    save_figure=True,
-    stochastic=None,
-):
-    """
-    Plot a critic for the Pendulum environment
-    :param agent: the critic agent to be plotted
-    :param env: the evaluation environment
-    :param env_string: the name of the environment
-    :param plot: whether the plot should be interactive
-    :param directory: the directory where to save the figure
-    :param figure_name: the name of the file to save the figure
-    :param save_figure: whether the figure should be saved
-    :param stochastic: whether we plot the deterministic or stochastic version
-    :return: nothing
-    """
-    if env.observation_space.shape[0] <= 2:
-        msg = f"Observation space dim {env.observation_space.shape[0]}, should be > 2"
-        raise (ValueError(msg))
-    definition = 100
-    portrait = np.zeros((definition, definition))
-    state_min = env.observation_space.low
-    state_max = env.observation_space.high
-
-    for index_t, t in enumerate(np.linspace(-np.pi, np.pi, num=definition)):
-        for index_td, td in enumerate(
-            np.linspace(state_min[2], state_max[2], num=definition)
-        ):
-            obs = np.array([[np.cos(t), np.sin(t), td]])
-            obs = th.from_numpy(obs.astype(np.float32))
-
-            value = agent.model(obs).squeeze(-1)
-
-            portrait[definition - (1 + index_td), index_t] = value.item()
-
-    plt.figure(figsize=(10, 10))
-    plt.imshow(
-        portrait,
-        cmap="inferno",
-        extent=[-180, 180, state_min[2], state_max[2]],
-        aspect="auto",
-    )
-
-    directory += "/" + env_string + "_critics/"
-    title = env_string + " Critic"
-    plt.colorbar(label="critic value")
-
-    # Add a point at the center
-    plt.scatter([0], [0])
-    x_label, y_label = getattr(env.observation_space, "names", ["x", "y"])
-    final_show(save_figure, plot, directory, figure_name, x_label, y_label, title)
-
-
-def plot_cartpole_critic_v(
-    agent,
-    env,
-    env_string,
-    directory,
-    figure_name,
-    plot=True,
-    save_figure=True,
-    stochastic=None,
-):
-    """
-    Visualization of the critic in a N-dimensional state space
-    The N-dimensional state space is projected into its first two dimensions.
-    A FeatureInverter wrapper should be used to select which features to put first to plot them
-    :param agent: the critic agent to be plotted
-    :param env: the environment
-    :param env_string: the name of the environment
-    :param plot: whether the plot should be interactive
-    :param directory: the directory where to save the figure
-    :param figure_name: the name of the file where to plot the function
-    :param save_figure: whether the plot should be saved into a file
-    :param stochastic: whether we plot the deterministic or stochastic version
-    :return: nothing
-    """
-    if env.observation_space.shape[0] <= 2:
-        msg = f"Observation space dim {env.observation_space.shape[0]}, should be > 2"
-        raise (ValueError(msg))
-    definition = 100
-    portrait = np.zeros((definition, definition))
-    state_min = env.observation_space.low
-    state_max = env.observation_space.high
-
-    for index_x, x in enumerate(
-        np.linspace(state_min[0], state_max[0], num=definition)
-    ):
-        for index_y, y in enumerate(
-            np.linspace(state_min[2], state_max[2], num=definition)
-        ):
-            obs = np.array([x])
-            z1 = random.random() - 0.5
-            z2 = random.random() - 0.5
-            obs = np.append(obs, z1)
-            obs = np.append(obs, y)
-            obs = np.append(obs, z2)
-            obs = obs.reshape(1, -1)
-            obs = th.from_numpy(obs.astype(np.float32))
-            value = agent.model(obs).squeeze(-1)
-            portrait[definition - (1 + index_y), index_x] = value.item()
-
-    plt.figure(figsize=(10, 10))
-    plt.imshow(
-        portrait,
-        cmap="inferno",
-        extent=[state_min[0], state_max[0], state_min[2], state_max[2]],
-        aspect="auto",
-    )
-
-    directory += "/" + env_string + "_critics/"
-    title = env_string + " Critic"
-    plt.colorbar(label="critic value")
-
-    # Add a point at the center
-    plt.scatter([0], [0])
-    x_label, y_label = getattr(env.observation_space, "names", ["x", "y"])
-    final_show(save_figure, plot, directory, figure_name, x_label, y_label, title)
-
-
-def plot_lunarlander_critic_v(
-    agent,
-    env,
-    env_string,
-    directory,
-    figure_name,
-    plot=True,
-    save_figure=True,
-):
-    """
-    Visualization of the critic in a N-dimensional state space
-    The N-dimensional state space is projected into its first two dimensions.
-    A FeatureInverter wrapper should be used to select which features to put first to plot them
-    :param agent: the critic agent to be plotted
-    :param env: the environment
-    :param env_string: the name of the environment
-    :param plot: whether the plot should be interactive
-    :param directory: the directory where to save the figure
-    :param figure_name: the name of the file where to plot the function
-    :param save_figure: whether the plot should be saved into a file
-    :return: nothing
-    """
-    if env.observation_space.shape[0] <= 2:
-        msg = f"Observation space dim {env.observation_space.shape[0]}, should be > 2"
-        raise (ValueError(msg))
-    definition = 100
-    portrait = np.zeros((definition, definition))
-    state_min = [-1.5, -1.5, -5.0, -5.0, -3.14, -5.0, -0.0, -0.0]
-    state_max = [1.5, 1.5, 5.0, 5.0, 3.14, 5.0, 1.0, 1.0]
-
-    for index_x, x in enumerate(
-        np.linspace(state_min[0], state_max[0], num=definition)
-    ):
-        for index_y, y in enumerate(
-            np.linspace(state_min[1], state_max[1], num=definition)
-        ):
-            obs = np.array([x])
-            obs = np.append(obs, y)
-            nb = range(len(state_min) - 2)
-            for _ in nb:
-                z = random.random() - 0.5
-                obs = np.append(obs, z)
-            obs = obs.reshape(1, -1)
-            obs = th.from_numpy(obs.astype(np.float32))
-            value = agent.model(obs).squeeze(-1)
-            portrait[definition - (1 + index_y), index_x] = value.item()
-
-    plt.figure(figsize=(10, 10))
-    plt.imshow(
-        portrait,
-        cmap="inferno",
-        extent=[state_min[0], state_max[0], state_min[1], state_max[1]],
-        aspect="auto",
-    )
-
-    directory += "/" + env_string + "_critics/"
-    title = env_string + " Critic"
-    plt.colorbar(label="critic value")
-
-    # Add a point at the center
-    plt.scatter([0], [0])
-    x_label, y_label = getattr(env.observation_space, "names", ["x", "y"])
-    final_show(save_figure, plot, directory, figure_name, x_label, y_label, title)
-
-
-def plot_standard_critic_v(
-    agent,
-    env,
-    env_string,
-    directory,
-    figure_name,
-    plot=True,
-    save_figure=True,
-):
-    """
-    Visualization of the critic in a N-dimensional state space
-    The N-dimensional state space is projected into its first two dimensions.
-    A FeatureInverter wrapper should be used to select which features to put first to plot them
-    :param agent: the critic agent to be plotted
-    :param env: the environment
-    :param env_string: the name of the environment
-    :param plot: whether the plot should be interactive
-    :param directory: the directory where to save the figure
-    :param figure_name: the name of the file where to plot the function
-    :param save_figure: whether the plot should be saved into a file
-    :return: nothing
-    """
     if env.observation_space.shape[0] < 2:
         msg = f"Observation space dim {env.observation_space.shape[0]}, should be >= 2"
         raise (ValueError(msg))
-    definition = 100
-    portrait = np.zeros((definition, definition))
+
     state_min = env.observation_space.low
     state_max = env.observation_space.high
+
     for i in range(len(state_min)):
         if state_min[i] == -np.inf:
             state_min[i] = -1e20
         if state_max[i] == np.inf:
             state_max[i] = 1e20
 
-    for index_x, x in enumerate(
-        np.linspace(state_min[0], state_max[0], num=definition)
-    ):
+    workspace: Workspace = Workspace()
+
+    all_obs = []
+    for index_x, x in enumerate(np.linspace(state_min[0], state_max[0], definition)):
         for index_y, y in enumerate(
-            np.linspace(state_min[1], state_max[1], num=definition)
+            np.linspace(state_min[1], state_max[1], definition)
         ):
-            obs = np.array([x])
-            obs = np.append(obs, y)
-            nb = range(len(state_min) - 2)
-            for _ in nb:
-                z = random.random() - 0.5
+            # create possible states to observe
+            obs = [x, y]
+            for i in range(2, env.observation_space.shape[0]):
+                z = np.random.uniform(state_min[i], state_max[i])
                 obs = np.append(obs, z)
-            obs = obs.reshape(1, -1)
-            obs = th.from_numpy(obs.astype(np.float32))
-            value = agent.model(obs).squeeze(-1)
-            portrait[definition - (1 + index_y), index_x] = value.item()
+            all_obs.append(obs)
+    all_obs = torch.tensor([all_obs], dtype=torch.float32)
+
+    workspace.set_full(var_name_obs, all_obs, batch_dims=None)
+
+    if agent.is_q_function:
+        action = torch.tensor([[action for _ in range(definition**2)]])
+        workspace.set_full(var_name_action, action, batch_dims=None)
+
+    agent(workspace, t=0)
+    portrait = (
+        workspace.get_full(var_name_q_val)
+        .reshape(definition, definition)
+        .detach()
+        .numpy()
+    )
 
     plt.figure(figsize=(10, 10))
     plt.imshow(
         portrait,
         cmap="inferno",
-        extent=[state_min[0], state_max[0], state_min[1], state_max[1]],
+        extent=[
+            state_min[0],
+            state_max[0],
+            state_min[1],
+            state_max[1],
+        ],
         aspect="auto",
     )
 
-    directory += "/" + env_string + "_critics/"
-    title = env_string + " Critic"
+    directory += "/" + env_name + "_critics/"
+    title = env_name + " critic"
     plt.colorbar(label="critic value")
 
     # Add a point at the center
     plt.scatter([0], [0])
     x_label, y_label = getattr(env.observation_space, "names", ["x", "y"])
-    final_show(save_figure, plot, directory, figure_name, x_label, y_label, title)
-
-
-# ------------------------- q functions -------------------------------
-
-
-def plot_pendulum_critic_q(
-    agent,
-    env,
-    env_string,
-    directory,
-    figure_name,
-    plot=True,
-    save_figure=True,
-    action=None,
-):
-    """
-    Plot a critic for the Pendulum environment
-    :param agent: the critic agent to be plotted
-    :param env: the evaluation environment
-    :param env_string: the name of the environment
-    :param plot: whether the plot should be interactive
-    :param directory: the directory where to save the figure
-    :param figure_name: the name of the file to save the figure
-    :param save_figure: whether the figure should be saved
-    :param action: the action for which we want to plot the value
-    :return: nothing
-    """
-    if env.observation_space.shape[0] <= 2:
-        msg = f"Observation space dim {env.observation_space.shape[0]}, should be > 2"
-        raise (ValueError(msg))
-    definition = 100
-    portrait = np.zeros((definition, definition))
-    state_min = env.observation_space.low
-    state_max = env.observation_space.high
-
-    for index_t, t in enumerate(np.linspace(-np.pi, np.pi, num=definition)):
-        for index_td, td in enumerate(
-            np.linspace(state_min[2], state_max[2], num=definition)
-        ):
-            obs = np.array([[np.cos(t), np.sin(t), td]])
-            obs = th.from_numpy(obs.astype(np.float32))
-
-            if action is None:
-                action = th.Tensor([0])
-            value = agent.predict_value(obs[0], action)
-
-            portrait[definition - (1 + index_td), index_t] = value.item()
-
-    plt.figure(figsize=(10, 10))
-    plt.imshow(
-        portrait,
-        cmap="inferno",
-        extent=[-180, 180, state_min[2], state_max[2]],
-        aspect="auto",
-    )
-
-    directory += "/" + env_string + "_critics/"
-    title = env_string + " Critic"
-    plt.colorbar(label="critic value")
-
-    # Add a point at the center
-    plt.scatter([0], [0])
-    x_label, y_label = getattr(env.observation_space, "names", ["x", "y"])
-    final_show(save_figure, plot, directory, figure_name, x_label, y_label, title)
-
-
-def plot_cartpole_critic_q(
-    agent,
-    env,
-    env_string,
-    directory,
-    figure_name,
-    plot=True,
-    save_figure=True,
-    action=None,
-):
-    """
-    Visualization of the critic in a N-dimensional state space
-    The N-dimensional state space is projected into its first two dimensions.
-    A FeatureInverter wrapper should be used to select which features to put first to plot them
-    :param agent: the critic agent to be plotted
-    :param env: the environment
-    :param env_string: the name of the environment
-    :param plot: whether the plot should be interactive
-    :param directory: the directory where to save the figure
-    :param figure_name: the name of the file where to plot the function
-    :param save_figure: whether the plot should be saved into a file
-    :param action: the action for which we want to plot the value
-    :return: nothing
-    """
-    if env.observation_space.shape[0] <= 2:
-        msg = f"Observation space dim {env.observation_space.shape[0]}, should be > 2"
-        raise (ValueError(msg))
-    definition = 100
-    portrait = np.zeros((definition, definition))
-    state_min = env.observation_space.low
-    state_max = env.observation_space.high
-
-    for index_x, x in enumerate(
-        np.linspace(state_min[0], state_max[0], num=definition)
-    ):
-        for index_y, y in enumerate(
-            np.linspace(state_min[2], state_max[2], num=definition)
-        ):
-            obs = np.array([x])
-            z1 = random.random() - 0.5
-            z2 = random.random() - 0.5
-            obs = np.append(obs, z1)
-            obs = np.append(obs, y)
-            obs = np.append(obs, z2)
-            obs = obs.reshape(1, -1)
-            obs = th.from_numpy(obs.astype(np.float32))
-
-            if action is None:
-                action = th.Tensor([0])
-            value = agent.predict_value(obs[0], action)
-
-            portrait[definition - (1 + index_y), index_x] = value.item()
-
-    plt.figure(figsize=(10, 10))
-    plt.imshow(
-        portrait,
-        cmap="inferno",
-        extent=[state_min[0], state_max[0], state_min[2], state_max[2]],
-        aspect="auto",
-    )
-
-    directory += "/" + env_string + "_critics/"
-    title = env_string + " Critic"
-    plt.colorbar(label="critic value")
-
-    # Add a point at the center
-    plt.scatter([0], [0])
-    x_label, y_label = getattr(env.observation_space, "names", ["x", "y"])
-    final_show(save_figure, plot, directory, figure_name, x_label, y_label, title)
-
-
-def plot_lunarlander_critic_q(
-    agent,
-    env,
-    env_string,
-    directory,
-    figure_name,
-    plot=True,
-    save_figure=True,
-    action=None,
-):
-    """
-    Visualization of the critic in a N-dimensional state space
-    The N-dimensional state space is projected into its first two dimensions.
-    A FeatureInverter wrapper should be used to select which features to put first to plot them
-    :param agent: the critic agent to be plotted
-    :param env: the environment
-    :param env_string: the name of the environment
-    :param plot: whether the plot should be interactive
-    :param directory: the directory where to save the figure
-    :param figure_name: the name of the file where to plot the function
-    :param save_figure: whether the plot should be saved into a file
-    :param action: the action for which we want to plot the value
-    :return: nothing
-    """
-    if env.observation_space.shape[0] <= 2:
-        msg = f"Observation space dim {env.observation_space.shape[0]}, should be > 2"
-        raise (ValueError(msg))
-    definition = 100
-    portrait = np.zeros((definition, definition))
-    state_min = [-1.5, -1.5, -5.0, -5.0, -3.14, -5.0, -0.0, -0.0]
-    state_max = [1.5, 1.5, 5.0, 5.0, 3.14, 5.0, 1.0, 1.0]
-
-    for index_x, x in enumerate(
-        np.linspace(state_min[0], state_max[0], num=definition)
-    ):
-        for index_y, y in enumerate(
-            np.linspace(state_min[1], state_max[1], num=definition)
-        ):
-            obs = np.array([x])
-            obs = np.append(obs, y)
-            nb = range(len(state_min) - 2)
-            for _ in nb:
-                z = random.random() - 0.5
-                obs = np.append(obs, z)
-            obs = obs.reshape(1, -1)
-            obs = th.from_numpy(obs.astype(np.float32))
-
-            if action is None:
-                action = th.Tensor([0, 0])
-            value = agent.predict_value(obs[0], action)
-
-            portrait[definition - (1 + index_y), index_x] = value.item()
-
-    plt.figure(figsize=(10, 10))
-    plt.imshow(
-        portrait,
-        cmap="inferno",
-        extent=[state_min[0], state_max[0], state_min[1], state_max[1]],
-        aspect="auto",
-    )
-
-    directory += "/" + env_string + "_critics/"
-    title = env_string + " Critic"
-    plt.colorbar(label="critic value")
-
-    # Add a point at the center
-    plt.scatter([0], [0])
-    x_label, y_label = getattr(env.observation_space, "names", ["x", "y"])
-    final_show(save_figure, plot, directory, figure_name, x_label, y_label, title)
-
-
-def plot_standard_critic_q(
-    agent,
-    env,
-    env_string,
-    directory,
-    figure_name,
-    plot=True,
-    save_figure=True,
-    action=None,
-):
-    """
-    Visualization of the critic in a N-dimensional state space
-    The N-dimensional state space is projected into its first two dimensions.
-    A FeatureInverter wrapper should be used to select which features to put first to plot them
-    :param agent: the critic agent to be plotted
-    :param env: the environment
-    :param env_string: the name of the environment
-    :param plot: whether the plot should be interactive
-    :param directory: the directory where to save the figure
-    :param figure_name: the name of the file where to plot the function
-    :param save_figure: whether the plot should be saved into a file
-    :param action: the action for which we want to plot the value
-    :return: nothing
-    """
-    if env.observation_space.shape[0] < 2:
-        msg = f"Observation space dim {env.observation_space.shape[0]}, should be >= 2"
-        raise (ValueError(msg))
-    definition = 100
-    portrait = np.zeros((definition, definition))
-    state_min = env.observation_space.low
-    state_max = env.observation_space.high
-    for i in range(len(state_min)):
-        if state_min[i] == -np.inf:
-            state_min[i] = -1e20
-        if state_max[i] == np.inf:
-            state_max[i] = 1e20
-
-    for index_x, x in enumerate(
-        np.linspace(state_min[0], state_max[0], num=definition)
-    ):
-        for index_y, y in enumerate(
-            np.linspace(state_min[1], state_max[1], num=definition)
-        ):
-            obs = np.array([x])
-            obs = np.append(obs, y)
-            nb = range(len(state_min) - 2)
-            for _ in nb:
-                z = random.random() - 0.5
-                obs = np.append(obs, z)
-            obs = obs.reshape(1, -1)
-            obs = th.from_numpy(obs.astype(np.float32))
-
-            if action is None:
-                action = th.Tensor([0])
-            value = agent.predict_value(obs[0], action)
-
-            portrait[definition - (1 + index_y), index_x] = value.item()
-
-    plt.figure(figsize=(10, 10))
-    plt.imshow(
-        portrait,
-        cmap="inferno",
-        extent=[state_min[0], state_max[0], state_min[1], state_max[1]],
-        aspect="auto",
-    )
-
-    directory += "/" + env_string + "_critics/"
-    title = env_string + " Critic"
-    plt.colorbar(label="critic value")
-
-    # Add a point at the center
-    plt.scatter([0], [0])
-    x_label, y_label = getattr(env.observation_space, "names", ["x", "y"])
-    final_show(save_figure, plot, directory, figure_name, x_label, y_label, title)
+    final_show(save_fig, plot, directory, figure_name, x_label, y_label, title)
