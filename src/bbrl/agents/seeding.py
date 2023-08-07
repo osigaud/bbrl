@@ -6,6 +6,7 @@
 # LICENSE file in the root directory of this source tree.
 #
 from abc import ABC
+from typing import Optional
 
 from bbrl import Agent
 
@@ -16,9 +17,9 @@ class SeedableAgent(Agent, ABC):
     are seeded (not mandatory)
     """
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._seed = None
+    def __init__(self, seed: Optional[int] = None, **kwargs):
+        super().__init__(**kwargs)
+        self._seed = seed
 
     def seed(self, seed: int):
         """Provide a seed to this agent. Useful if the agent is stochastic.
