@@ -91,7 +91,7 @@ try:
             pass
 
 except ImportError:
-    raise ImportError("Please install wandb to use WandbLogger")
+    warnings.warn("wandb not installed, please do not use WandbLogger")
 
 
 class TFPrefixLogger:
