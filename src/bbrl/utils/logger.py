@@ -87,8 +87,8 @@ try:
         def add_html(self, name, value) -> None:
             wandb.log({name: wandb.Html(value)})
 
-        def close(self) -> None:
-            pass
+        def close(self, exit_code = 0) -> None:
+            wandb.finish(exit_code=exit_code)
 
 except ImportError:
     warnings.warn("wandb not installed, please do not use WandbLogger")
