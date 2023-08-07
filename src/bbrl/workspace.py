@@ -647,7 +647,9 @@ class Workspace:
             mini_workspace = to_aggregate[0]
         return mini_workspace
 
-    def get_transitions(self, no_final_state=False) -> Workspace:
+    def get_transitions(
+        self, no_final_state=False, filter_key: str = "env/done"
+    ) -> Workspace:
         """Return a new workspace containing the transitions of the current workspace.
             Each key of the current workspace have dimensions [n_step, n_env, key_dim]
             {
@@ -687,7 +689,7 @@ class Workspace:
                 x_next = array[1:].view(-1, *array.shape[2:])
                 transitions[key] = torch.stack([x, x_next])
         else:
-            done = self["env/done"][:-1]
+            done = self[filter_key][:-1]
             for key in self.keys():
                 array = self[key]
 
