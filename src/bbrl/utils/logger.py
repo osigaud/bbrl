@@ -5,7 +5,7 @@
 import bz2
 import pickle
 import time
-from typing import Optional
+from typing import Optional, Union
 
 import numpy as np
 
