@@ -266,7 +266,7 @@ class ParallelGymAgent(GymAgent):
         self,
         make_env_fn: Callable[[Optional[Dict[str, Any]]], Env],
         num_envs: int,
-        make_env_args: dict[str, Any] | None = None,
+        make_env_args: Union[dict[str, Any], None] = None,
         *args,
         **kwargs,
     ):
