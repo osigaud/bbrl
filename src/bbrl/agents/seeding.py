@@ -8,7 +8,7 @@
 from abc import ABC
 from typing import Optional
 
-from bbrl import Agent
+from bbrl.agents import Agent
 
 
 class SeedableAgent(Agent, ABC):
