@@ -266,7 +266,7 @@ class ParallelGymAgent(GymAgent):
         self,
         make_env_fn: Callable[[Optional[Dict[str, Any]]], Env],
         num_envs: int,
-        make_env_args: Union[dict[str, Any], None] = None,
+        make_env_args: Union[Dict[str, Any], None] = None,
         *args,
         **kwargs,
     ):
@@ -295,7 +295,7 @@ class ParallelGymAgent(GymAgent):
         args: Dict[str, Any] = make_env_args if make_env_args is not None else {}
         self._initialize_envs(num_envs=num_envs, make_env_args=args)
 
-    def _initialize_envs(self, num_envs: int, make_env_args: dict[str, Any]):
+    def _initialize_envs(self, num_envs: int, make_env_args: Dict[str, Any]):
         self.envs = [self.make_env_fn(**make_env_args) for _ in range(num_envs)]
         self._timestep = torch.zeros(len(self.envs), dtype=torch.long)
         self.observation_space = self.envs[0].observation_space
