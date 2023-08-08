@@ -30,6 +30,7 @@ def plot_critic(
     var_name_obs: str = "env/env_obs",
     var_name_action: str = "action",
     var_name_q_val: str = "q_values",
+    **kwargs,
 ) -> None:
     """
     Plot the critic of an agent
@@ -45,6 +46,7 @@ def plot_critic(
     :param str var_name_obs: the name of the observation variable
     :param str var_name_action: the name of the action variable
     :param str var_name_q_val: the name of the q value variable
+    :param kwargs: the arguments to be passed to the agent forward function
     :return: None
     """
 
@@ -101,7 +103,7 @@ def plot_critic(
         action = torch.tensor([[action for _ in range(definition**2)]])
         workspace.set_full(var_name_action, action, batch_dims=None)
 
-    agent(workspace, t=0)
+    agent(workspace, t=0, **kwargs)
     portrait = (
         workspace.get_full(var_name_q_val)
         .reshape(definition, definition)

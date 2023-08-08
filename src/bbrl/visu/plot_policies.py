@@ -26,6 +26,7 @@ def plot_policy(
     definition: int = 100,
     var_name_obs: str = "env/env_obs",
     var_name_action: str = "action",
+    **kwargs,
 ) -> None:
     """
     Plot the policy of the agent
@@ -39,6 +40,7 @@ def plot_policy(
     :param int definition: the definition of the plot
     :param str var_name_obs: the name of the observation variable red by the agent
     :param str var_name_action: the name of the action variable written by the agent
+    :param kwargs: the arguments to be passed to the actor forward function
     :return: None
     """
     if env_name is None:
@@ -82,7 +84,7 @@ def plot_policy(
     workspace.set_full(var_name_obs, all_obs, batch_dims=None)
 
     # predictions ici de l'action selon la policy
-    actor(workspace, t=0)
+    actor(workspace, t=0, **kwargs)
 
     # récupération des actions dans le workspace
     portrait = (
