@@ -5,17 +5,10 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 #
+import warnings
 from abc import ABC
 from pathlib import Path
-from typing import (
-    Any,
-    Callable,
-    Dict,
-    List,
-    Optional,
-    Protocol,
-    Union,
-)
+from typing import Any, Callable, Dict, List, Optional, Protocol, Union, Tuple
 import logging
 import numpy as np
 import torch
@@ -228,27 +221,22 @@ class GymAgent(TimeAgent, SeedableAgent, SerializableAgent, ABC):
             raise ValueError("The action space is not defined")
         return self.action_space
 
-    # def get_obs_and_actions_sizes(self):
-    #     action_dim = 0
-    #     if isinstance(self.action_space, spaces.Box):
-    #         action_dim = self.action_space.shape[0]
-    #     elif isinstance(self.action_space, spaces.Discrete):
-    #         action_dim = self.action_space.n
-
-    #     state_dim = 0
-    #     if isinstance(self.observation_space, spaces.Box):
-    #         state_dim = self.observation_space.shape[0]
-    #     elif isinstance(self.observation_space, spaces.Discrete):
-    #         state_dim = 1  # self.observation_space.n
-    #     return state_dim, action_dim
-
-    def get_obs_and_actions_sizes(self):
+    def get_obs_and_actions_sizes(self) -> Union[int, Tuple[int]]:
         obs_space = self.get_observation_space()
-        obs_shape = obs_space.shape if len(obs_space.shape) > 0 else obs_space.n
-
         act_space = self.get_action_space()
-        act_shape = act_space.shape if len(act_space.shape) > 0 else act_space.n
-        return obs_shape[0], act_shape
+
+        def parse_space(space):
+            if len(space.shape) > 0:
+                if len(space.shape) > 1:
+                    warnings.warn(
+                        "Multi dimensional space, be careful, a tuple (shape) is returned, maybe youd like to flatten or simplify it first"
+                    )
+                    return space.shape
+                return space.shape[0]
+            else:
+                return space.n
+
+        return parse_space(obs_space), parse_space(act_space)
 
     def is_continuous_action(self):
         return isinstance(self.action_space, gym.spaces.Box)
