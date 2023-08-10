@@ -243,10 +243,10 @@ class GymAgent(TimeAgent, SeedableAgent, SerializableAgent, ABC):
     #     return state_dim, action_dim
 
     def get_obs_and_actions_sizes(self):
-        obs_space = get_observation_space()
+        obs_space = self.get_observation_space()
         obs_shape = obs_space.shape if len(obs_space.shape) > 0 else obs_space.n
 
-        act_space = get_action_space()
+        act_space = self.get_action_space()
         act_shape = act_space.shape if len(act_space.shape) > 0 else act_space.n
         return obs_shape[0], act_shape
 
