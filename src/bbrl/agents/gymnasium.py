@@ -228,19 +228,27 @@ class GymAgent(TimeAgent, SeedableAgent, SerializableAgent, ABC):
             raise ValueError("The action space is not defined")
         return self.action_space
 
-    def get_obs_and_actions_sizes(self):
-        action_dim = 0
-        if isinstance(self.action_space, spaces.Box):
-            action_dim = self.action_space.shape[0]
-        elif isinstance(self.action_space, spaces.Discrete):
-            action_dim = self.action_space.n
+    # def get_obs_and_actions_sizes(self):
+    #     action_dim = 0
+    #     if isinstance(self.action_space, spaces.Box):
+    #         action_dim = self.action_space.shape[0]
+    #     elif isinstance(self.action_space, spaces.Discrete):
+    #         action_dim = self.action_space.n
 
-        state_dim = 0
-        if isinstance(self.observation_space, spaces.Box):
-            state_dim = self.observation_space.shape[0]
-        elif isinstance(self.observation_space, spaces.Discrete):
-            state_dim = 1  # self.observation_space.n
-        return state_dim, action_dim
+    #     state_dim = 0
+    #     if isinstance(self.observation_space, spaces.Box):
+    #         state_dim = self.observation_space.shape[0]
+    #     elif isinstance(self.observation_space, spaces.Discrete):
+    #         state_dim = 1  # self.observation_space.n
+    #     return state_dim, action_dim
+
+    def get_obs_and_actions_sizes(self):
+        obs_space = get_observation_space()
+        obs_shape = obs_space.shape if len(obs_space.shape) > 0 else obs_space.n
+
+        act_space = get_action_space()
+        act_shape = act_space.shape if len(act_space.shape) > 0 else act_space.n
+        return obs_shape[0], act_shape
 
     def is_continuous_action(self):
         return isinstance(self.action_space, gym.spaces.Box)
