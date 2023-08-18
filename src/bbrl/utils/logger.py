@@ -30,6 +30,7 @@ try:
             log_loss: bool = False,
             **kwargs
         ) -> None:
+            wandb.login()
             wandb.init(
                 project=project, group=group, job_type=job_type, tags=tags.split("_")
             )
@@ -37,7 +38,6 @@ try:
             self.every_n_seconds = every_n_seconds
             self.save_time = -float("inf")
             self.verbose = verbose
-            self.log_loss = log_loss
 
         def _to_dict(self, h: Union[dict, DictConfig]) -> dict:
             if isinstance(h, dict) or isinstance(h, DictConfig):
@@ -62,24 +62,12 @@ try:
             pass
 
         def add_scalar(self, name, value, iteration) -> None:
-            if ("loss" in name) and (not self.log_loss):
-                pass
-            else:
-                if self.verbose:
-                    print("['" + name + "' at " + str(iteration) + "] = " + str(value))
-                if "/" in name:
-                    iteration_name = "/".join(name.split("/")[:-1] + ["iteration"])
-                else:
-                    iteration_name = "iteration"
-                self.logs[name] = value
-                self.logs[iteration_name] = iteration
-                t = time.time()
-                if ((t - self.save_time) > self.every_n_seconds) or (
-                    "evaluation/iteration" in self.logs
-                ):
-                    wandb.log(self.logs, commit=True)
-                    self.save_time = t
-                    self.logs = {}
+            if self.verbose:
+                print("['" + name + "' at " + str(iteration) + "] = " + str(value))
+            self.logs[name] = value
+            self.logs["iteration"] = iteration
+            wandb.log(self.logs, commit=True)
+            self.logs = {}
 
         def add_video(self, name, value, iteration, fps=10) -> None:
             pass
@@ -87,7 +75,7 @@ try:
         def add_html(self, name, value) -> None:
             wandb.log({name: wandb.Html(value)})
 
-        def close(self, exit_code = 0) -> None:
+        def close(self, exit_code=0) -> None:
             wandb.finish(exit_code=exit_code)
 
 except ImportError:
