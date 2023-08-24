@@ -109,7 +109,7 @@ def plot_policy(
 
         title = "{} Actor (action dim: {})".format(env_name, dim)
         plt.colorbar(label="action")
-        directory += "/policies/"
+        directory += "/" + env_name + "_policies/"
         # Add a point at the center
         plt.scatter([0], [0])
         x_label, y_label = getattr(env.observation_space, "names", ["x", "y"])
