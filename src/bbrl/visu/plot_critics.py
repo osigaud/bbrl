@@ -100,9 +100,11 @@ def plot_critic(
     if agent.is_q_function:
         action = torch.tensor([[action for _ in range(definition**2)]])
         workspace.set_full(var_name_action, action, batch_dims=None)
+        var_name_q_val: str = f"{agent.name}/q_values"
+    else:
+        var_name_q_val: str = f"{agent.name}/v_values"
 
     agent(workspace, t=0, **kwargs)
-    var_name_q_val: str = f"{agent.name}/q_values"
     portrait = (
         workspace.get_full(var_name_q_val)
         .reshape(definition, definition)
