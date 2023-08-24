@@ -105,6 +105,7 @@ def plot_critic(
         var_name_q_val: str = f"{agent.name}/v_values"
 
     agent(workspace, t=0, **kwargs)
+    print(workspace.variables)
     portrait = (
         workspace.get_full(var_name_q_val)
         .reshape(definition, definition)
