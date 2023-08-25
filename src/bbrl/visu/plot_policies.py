@@ -66,7 +66,10 @@ def plot_policy(
 
     workspace = Workspace()
 
-    action_dim = flatdim(env.action_space)
+    if env.is_continuous_action():
+        action_dim = flatdim(env.action_space)
+    else:
+        action_dim = 1
 
     all_obs = []
     for index_x, x in enumerate(np.linspace(state_min[0], state_max[0], definition)):
@@ -88,7 +91,7 @@ def plot_policy(
     # predictions ici de l'action selon la policy
     actor(workspace, t=0, **kwargs)
 
-    # récupération des actions dans le workspace
+    # get the actions from the workspace
     portrait = (
         workspace.get_full(var_name_action)
         .reshape(definition, definition, action_dim)
