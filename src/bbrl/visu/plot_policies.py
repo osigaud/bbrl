@@ -6,6 +6,7 @@ from typing import Union
 
 import matplotlib.pyplot as plt
 import numpy as np
+import random
 import torch
 from gymnasium.spaces import flatdim
 
@@ -75,8 +76,9 @@ def plot_policy(
             # create possible states to observe
             obs = [x, y]
             for i in range(2, env.observation_space.shape[0]):
-                # TODO: generate randomness around mean
-                z = random.uniform(state_min[i], state_max[i])
+                # generate randomness around mean
+                z = random.random() - 0.5
+                # z = random.uniform(state_min[i], state_max[i])
                 obs.append(z)
             all_obs.append(obs)
     all_obs = torch.tensor([all_obs], dtype=torch.float32)
