@@ -13,7 +13,6 @@ from gymnasium import Space
 from gymnasium.core import ActType
 
 from bbrl import Agent
-# from bbrl.agents import PrintAgent, Agents
 from bbrl.agents.gymnasium import GymAgent
 from bbrl.visu.common import final_show
 from bbrl.workspace import Workspace
@@ -74,6 +73,7 @@ def plot_critic(
     state_min = env.observation_space.low
     state_max = env.observation_space.high
 
+    # TODO: it would be better to determine the min and max from the available data...
     for i in range(len(state_min)):
         if state_min[i] == -np.inf:
             state_min[i] = -1e20
@@ -165,7 +165,7 @@ def plot_discrete_q(
     :param bool plot: if True, plot the figure
     :param bool save_fig: if True, save the figure
     :param int definition: the definition of the plot
-    :param ActType action: the action to use if the agent is a q function
+    :param ActType input_action: the action to use if the agent is a q function. Use "policy" if you want to see the critic as a policy (display the chosen action)
     :param str var_name_obs: the name of the observation variable
     :param str var_name_action: the name of the action variable
     :param kwargs: the arguments to be passed to the agent forward function
@@ -191,6 +191,7 @@ def plot_discrete_q(
     state_min = env.observation_space.low
     state_max = env.observation_space.high
 
+    # TODO: it would be better to determine the min and max from the available data...
     for i in range(len(state_min)):
         if state_min[i] == -np.inf:
             state_min[i] = -1e20
@@ -223,15 +224,13 @@ def plot_discrete_q(
 
     agent(workspace, t=0, **kwargs)
     data = workspace.get_full(var_name_value)
-    # print("action", input_action)
-    # print("data", data)
 
     if input_action is None:
         q_values = data.max(dim=-1).values
+    elif input_action == "policy":
+        q_values = data.max(dim=-1).indices
     else:
         q_values = data[:, :, input_action]
-        
-    # print("q_values", q_values)
         
     portrait = (
         q_values.reshape(definition, definition)
