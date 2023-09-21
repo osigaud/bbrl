@@ -6,16 +6,20 @@ import os
 
 try:
     import gym
-    import my_gym
+    import my_gym  # noqa: F401
+
     no_gym = False
     from bbrl.agents.gymb import AutoResetGymAgent, NoAutoResetGymAgent
 except ImportError:
     no_gym = True
+
     class AutoResetGymAgent:
         pass
+
     class NoAutoResetGymAgent:
         pass
-    
+
+
 import time
 
 import torch
@@ -33,8 +37,8 @@ from bbrl.agents import Agents, TemporalAgent
 from bbrl.utils.chrono import Chrono
 from bbrl.utils.functional import gae
 
-from bbrl.visu.visu_policies import plot_policy
-from bbrl.visu.visu_critics import plot_critic
+from bbrl.visu.plot_policies import plot_policy
+from bbrl.visu.plot_critics import plot_critic
 
 
 def build_backbone(sizes, activation):
@@ -208,9 +212,6 @@ def setup_optimizers(cfg, action_agent, critic_agent):
 
 def compute_critic_loss(cfg, reward, must_bootstrap, critic):
     # Compute temporal difference
-    # target = reward[:-1] + cfg.algorithm.discount_factor * critic[1:].detach() * (must_bootstrap.float())
-    # td = target - critic[:-1]
-    # assert target.shape == critic[:-1].shape, f"Missing an element in the critic list: {target.shape} vs {critic.shape}"
     td = gae(
         critic, reward, must_bootstrap, cfg.algorithm.discount_factor, cfg.algorithm.gae
     )
@@ -316,7 +317,7 @@ def run_a2c(cfg, max_grad_norm=0.5):
             rewards = eval_workspace["env/cumulated_reward"][-1]
             mean = rewards.mean()
             logger.add_log("reward", mean, nb_steps)
-            print(f"epoch: {epoch}, reward: {mean }")
+            print(f"epoch: {epoch}, reward: {mean }")  # noqa: T201
 
             if cfg.save_best and mean > best_reward:
                 best_reward = mean
