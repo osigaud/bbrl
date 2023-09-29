@@ -79,7 +79,10 @@ try:
             wandb.finish(exit_code=exit_code)
 
 except ImportError:
-    warnings.warn("wandb not installed, please do not use WandbLogger")
+
+    class WandbLogger:
+        def __init__(self, *args, **kwargs):
+            raise RuntimeError("wandb not installed, please do not use WandbLogger")
 
 
 class TFPrefixLogger:
@@ -572,6 +575,8 @@ def _create_col(df, hps, _name):
         print(_name)
         v[_name] = name
         vs.append(v)
+    import pandas as pd
+
     return pd.concat(vs)
 
 

@@ -37,8 +37,6 @@ def make_env(env_name, autoreset=False, wrappers: List = [], **kwargs):
     :param autoreset: if True, wrap the environment into an AutoResetWrapper,
         defaults to False
     """
-
-    print("env name:", env_name)
     env = make(env_name, **kwargs)
     for wrapper in wrappers:
         env = wrapper(env)

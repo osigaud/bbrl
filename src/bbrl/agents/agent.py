@@ -13,20 +13,23 @@ import torch.nn as nn
 
 
 class Agent(nn.Module):
-    """An `Agent` is a `torch.nn.Module` that reads and writes into a `bbrl.Workspace`"""
+    """An `Agent` is a `torch.nn.Module` that reads and writes into a
+    `bbrl.Workspace`"""
 
     def __init__(self, name: str = None, verbose=False):
         """To create a new Agent
 
         Args:
-            name ([type], optional): An agent can have a name that will allow to perform operations
-            on agents that are composed into more complex agents.
+            name ([type], optional): An agent can have a name that will allow to
+            perform operations on agents that are composed into more complex
+            agents.
         """
         super().__init__()
         self._name = name
         self.__trace_file = None
         self.verbose = verbose
         self.workspace = None
+        self.prefix = ""
 
     def seed(self, seed: int):
         """Provide a seed to this agent. Useful is the agent is stochastic.
@@ -52,8 +55,13 @@ class Agent(nn.Module):
         """
         return self._name
 
+    def with_prefix(self, prefix: str):
+        """Returns the prefix in environments"""
+        self.prefix = prefix
+        return self
+
     def set_trace_file(self, filename):
-        print("[TRACE]: Tracing agent in file " + filename)
+        print("[TRACE]: Tracing agent in file " + filename)  # noqa: T201
         self.__trace_file = open(filename, "wt")
 
     def __call__(self, workspace, **kwargs):
