@@ -9,4 +9,5 @@ opencv-python
 omegaconf
 matplotlib
 seaborn
-
+scipy
+bootstrapped

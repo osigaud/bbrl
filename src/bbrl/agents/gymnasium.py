@@ -8,13 +8,12 @@
 import warnings
 from abc import ABC
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional, Protocol, Union, Tuple
+from typing import Any, Callable, Dict, List, Optional, Union, Tuple
 import logging
 import numpy as np
 import torch
 from torch import nn, Tensor
 import gymnasium as gym
-import gymnasium.spaces as spaces
 from gymnasium import Env, Space, Wrapper, make
 from gymnasium.core import ActType, ObsType
 from gymnasium.vector import VectorEnv
@@ -55,7 +54,9 @@ def record_video(env: Env, agent: Agent, path: str):
     """
 
     # Creates the containing folder if needed
-    Path(path).parent.mkdir(exist_ok=True, parents=True)
+    path = Path(path)
+
+    path.parent.mkdir(exist_ok=True, parents=True)
 
     with torch.no_grad():
         workspace = Workspace()
@@ -63,7 +64,7 @@ def record_video(env: Env, agent: Agent, path: str):
         workspace.set("env/env_obs", 0, torch.Tensor(obs).unsqueeze(0))
         t = 0
         done = False
-        video_recorder = VideoRecorder(env, path, enabled=True)
+        video_recorder = VideoRecorder(env, str(path.resolve()), enabled=True)
         video_recorder.capture_frame()
 
         while not done:
@@ -228,7 +229,8 @@ class GymAgent(TimeAgent, SeedableAgent, SerializableAgent, ABC):
             if len(space.shape) > 0:
                 if len(space.shape) > 1:
                     warnings.warn(
-                        "Multi dimensional space, be careful, a tuple (shape) is returned, maybe youd like to flatten or simplify it first"
+                        "Multi dimensional space, be careful, a tuple (shape) "
+                        "is returned, maybe youd like to flatten or simplify it first"
                     )
                     return space.shape
                 return space.shape[0]
@@ -268,11 +270,20 @@ class ParallelGymAgent(GymAgent):
         """Create an agent from a Gymnasium environment
 
         Args:
-            make_env_fn ([function that returns a gymnasium.Env]): The function to create a single gymnasium environments
-            num_envs ([int]): The number of environments to create, defaults to 1
-            make_env_args (dict): The arguments of the function that creates a gymnasium.Env
-            input_string (str, optional): [the name of the action variable in the workspace]. Defaults to "action".
-            output_string (str, optional): [the output prefix of the environment]. Defaults to "env/".
+            make_env_fn ([function that returns a gymnasium.Env]): The function
+            to create a single gymnasium environments
+
+            num_envs ([int]): The number of environments to create, defaults to
+            1
+
+            make_env_args (dict): The arguments of the function that creates a
+            gymnasium.Env
+
+            input_string (str, optional): [the name of the action variable in
+            the workspace]. Defaults to "action".
+
+            output_string (str, optional): [the output prefix of the
+            environment]. Defaults to "env/".
         """
         super().__init__(*args, **kwargs)
         assert num_envs > 0, "n_envs must be > 0"
