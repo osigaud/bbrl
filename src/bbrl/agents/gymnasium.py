@@ -38,7 +38,7 @@ def make_env(env_name, autoreset=False, wrappers: List = [], **kwargs):
         defaults to False
     """
 
-    print("env name:", env_name)
+    # print("env name:", env_name)
     env = make(env_name, **kwargs)
     for wrapper in wrappers:
         env = wrapper(env)
@@ -383,7 +383,7 @@ class ParallelGymAgent(GymAgent):
         s: int = self._timestep_from_reset * self.num_envs * self._nb_reset * self._seed
         s += (k + 1) * (self._timestep[k].item() + 1 if self._is_autoreset else 1)
 
-        return self._format_obs(k, *env.reset(seed=s))
+        return self._format_obs(k, *env.reset(seed=s), {})
 
     def _step(self, k: int, action: Tensor):
         env = self.envs[k]
