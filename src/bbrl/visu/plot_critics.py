@@ -111,7 +111,7 @@ def plot_critic(
     agent(workspace, t=0, **kwargs)
     data = workspace.get_full(var_name_value)
     portrait = (
-        data
+        data[input_action]
         .reshape(definition, definition)
         .detach()
         .numpy()
