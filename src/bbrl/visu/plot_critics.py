@@ -111,15 +111,15 @@ def plot_critic(
     agent(workspace, t=0, **kwargs)
     data = workspace.get_full(var_name_value)
     portrait = (
-        data[input_action]
-        .reshape(definition, definition)
+        data
+        .reshape(definition, definition, env.action_space.n)
         .detach()
         .numpy()
     )
 
     plt.figure(figsize=(10, 10))
     plt.imshow(
-        portrait,
+        portrait[input_action],
         cmap="inferno",
         extent=[
             state_min[0],
