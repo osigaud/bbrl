@@ -57,11 +57,6 @@ def plot_critic(
 
     if not agent.is_q_function and input_action is not None:
         warnings.warn("action is ignored for non q function agent")
-    if agent.is_q_function and input_action is None:
-        warnings.warn("action is None for q function agent, using random action")
-        action_space: Space[ActType] = env.get_action_space()
-        input_action = action_space.sample()
-
     assert (
         len(env.observation_space.shape) == 1
     ), "Nested observation space not supported"
@@ -99,27 +94,34 @@ def plot_critic(
 
     workspace.set_full(var_name_obs, all_obs, batch_dims=None)
 
-    if agent.is_q_function:
+    if agent.is_q_function and input_action is not None:
         action = torch.tensor([[input_action for _ in range(definition**2)]])
         workspace.set_full(var_name_action, action, batch_dims=None)
-        if var_name_value == "None":
-            var_name_value: str = f"{agent.name}/q_values"
-    else:
+    elif not agent.is_q_function:
         if var_name_value == "None":
             var_name_value: str = f"{agent.name}/v_values"
+    else:
+        if var_name_value == "None":
+            var_name_value: str = f"{agent.name}/q_values"
 
     agent(workspace, t=0, **kwargs)
     data = workspace.get_full(var_name_value)
-    portrait = (
+    portrait_data = (
         data
         .reshape(definition, definition, env.action_space.n)
         .detach()
         .numpy()
     )
-
+    if agent.is_q_function and input_action is not None:
+        portrait = portrait_data[input_action]
+    elif not agent.is_q_function:
+        portrait = portrait_data[input_action]
+    else:
+        portrait = portrait_data.max(axis=-1)
     plt.figure(figsize=(10, 10))
+    
     plt.imshow(
-        portrait[input_action],
+        portrait,
         cmap="inferno",
         extent=[
             state_min[0],
