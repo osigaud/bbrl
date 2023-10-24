@@ -325,7 +325,10 @@ class ParallelGymAgent(GymAgent):
             return {"env_obs": observation}
 
         if isinstance(observation, dict):
-            return {f"env_obs/{key}": value for key, value in observation.items()}
+            if len(observation) == 1 and list(observation.keys())[0] == "env_obs":
+                return observation
+            else:
+                return {f"env_obs/{key}": value for key, value in observation.items()}
 
         raise ValueError(
             f"Observation must be a torch.Tensor or a dict, not {type(observation)}"
