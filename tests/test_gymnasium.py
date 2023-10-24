@@ -31,16 +31,11 @@ class MyEnv(gym.Env):
 
     def __init__(self):
         self._max_steps = 5
-        self.observation_space = spaces.Dict(
-            {
-                "env_obs": spaces.Box(0, len(MyEnv.MOVES), shape=(1,), dtype=int),
-            }
-        )
-
+        self.observation_space = spaces.Box(0, len(MyEnv.MOVES), shape=(1,), dtype=int)
         self.action_space = spaces.Discrete(2)
 
     def _get_obs(self):
-        return {"env_obs": self._agent_location}
+        return self._agent_location
 
     def _get_info(self):
         return {
