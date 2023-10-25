@@ -17,6 +17,11 @@ from bbrl.agents.gymnasium import GymAgent
 from bbrl.visu.common import final_show
 from bbrl.workspace import Workspace
 
+# The plot critic actions below could probably be factored or at least reuse common subparts
+
+
+# plot a DPDG-like critic.
+# If the input_action is None, which cannot be the case with DDPG-like critic, a random action is drawn, which makes little sense.
 
 def plot_critic(
     agent: Agent,
@@ -58,10 +63,10 @@ def plot_critic(
     if not agent.is_q_function and input_action is not None:
         warnings.warn("action is ignored for non q function agent")
     if agent.is_q_function and input_action is None:
-        warnings.warn("action is None for q function agent, using random action")
         action_space: Space[ActType] = env.get_action_space()
-        input_action = action_space.sample()
-
+        input_action = action_space.sample()   
+        warnings.warn("trying to plot a Q critic without giving an action")
+        
     assert (
         len(env.observation_space.shape) == 1
     ), "Nested observation space not supported"
@@ -112,14 +117,14 @@ def plot_critic(
     data = workspace.get_full(var_name_value)
     portrait = (
         data
-        .reshape(definition, definition, env.action_space.n)
+        .reshape(definition, definition)
         .detach()
         .numpy()
     )
-
     plt.figure(figsize=(10, 10))
+    
     plt.imshow(
-        portrait[input_action],
+        portrait,
         cmap="inferno",
         extent=[
             state_min[0],
@@ -139,6 +144,10 @@ def plot_critic(
     x_label, y_label = getattr(env.observation_space, "names", ["x", "y"])
     final_show(save_fig, plot, directory, figure_name, x_label, y_label, title)
 
+# Plot a DQN-like critic.
+# If input_action is "policy", it plots the actions with a different color for each action
+# If input_action is "None", it plots the value of the best action
+# Otherwise, input_action is a number and it plots the Q-value of the corresponding action
     
 def plot_discrete_q(
     agent: Agent,
