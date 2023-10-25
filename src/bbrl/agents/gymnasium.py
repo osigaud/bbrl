@@ -21,6 +21,7 @@ from gymnasium.wrappers import AutoResetWrapper
 from gymnasium.wrappers.monitoring.video_recorder import VideoRecorder
 
 from bbrl import SeedableAgent, SerializableAgent, TimeAgent, Agent
+from bbrl.agents.utils import TemporalAgent
 from bbrl.workspace import Workspace
 
 
@@ -45,13 +46,16 @@ def make_env(env_name, autoreset=False, wrappers: List = [], **kwargs):
     return env
 
 
-def record_video(env: Env, agent: Agent, path: str):
+def record_video(env: Env, policy: Agent, path: str):
     """Record a video for a given gymnasium environment and a BBRL agent
 
     :param env: The environment (created with `render_mode="rgb_array"`)
-    :param agent: The BBRL agent
+    :param policy: The BBRL agent
     :param path: The path of the video
     """
+    # Tries to get the non temporal agent.
+    if isinstance(policy, TemporalAgent):
+        policy = policy.agent
 
     # Creates the containing folder if needed
     path = Path(path)
@@ -69,7 +73,7 @@ def record_video(env: Env, agent: Agent, path: str):
 
         while not done:
             workspace.set("env/env_obs", t, torch.Tensor(obs).unsqueeze(0))
-            agent(t=t, workspace=workspace)
+            policy(t=t, workspace=workspace)
             action = workspace.get("action", t).squeeze(0).numpy()
             obs, reward, terminated, truncated, info = env.step(action)
             video_recorder.capture_frame()
