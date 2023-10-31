@@ -82,7 +82,7 @@ def gae(reward, next_critic, must_bootstrap, critic, discount_factor, gae_coef):
     gae_val = td[-1]
     gaes = [gae_val]
     for t in range(td_shape - 2, -1, -1):
-        gae_val = td[t] + discount_factor * gae_coef * mb[:-1][t] * gae_val
+        gae_val = td[t] + discount_factor * gae_coef * mb[t] * gae_val
         gaes.append(gae_val)
     gaes = list([g.unsqueeze(0) for g in reversed(gaes)])
     gaes = torch.cat(gaes, dim=0)
