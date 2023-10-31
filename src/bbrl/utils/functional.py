@@ -54,9 +54,26 @@ def doubleqlearning_temporal_difference(
     return td
 
 
-def gae(critic, reward, must_bootstrap, discount_factor, gae_coef):
+def old_gae(critic, reward, must_bootstrap, discount_factor, gae_coef):
     mb = must_bootstrap.float()
     td = reward[1:] + discount_factor * mb * critic[1:].detach() - critic[:-1]
+    # handling td0 case
+    if gae_coef == 0.0:
+        return td
+
+    td_shape = td.shape[0]
+    gae_val = td[-1]
+    gaes = [gae_val]
+    for t in range(td_shape - 2, -1, -1):
+        gae_val = td[t] + discount_factor * gae_coef * mb[:-1][t] * gae_val
+        gaes.append(gae_val)
+    gaes = list([g.unsqueeze(0) for g in reversed(gaes)])
+    gaes = torch.cat(gaes, dim=0)
+    return gaes
+
+def gae(reward, next_critic, must_bootstrap, critic, discount_factor, gae_coef):
+    mb = must_bootstrap.int()
+    td = reward + discount_factor * next_critic.detach() * mb - critic
     # handling td0 case
     if gae_coef == 0.0:
         return td
