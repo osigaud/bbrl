@@ -83,7 +83,9 @@ def record_video(env: Env, policy: Agent, path: str):
         video_recorder.close()
 
 
-def _convert_action(action: Tensor) -> Union[int, np.ndarray]:
+def _convert_action(action: Union[Dict,Tensor]) -> Union[int, np.ndarray]:
+    if isinstance(action, dict):
+        return {key: _convert_action(value) for key, value in action.items()}
     if len(action.size()) == 0:
         action = action.item()
         assert isinstance(action, int)
@@ -322,6 +324,23 @@ class ParallelGymAgent(GymAgent):
             self.include_last_state = False
 
     @staticmethod
+    def _flatten_value(value: Dict[str, Any]):
+        """Flatten nested dict structures with concatenating keys"""
+        ret = {}
+        for key, value in value.items():
+            if isinstance(value, Tensor):
+                ret[key] = value
+            elif isinstance(value, dict):
+                for subkey, subvalue in ParallelGymAgent._flatten_value(value).items():
+                    ret[f"{key}/{subkey}"] = subvalue
+            else:
+                raise ValueError(
+                    f"Observation component must be a torch.Tensor or a dict, not {type(observation)}"
+                )                
+
+        return ret
+
+    @staticmethod
     def _format_frame(frame):
         observation = _format_frame(frame)
 
@@ -329,7 +348,7 @@ class ParallelGymAgent(GymAgent):
             return {"env_obs": observation}
 
         if isinstance(observation, dict):
-            return {f"env_obs/{key}": value for key, value in observation.items()}
+            return {f"env_obs/{key}": value for key, value in ParallelGymAgent._flatten_value(observation).items()}
 
         raise ValueError(
             f"Observation must be a torch.Tensor or a dict, not {type(observation)}"
@@ -424,12 +443,35 @@ class ParallelGymAgent(GymAgent):
                 observations.append(self._reset(k))
                 self._last_frame[k] = None
         else:
-            action = self.get((self.input, t - 1))
-            assert action.size()[0] == self.num_envs, "Incompatible number of envs"
-
+            if self.input in self.workspace.variables:
+                # Action is a tensor
+                action = self.get((self.input, t - 1))
+                assert action.size()[0] == self.num_envs, f"Incompatible number of envs ({action.shape[0]} vs {self.num_envs})"
+            else:
+                # Action is a dictionary
+                action = {}
+                prefix = f"{self.input}/"
+                len_prefix = len(prefix)
+                for varname in self.workspace.variables:
+                    if not varname.startswith(prefix):
+                        continue
+                    keys = varname[len_prefix:].split("/")
+                    current = action
+                    for key in keys[:-1]:
+                        current = current.setdefault(key, {})
+                    current[keys[-1]] = self.get((varname, t - 1))
+                
+            def dict_slice(k: int, object):
+                if isinstance(object, dict):
+                    return {key: dict_slice(k, value) for key, value in object.items()}
+                return object[k]
+                
             for k, env in enumerate(self.envs):
                 if self._last_frame[k] is None:
-                    frame = self._step(k, action[k])
+                    if isinstance(action, dict):
+                        frame = self._step(k, dict_slice(k, action))
+                    else:
+                        frame = self._step(k, action[k])
                 else:
                     # Use last frame
                     frame = self._last_frame[k]
