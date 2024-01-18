@@ -172,7 +172,7 @@ class GymAgent(TimeAgent, SeedableAgent, SerializableAgent, ABC):
 
         self.reward_at_t = reward_at_t
         self.include_last_state = include_last_state
-        self.ghost_params: nn.Parameter = nn.Parameter(torch.randn(()))
+        self.ghost_params: nn.Parameter = nn.Parameter(torch.Tensor())
 
         self.input: str = input_string
         self.output: str = output_string
