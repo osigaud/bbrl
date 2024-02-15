@@ -83,7 +83,7 @@ def record_video(env: Env, policy: Agent, path: str):
         video_recorder.close()
 
 
-def _convert_action(action: Union[Dict,Tensor]) -> Union[int, np.ndarray]:
+def _convert_action(action: Union[Dict, Tensor]) -> Union[int, np.ndarray]:
     if isinstance(action, dict):
         return {key: _convert_action(value) for key, value in action.items()}
     if len(action.size()) == 0:
@@ -166,11 +166,15 @@ class GymAgent(TimeAgent, SeedableAgent, SerializableAgent, ABC):
         :param reward_at_t: The reward for transitioning from $s_t$ to $s_{t+1}$
             is $r_t$ if reward_at_t is True, and $r_{t+1}$ otherwise (default
             False).
-        :param include_last_state: By default (False), the final state is not
-            included when using an auto-reset environment. Setting to True allows
-            to preserve it.
+        :param include_last_state: By default (True), the final state is
+            included when using an auto-reset environment. Setting to False
+            discards this information.
         """
         super().__init__(*args, **kwargs)
+
+        assert (
+            include_last_state or reward_at_t
+        ), "Last state should be included when reward is at t+1"
 
         self.reward_at_t = reward_at_t
         self.include_last_state = include_last_state
@@ -335,8 +339,9 @@ class ParallelGymAgent(GymAgent):
                     ret[f"{key}/{subkey}"] = subvalue
             else:
                 raise ValueError(
-                    f"Observation component must be a torch.Tensor or a dict, not {type(observation)}"
-                )                
+                    "Observation component must be a torch.Tensor or a dict,"
+                    f" not {type(value)}"
+                )
 
         return ret
 
@@ -348,7 +353,10 @@ class ParallelGymAgent(GymAgent):
             return {"env_obs": observation}
 
         if isinstance(observation, dict):
-            return {f"env_obs/{key}": value for key, value in ParallelGymAgent._flatten_value(observation).items()}
+            return {
+                f"env_obs/{key}": value
+                for key, value in ParallelGymAgent._flatten_value(observation).items()
+            }
 
         raise ValueError(
             f"Observation must be a torch.Tensor or a dict, not {type(observation)}"
@@ -446,7 +454,9 @@ class ParallelGymAgent(GymAgent):
             if self.input in self.workspace.variables:
                 # Action is a tensor
                 action = self.get((self.input, t - 1))
-                assert action.size()[0] == self.num_envs, f"Incompatible number of envs ({action.shape[0]} vs {self.num_envs})"
+                assert (
+                    action.size()[0] == self.num_envs
+                ), f"Incompatible number of envs ({action.shape[0]} vs {self.num_envs})"
             else:
                 # Action is a dictionary
                 action = {}
@@ -460,12 +470,12 @@ class ParallelGymAgent(GymAgent):
                     for key in keys[:-1]:
                         current = current.setdefault(key, {})
                     current[keys[-1]] = self.get((varname, t - 1))
-                
+
             def dict_slice(k: int, object):
                 if isinstance(object, dict):
                     return {key: dict_slice(k, value) for key, value in object.items()}
                 return object[k]
-                
+
             for k, env in enumerate(self.envs):
                 if self._last_frame[k] is None:
                     if isinstance(action, dict):
