@@ -172,10 +172,6 @@ class GymAgent(TimeAgent, SeedableAgent, SerializableAgent, ABC):
         """
         super().__init__(*args, **kwargs)
 
-        assert (
-            include_last_state or reward_at_t
-        ), "Last state should be included when reward is at t+1"
-
         self.reward_at_t = reward_at_t
         self.include_last_state = include_last_state
         self.ghost_params: nn.Parameter = nn.Parameter(torch.Tensor())
