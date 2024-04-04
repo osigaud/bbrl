@@ -74,7 +74,7 @@ Link to the paper: [SaLinA: Sequential Learning of Agents](https://arxiv.org/abs
 
 ## Understanding BBRL
 
-To help you understand how to use BBRL, we have written a doc [here](docs/index.html)
+To help you understand how to use BBRL, we have written a doc [here](https://htmlpreview.github.io/?https://github.com/osigaud/bbrl/blob/master/docs/index.html)
 
 #### Coding your first RL algorithms with BBRL
 
