@@ -38,6 +38,12 @@ Link to the paper: [SaLinA: Sequential Learning of Agents](https://arxiv.org/abs
 
 ## News
 
+* April 2024:
+* * Major evolution of the documentation
+
+* March 2024:
+* * Bug fixes in the replay buffer
+
 * May-June 2023:
 * * Integrated the use of gymnasium. Turned google colab notebooks into colab compatible jupyter notebooks. Refactored all the notebooks. 
 
@@ -66,25 +72,9 @@ Link to the paper: [SaLinA: Sequential Learning of Agents](https://arxiv.org/abs
 
 * * When using autoreset=True and no replay buffer, transitions from an episode to the next were considered as standard steps in an episode. We added a mechanism to properly filter them out, using an additional `get_transitions()` function in the Workspace class.
 
-### Starting with notebooks
+## Understanding BBRL
 
-There are two kinds of notebooks:
-
-- some are just for reading, they explain the main concepts and design choices behind BBRL
-
-- some are designed for learning about RL algorithms and practicing with BBRL. Ideally, these notebooks should be studied in the provided order.
-
-#### Explanatory notebooks
-
-- Getting started: The [BBRL model](https://colab.research.google.com/drive/1_yp-JKkxh_P8Yhctulqm0IrLbE41oK1p?usp=sharing)
-
-- Explanations about using [autoreset=False](https://colab.research.google.com/drive/1EX5O03mmWFp9wCL_Gb_-p08JktfiL2l5?usp=sharing)
-
-- Explanations about using [autoreset=True](https://colab.research.google.com/drive/1W9Y-3fa6LsPeR6cBC1vgwBjKfgMwZvP5?usp=sharing)
-
-- [Different Reward Indexing Schemes](https://colab.research.google.com/drive/1Cld72_FBA1aMS2U4EsyV3LGZIlQC_PsC?usp=sharing)
-
-- [Dealing with Time Limits](https://colab.research.google.com/drive/1erLbRKvdkdDy0Zn1X_JhC01s1QAt4BBj?usp=sharing)
+To help you understand how to use BBRL, we have written a doc [here](docs/index.html)
 
 #### Coding your first RL algorithms with BBRL
 
@@ -116,11 +106,11 @@ Most of the notebooks below can be run under jupyter notebook as well as under G
 
 ### Learning RL with `bbrl` in your favorite coding environment
 
-Have a look at the [bbrl_examples](https://github.com/osigaud/bbrl_example.git) library.
+Have a look at the [bbrl_algos](https://github.com/osigaud/bbrl_algos.git) library.
 
 ### Code Documentation:
 
-[Generated with pdoc](https://htmlpreview.github.io/?https://github.com/osigaud/bbrl/blob/master/docs/bbrl/index.html)
+[Generated with pdoc](https://htmlpreview.github.io/?https://github.com/osigaud/bbrl/blob/master/documentation/bbrl/index.html)
 
 ### Development
 
