@@ -1,7 +1,6 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 #
-
 import torch
 
 
@@ -73,8 +72,11 @@ def old_gae(critic, reward, must_bootstrap, discount_factor, gae_coef):
 
 def gae(reward, next_critic, must_bootstrap, critic, discount_factor, gae_coef):
     mb = must_bootstrap.int()
+    # delta = reward + discount_factor * next_critic.detach() * mb
     td = reward + discount_factor * next_critic.detach() * mb - critic
     # handling td0 case
+    # print("delta", delta)
+    # print("td", td)
     if gae_coef == 0.0:
         return td
 
@@ -82,6 +84,7 @@ def gae(reward, next_critic, must_bootstrap, critic, discount_factor, gae_coef):
     gae_val = td[-1]
     gaes = [gae_val]
     for t in range(td_shape - 2, -1, -1):
+        # print(t, "td", td[t], mb[t])
         gae_val = td[t] + discount_factor * gae_coef * mb[t] * gae_val
         gaes.append(gae_val)
     gaes = list([g.unsqueeze(0) for g in reversed(gaes)])
