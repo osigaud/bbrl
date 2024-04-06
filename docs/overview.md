@@ -62,7 +62,7 @@ In BBRL, this core loop is represented by applying a temporal agent to a workspa
 
 Note that everything interacting in a workspace is an agent, so in BBRL the RL environment is an agent too.
 
-In most use cases of RL, this environment agent will build upon a [gymnasium]() environment.
+In most use cases of RL, this environment agent will build upon a [gymnasium](https://gymnasium.farama.org/index.html) environment.
 Thus is must be capable of calling `reset()` and `step()` following the gymnasium interface so as to write observations and rewards through time along the unfolding of interaction episodes.
 
 A key feature of BBRL is that it provides a generic `ParallelGymAgent` class that builds upon any gymnasium environment and that provides all the necessary mechanics to transparently run this environment into the workspace without having to care about writing observations and rewards, dealing with the end of the episodes, etc. 
@@ -81,8 +81,8 @@ In particular, if an agent is running episodes over several environments and an 
 
 - or restart the agent in this environment, and desynchronize episodes in the various environments? That's the `autoreset=True` option. This solution looks better, but it raises additional issues.
 
-More details about these options can be found here [here]("./menus/autoreset_menu.html").
+More details about these options can be found here [here](autoreset.md).
 
 ## Dealing with time limits
 
-Most RL problems are episodic: at some point, the episode stops and the learning agent is eventually reset somewhere else. One condition for stopping an episode can be that a time limit has been reached. This case is known in the literature to raise some consistency issues. This is explained [here]("./menus/time_limits_menu.html").
+Most RL problems are episodic: at some point, the episode stops and the learning agent is eventually reset somewhere else. One condition for stopping an episode can be that a time limit has been reached. This case is known in the literature to raise some consistency issues. This is explained [here](time_limits.md).

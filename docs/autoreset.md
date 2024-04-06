@@ -43,7 +43,7 @@ The collection model based on epochs faces the following list of issues:
 
 - In general, the end of an epoch does not coincide with the end of all episodes. When an epochs ends before an episode stops, a specific treatment is needed to avoid loosing data from an epoch to the next. This is explained in the <a href="#binding">Binding together data collection epochs from the same episode</a> section.
 - Data from an epoch may contain several successive episodes, and the transition from an episode to the next should not be considered as a training transition, it must be properly ignored by the training process. This is explained in the <a href="#dealing">Dealing with transitions from one episode to the next</a> section.
-- An episode may stop either because the corresponding task is done, or because a time limit has been reached. This also requires a specific treatment. See <a href="time_limits.html">here</a> for more information about this issue.
+- An episode may stop either because the corresponding task is done, or because a time limit has been reached. This also requires a specific treatment. See <a href="time_limits.md">here</a> for more information about this issue.
 
 <h3 id="binding">Binding together data collection epochs from the same episode</h3>
 
@@ -55,7 +55,7 @@ The right way to fix this issue is to copy the last time step frame of the previ
 
 <img src="images/transition_shifted_OK.png" alt="[copyright Sorbonne Universite]" >
 
-This mechanism is implemented using `train_workspace.copy_n_last_steps(1)` as shown in [this notebook]().
+This mechanism is implemented using `train_workspace.copy_n_last_steps(1)` as shown at the bottom of [this notebook](03-multi_env_autoreset.ipynb).
 
 Note that `train_workspace.zero_grad()` is used to clean all gradients in the workspace before processing the new data that will be collected.
 
