@@ -17,11 +17,11 @@ What we want to do is illustrated below.
 If life was simple, we would just use something simple like `torch.gather(q-values, actions)`...
 But life is not simple!
 
-In practice, the actions Tensor is organized this way: [a_1\, a_3\, a_0\, a_2\, a_3\, a_1]. But we need them to be organized this way: [[a_1][a_3][a_0][a_2][a_3][a_1]].
+In practice, the actions Tensor is organized this way: $[a_1\, a_3\, a_0\, a_2\, a_3\, a_1]$. But we need them to be organized this way: $[[a_1][a_3][a_0][a_2][a_3][a_1]]$.
 
 So, to get the adequate indexes, we need to use `actions.unsqueeze(-1)`.
 
-Besides, `torch.gather()` does produce a Tensor like this: [[q_1][q_3][q_0][q_2][q_3][q_1]]. But we need a Tensor like this: [q_1, q_3, q_0, q_2, q_3, q_1].
+Besides, `torch.gather()` does produce a Tensor like this: $[[q_1][q_3][q_0][q_2][q_3][q_1]]$. But we need a Tensor like this: $[q_1, q_3, q_0, q_2, q_3, q_1]$.
 
 So we use something like `qvals = qvalues.gather(some params...).squeeze(-1)`.
 
