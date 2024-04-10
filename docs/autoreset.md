@@ -31,7 +31,7 @@ As shown below, this facilitates checking if all environments are done and getti
 
 <img src="images/noautoreset_nenvs.png" alt="[copyright Sorbonne Universite]" >
 
-To practice about all these aspects of using a ParallelGymAgent with `autoreset=False`, you should play with [this notebook](02-multi_env_noautoreset.student.ipynb).
+To practice about all these aspects of using a ParallelGymAgent with `autoreset=False`, you should play with [this notebook](notebooks/02-multi_env_noautoreset.student.ipynb).
 
 ## The `autoreset=True` case
 
@@ -55,7 +55,7 @@ The right way to fix this issue is to copy the last time step frame of the previ
 
 <img src="images/transition_shifted_OK.png" alt="[copyright Sorbonne Universite]" >
 
-This mechanism is implemented using `train_workspace.copy_n_last_steps(1)` as shown at the bottom of [this notebook](03-multi_env_autoreset.student.ipynb).
+This mechanism is implemented using `train_workspace.copy_n_last_steps(1)` as shown at the bottom of [this notebook](notebooks/03-multi_env_autoreset.student.ipynb).
 
 Note that `train_workspace.zero_grad()` is used to clean all gradients in the workspace before processing the new data that will be collected.
 
@@ -85,4 +85,4 @@ The list is organized as visualized below.
 <img src="images/transition_reorganization.png" alt="[copyright Sorbonne Universite]" >
 
 
-To practice about all these aspects of using a ParallelGymAgent with `autoreset=True`, you should play with [this notebook](03-multi_env_autoreset.student.ipynb).
+To practice about all these aspects of using a ParallelGymAgent with `autoreset=True`, you should play with [this notebook](notebooks/03-multi_env_autoreset.student.ipynb).
