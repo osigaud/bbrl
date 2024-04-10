@@ -13,4 +13,4 @@ In former [OpenAI gym environments](https://www.gymlibrary.dev/index.html), prop
 
 So the rules to apply when an episode stops is simple: the values from the previous step should not be propagated if `terminated` is True, and it should be propagated in any other case.
 
-To implement the above, rather than using complicated "if... else... " rules, we multiply the value of the next state by `(1 - terminated)` : if the `terminated` boolean is True, its value is 1, thus `(1 - terminated)` is 0, thus the value from the next state is cancelled. If it is False, `(1 - terminated)` is 1, thus the value is not cancelled.
+To implement the above, rather than using complicated "if... else... " rules, we multiply the value of the next state by `~terminated`, making profit of the True=1, False=0 equivalence in python: if the `terminated` boolean is True, its value is 1, thus `~terminated` is 0 and the value from the next state is cancelled. If it is False, `~terminated` is 1, thus the value is not cancelled.
