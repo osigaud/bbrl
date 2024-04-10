@@ -6,11 +6,11 @@ As explained in [this paper](http://proceedings.mlr.press/v80/pardo18a/pardo18a.
 
 The proper way to deal with time limits consists in still propagating values in the critic from the next state to the current state (a Bellman backup) over the last transition when the episode is stopped by a time limit, by contrast with the case where the episode stops because the task is done, in which case the value of the next state should be ignored.
 
-In former OpenAI gym environments, properly dealing with time limits was a little intricate. With the more recent gymnasium library, the situation is simpler. The environment outputs three variables related to the end of an episode:
-- terminated is True if the episode stops due to a terminal success or failure from the behavior of the agent, False otherwise;
-- truncated is True if the episode stops because the time limit is elapsed, False otherwise;
-- done is True if either terminated or truncated is true, False otherwise.
+In former [OpenAI gym environments](https://www.gymlibrary.dev/index.html), properly dealing with time limits was a little intricate. With the more recent [gymnasium](https://gymnasium.farama.org/index.html) library, the situation is simpler. The environment outputs three variables related to the end of an episode:
+- `terminated` is True if the episode stops due to a terminal success or failure from the behavior of the agent, False otherwise;
+- `truncated` is True if the episode stops because the time limit is elapsed, False otherwise;
+- `done` is True if either terminated or truncated is true, False otherwise.
 
-So the rules to apply when an episode stops is simple: the episode should not be bootstrapped if terminated is True, and it should be bootstrapped in any other case.
+So the rules to apply when an episode stops is simple: the values from the previous step should not be propagated if `terminated` is True, and it should be propagated in any other case.
 
-To implement the above, rather than using complicated "if... else... " rules, we multiply the value of the next state by `(1 - terminated)` : if the terminated boolean is True, its value is 1, thus (1 - terminated) is 0, and if it is False, (1 - terminated) is 1.
+To implement the above, rather than using complicated "if... else... " rules, we multiply the value of the next state by `(1 - terminated)` : if the `terminated` boolean is True, its value is 1, thus `(1 - terminated)` is 0, thus the value from the next state is cancelled. If it is False, `(1 - terminated)` is 1, thus the value is not cancelled.
