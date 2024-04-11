@@ -2,9 +2,9 @@
 
 `bbrl`- A Flexible and Simple Library for Reinforcement Learning deriving from SaLinA
 
-BBRL stands for "BlackBoard Reinforcement Learning". Initially, this library was a fork of [the SaLinA library](https://github.com/facebookresearch/salina). 
-But SaLinA is a general model for sequential learning whereas BBRL is dedicated to RL, thus it focuses on a subset of SaLinA. 
-Morevover, BBRL is designed for education purpose (in particular, to teach various RL algorithms, concepts and phenomena). 
+BBRL stands for "BlackBoard Reinforcement Learning". Initially, this library was a fork of [the SaLinA library](https://github.com/facebookresearch/salina).
+But SaLinA is a general model for sequential learning whereas BBRL is dedicated to RL, thus it focuses on a subset of SaLinA.
+Morevover, BBRL is designed for education purpose (in particular, to teach various RL algorithms, concepts and phenomena).
 Thus the fork slowly drifted away from SaLinA and became independent after a few months, even if some parts of the code are still inherited from SaLinA.
 
 ## TL;DR.
@@ -45,7 +45,7 @@ Link to the paper: [SaLinA: Sequential Learning of Agents](https://arxiv.org/abs
 * * Bug fixes in the replay buffer
 
 * May-June 2023:
-* * Integrated the use of gymnasium. Turned google colab notebooks into colab compatible jupyter notebooks. Refactored all the notebooks. 
+* * Integrated the use of gymnasium. Turned google colab notebooks into colab compatible jupyter notebooks. Refactored all the notebooks.
 
 * August 2022:
 * * Major updates of the notebook-based documentation

@@ -10,6 +10,7 @@ import numpy as np
 try:
     import gym
     import my_gym
+
     no_gym = False
 except ImportError:
     no_gym = True

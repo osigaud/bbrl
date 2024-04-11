@@ -15,6 +15,7 @@ repos:
     - flake8-print
     - flake8-fixme
     id: flake8
+    args: ['--max-line-length=88', '--extend-ignore=T101,T201,E722,F401,E501,E203']
   repo: https://github.com/pycqa/flake8
   rev: 6.0.0
 - hooks:

@@ -73,4 +73,3 @@ def gae(reward, next_critic, must_bootstrap, critic, discount_factor, gae_coef):
     gaes = list([g.unsqueeze(0) for g in reversed(gaes)])
     gaes = torch.cat(gaes, dim=0)
     return gaes
-

@@ -724,6 +724,7 @@ class Workspace:
             workspace.set_full(k, v)
         return workspace
 
+
 class _SplitSharedWorkspace:
     """This is a view over a Workspace, restricted to particular batch dimensions.
     It is used when multiple agents are reading/writing in the same workspace
