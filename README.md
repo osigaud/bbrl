@@ -85,10 +85,6 @@ Most of the notebooks below can be run under jupyter notebook as well as under G
 - `jupyter notebook`
 - the notebook opens in your browser
 
-- [A simple agent-environment interaction code](https://colab.research.google.com/drive/1gSdkOBPkIQi_my9TtwJ-qWZQS0b2X7jt?usp=sharing)
-
-- [Building a simple Neural RL agent in interaction with a gym environment](https://colab.research.google.com/drive/1Ui481r47fNHCQsQfKwdoNEVrEiqAEokh?usp=sharing)
-
 - [Coding DQN using autoreset=False](http://master-dac.isir.upmc.fr/rld/rl/03-1-dqn-introduction.student.ipynb)
 
 - [Coding DQN using autoreset=True](http://master-dac.isir.upmc.fr/rld/rl/03-2-dqn-full.student.ipynb)
