@@ -32,7 +32,8 @@ Link to the paper: [SaLinA: Sequential Learning of Agents](https://arxiv.org/abs
 
 ## Quick Start
 
-* Just clone the repo
+* create and activate a python environment with your favorite tool, e.g. conda or venv (for instance, `conda create bbrl_env` ; `conda activate bbrl_env`)
+* Then clone the repo
 * `pip install -e .`
 
 
@@ -78,7 +79,11 @@ To help you understand how to use BBRL, we have written a doc [here](https://git
 
 #### Coding your first RL algorithms with BBRL
 
-Most of the notebooks below can be run under jupyter notebook as well as under Google colaboratory. In any case, download it on your disk and run it with your favorite notebook environment.
+Most of the notebooks below can be run under jupyter notebook as well as under Google colaboratory. In any case, download it on your disk and run it with your favorite notebook environment:
+
+- `conda activate bbrl_env` (for instance)
+- `jupyter notebook`
+- the notebook opens in your browser
 
 - [A simple agent-environment interaction code](https://colab.research.google.com/drive/1gSdkOBPkIQi_my9TtwJ-qWZQS0b2X7jt?usp=sharing)
 
@@ -92,9 +97,9 @@ Most of the notebooks below can be run under jupyter notebook as well as under G
 
 - [Coding basic Policy Gradient algorithms and REINFORCE](http://master-dac.isir.upmc.fr/rld/rl/05-reinforce.student.ipynb)
 
-- [A basic version of the A2C algorithm](http://master-dac.isir.upmc.fr/rld/rl/06-1-a2c_basic.student.ipynb)
+- [A basic version of the A2C algorithm](http://master-dac.isir.upmc.fr/rld/rl/06-1-a2c-basic.student.ipynb)
 
-- [A more advanced version of the A2C algorithm](http://master-dac.isir.upmc.fr/rld/rl/06-2-a2c_advanced.student.ipynb)
+- [A more advanced version of the A2C algorithm](http://master-dac.isir.upmc.fr/rld/rl/06-2-a2c-advanced.student.ipynb)
 
 - [The KL penalty version of PPO](http://master-dac.isir.upmc.fr/rld/rl/07-1-ppo_penalty.student.ipynb)
 
@@ -102,7 +107,10 @@ Most of the notebooks below can be run under jupyter notebook as well as under G
 
 - [Coding SAC](http://master-dac.isir.upmc.fr/rld/rl/08-sac.student.ipynb)
 
+<!---
 - [Coding TQC](https://colab.research.google.com/drive/1Lg9_M9YwI_E6Xm1on8GY9TLYxLItTSuw?usp=sharing)
+-->
+
 
 ### Learning RL with `bbrl` in your favorite coding environment
 
@@ -118,7 +126,7 @@ See [contributing](CONTRIBUTING.md)
 
 ## Dependencies
 
-`bbrl` utilizes `pytorch`, `hydra` for configuring experiments, and `gym` or `gymnasium` for reinforcement learning algorithms.
+`bbrl` utilizes `pytorch`, `hydra` for configuring experiments, and `gymnasium` for reinforcement learning algorithms. See requirements.txt for more details.
 
 ## License
 
