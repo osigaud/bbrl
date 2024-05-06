@@ -25,7 +25,7 @@ Note also that when using gradient descent techniques from pytorch over data sto
 
 ### Agents
 
-Agents are the entities interacting into a workspace. In practice, all agents interacting with a workspace have to be encapsulated into a temporal agent, from the class BBRL.agents.TemporalAgent. A temporal agent contains an object of the class BBRL.agents.Agents which iteself contains a list of inner agents. A BBRL algorithm will generally consists of the composition of several agents interacting in the same workspace by reading and writing each other's variables. 
+Agents are the entities interacting into a workspace. In practice, all agents interacting with a workspace have to be encapsulated into a temporal agent, from the class BBRL.agents.TemporalAgent. A temporal agent contains an object of the class BBRL.agents.Agents which iteself contains a list of inner agents. A BBRL algorithm will generally consists of the composition of several agents interacting in the same workspace by reading and writing each other's variables.
 
 For instance, one can implement the basic RL loop by having an environment agent which writes states and rewards and a RL agent which writes actions, both agents reading the variables from the other at each time step.
 
@@ -65,11 +65,11 @@ Note that everything interacting in a workspace is an agent, so in BBRL the RL e
 In most use cases of RL, this environment agent will build upon a [gymnasium](https://gymnasium.farama.org/index.html) environment.
 Thus is must be capable of calling `reset()` and `step()` following the gymnasium interface so as to write observations and rewards through time along the unfolding of interaction episodes.
 
-A key feature of BBRL is that it provides a generic `ParallelGymAgent` class that builds upon any gymnasium environment and that provides all the necessary mechanics to transparently run this environment into the workspace without having to care about writing observations and rewards, dealing with the end of the episodes, etc. 
+A key feature of BBRL is that it provides a generic `ParallelGymAgent` class that builds upon any gymnasium environment and that provides all the necessary mechanics to transparently run this environment into the workspace without having to care about writing observations and rewards, dealing with the end of the episodes, etc.
 
 ## autoreset=True or autoreset=False?
 
-In addition to facilitating interactions between an RL agent and a single environment, as the name implies, the ParallelGymAgent makes it possible to represent several instances of the same gymnasium environment in parallel, making it possible to train an agent into several identical environments at the same time. 
+In addition to facilitating interactions between an RL agent and a single environment, as the name implies, the ParallelGymAgent makes it possible to represent several instances of the same gymnasium environment in parallel, making it possible to train an agent into several identical environments at the same time.
 
 This feature is important for RL, as most deep RL algorithms are more stable when the learning agent is trained from multiple environments.
 

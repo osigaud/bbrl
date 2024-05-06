@@ -6,7 +6,7 @@ To know more about the project go to the [README](README.md) first.
 
 ## Pre-commit hooks
 
-Pre-commits hooks have been configured for this project using the 
+Pre-commits hooks have been configured for this project using the
 [pre-commit](https://pre-commit.com/) library:
 
 - [black](https://github.com/psf/black) python formatter

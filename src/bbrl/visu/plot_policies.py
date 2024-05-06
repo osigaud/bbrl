@@ -6,7 +6,6 @@ from typing import Union
 
 import matplotlib.pyplot as plt
 import numpy as np
-import random
 import torch
 from gymnasium.spaces import flatdim
 

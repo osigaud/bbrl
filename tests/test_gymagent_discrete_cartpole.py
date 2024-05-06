@@ -20,14 +20,18 @@ from bbrl.agents import Agents, TemporalAgent
 try:
     import gym
     import my_gym
+
     no_gym = False
     from bbrl.agents.gymb import AutoResetGymAgent, NoAutoResetGymAgent
 except ImportError:
     no_gym = True
+
     class AutoResetGymAgent:
         pass
+
     class NoAutoResetGymAgent:
         pass
+
 
 from bbrl.utils.utils import is_vec_of_ones
 

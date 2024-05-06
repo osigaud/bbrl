@@ -11,3 +11,5 @@ matplotlib
 seaborn
 scipy
 bootstrapped
+gymnasium
+moviepy
