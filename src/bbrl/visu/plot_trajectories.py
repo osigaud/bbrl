@@ -10,18 +10,17 @@ from typing import Union
 
 
 def plot_trajectory(
-        data,
-        fig_index = 1,
-        x_plot: Union[int, None] = 0,
-        y_plot: Union[int, None] = 1,
-        x_label: str = 'x',
-        y_label: str = 'y',
-        obs_key: str = 'env/obs',
-        title: str = 'Trajectory',
-        save_figure=True,
-        plot=True
+    data,
+    fig_index=1,
+    x_plot: Union[int, None] = 0,
+    y_plot: Union[int, None] = 1,
+    x_label: str = "x",
+    y_label: str = "y",
+    obs_key: str = "env/obs",
+    title: str = "Trajectory",
+    save_figure=True,
+    plot=True,
 ) -> None:
-
     if isinstance(data, Workspace):
         o = data.get_full(obs_key).numpy()
     elif isinstance(data, np.ndarray):
@@ -36,6 +35,6 @@ def plot_trajectory(
     for c in range(o.shape[0]):
         colors += [c] * o.shape[1]
 
-    plt.scatter(x, y, c=colors, cmap='viridis', alpha=0.7, s=1)
+    plt.scatter(x, y, c=colors, cmap="viridis", alpha=0.7, s=1)
     figname = "trajectory_" + str(fig_index) + ".pdf"
     final_show(save_figure, plot, figname, x_label, y_label, title, "/plots/")

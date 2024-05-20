@@ -1,7 +1,6 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 #
-
 import torch
 
 
@@ -54,27 +53,13 @@ def doubleqlearning_temporal_difference(
     return td
 
 
-def old_gae(critic, reward, must_bootstrap, discount_factor, gae_coef):
-    mb = must_bootstrap.float()
-    td = reward[1:] + discount_factor * mb * critic[1:].detach() - critic[:-1]
-    # handling td0 case
-    if gae_coef == 0.0:
-        return td
-
-    td_shape = td.shape[0]
-    gae_val = td[-1]
-    gaes = [gae_val]
-    for t in range(td_shape - 2, -1, -1):
-        gae_val = td[t] + discount_factor * gae_coef * mb[:-1][t] * gae_val
-        gaes.append(gae_val)
-    gaes = list([g.unsqueeze(0) for g in reversed(gaes)])
-    gaes = torch.cat(gaes, dim=0)
-    return gaes
-
 def gae(reward, next_critic, must_bootstrap, critic, discount_factor, gae_coef):
     mb = must_bootstrap.int()
+    # delta = reward + discount_factor * next_critic.detach() * mb
     td = reward + discount_factor * next_critic.detach() * mb - critic
     # handling td0 case
+    # print("delta", delta)
+    # print("td", td)
     if gae_coef == 0.0:
         return td
 
@@ -82,64 +67,9 @@ def gae(reward, next_critic, must_bootstrap, critic, discount_factor, gae_coef):
     gae_val = td[-1]
     gaes = [gae_val]
     for t in range(td_shape - 2, -1, -1):
+        # print(t, "td", td[t], mb[t])
         gae_val = td[t] + discount_factor * gae_coef * mb[t] * gae_val
         gaes.append(gae_val)
     gaes = list([g.unsqueeze(0) for g in reversed(gaes)])
     gaes = torch.cat(gaes, dim=0)
     return gaes
-
-
-def compute_reinforce_loss(
-    reward, action_probabilities, baseline, action, done, discount_factor
-):
-    batch_size = reward.size()[1]
-
-    # Find the first occurrence of done for each element in the batch
-    v_done, trajectories_length = done.float().max(0)
-    trajectories_length += 1
-    assert v_done.eq(1.0).all()
-    max_trajectories_length = trajectories_length.max().item()
-    # Shorten trajectories for faster computation
-    reward = reward[:max_trajectories_length]
-    action_probabilities = action_probabilities[:max_trajectories_length]
-    baseline = baseline[:max_trajectories_length]
-    action = action[:max_trajectories_length]
-
-    # Create a binary mask to mask useless values (of size max_trajectories_length x batch_size)
-    arange = (
-        torch.arange(max_trajectories_length, device=done.device)
-        .unsqueeze(-1)
-        .repeat(1, batch_size)
-    )
-    mask = arange.lt(
-        trajectories_length.unsqueeze(0).repeat(max_trajectories_length, 1)
-    )
-    reward = reward * mask
-
-    # Compute discounted cumulated reward
-    cum_reward = [torch.zeros_like(reward[-1])]
-    for t in range(max_trajectories_length - 1, 0, -1):
-        cum_reward.append(discount_factor + cum_reward[-1] + reward[t])
-    cum_reward.reverse()
-    cum_reward = torch.cat([c.unsqueeze(0) for c in cum_reward])
-
-    # baseline loss
-    g = baseline - cum_reward
-    baseline_loss = (g) ** 2
-    baseline_loss = (baseline_loss * mask).mean()
-
-    # policy loss
-    log_probabilities = _index(action_probabilities, action).log()
-    policy_loss = log_probabilities * -g.detach()
-    policy_loss = policy_loss * mask
-    policy_loss = policy_loss.mean()
-
-    # entropy loss
-    entropy = torch.distributions.Categorical(action_probabilities).entropy() * mask
-    entropy_loss = entropy.mean()
-
-    return {
-        "baseline_loss": baseline_loss,
-        "policy_loss": policy_loss,
-        "entropy_loss": entropy_loss,
-    }

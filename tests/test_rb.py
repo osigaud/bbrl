@@ -8,6 +8,7 @@ try:
     import gym
     import my_gym
     from bbrl.agents.gyma import AutoResetGymAgent
+
     no_gym = False
 except ImportError:
     no_gym = True
@@ -39,7 +40,6 @@ def make_gym_env(env_name):
 
 
 def run_rb(cfg):
-
     train_env_agent = AutoResetGymAgent(
         get_class(cfg.gym_env),
         get_arguments(cfg.gym_env),

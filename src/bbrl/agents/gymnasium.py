@@ -21,6 +21,7 @@ from gymnasium.wrappers import AutoResetWrapper
 from gymnasium.wrappers.monitoring.video_recorder import VideoRecorder
 
 from bbrl import SeedableAgent, SerializableAgent, TimeAgent, Agent
+from bbrl.agents.utils import TemporalAgent
 from bbrl.workspace import Workspace
 
 
@@ -45,13 +46,16 @@ def make_env(env_name, autoreset=False, wrappers: List = [], **kwargs):
     return env
 
 
-def record_video(env: Env, agent: Agent, path: str):
+def record_video(env: Env, policy: Agent, path: str):
     """Record a video for a given gymnasium environment and a BBRL agent
 
     :param env: The environment (created with `render_mode="rgb_array"`)
-    :param agent: The BBRL agent
+    :param policy: The BBRL agent
     :param path: The path of the video
     """
+    # Tries to get the non temporal agent.
+    if isinstance(policy, TemporalAgent):
+        policy = policy.agent
 
     # Creates the containing folder if needed
     path = Path(path)
@@ -69,7 +73,7 @@ def record_video(env: Env, agent: Agent, path: str):
 
         while not done:
             workspace.set("env/env_obs", t, torch.Tensor(obs).unsqueeze(0))
-            agent(t=t, workspace=workspace)
+            policy(t=t, workspace=workspace)
             action = workspace.get("action", t).squeeze(0).numpy()
             obs, reward, terminated, truncated, info = env.step(action)
             video_recorder.capture_frame()
@@ -79,7 +83,7 @@ def record_video(env: Env, agent: Agent, path: str):
         video_recorder.close()
 
 
-def _convert_action(action: Union[Dict,Tensor]) -> Union[int, np.ndarray]:
+def _convert_action(action: Union[Dict, Tensor]) -> Union[int, np.ndarray]:
     if isinstance(action, dict):
         return {key: _convert_action(value) for key, value in action.items()}
     if len(action.size()) == 0:
@@ -162,15 +166,15 @@ class GymAgent(TimeAgent, SeedableAgent, SerializableAgent, ABC):
         :param reward_at_t: The reward for transitioning from $s_t$ to $s_{t+1}$
             is $r_t$ if reward_at_t is True, and $r_{t+1}$ otherwise (default
             False).
-        :param include_last_state: By default (False), the final state is not
-            included when using an auto-reset environment. Setting to True allows
-            to preserve it.
+        :param include_last_state: By default (True), the final state is
+            included when using an auto-reset environment. Setting to False
+            discards this information.
         """
         super().__init__(*args, **kwargs)
 
         self.reward_at_t = reward_at_t
         self.include_last_state = include_last_state
-        self.ghost_params: nn.Parameter = nn.Parameter(torch.randn(()))
+        self.ghost_params: nn.Parameter = nn.Parameter(torch.Tensor())
 
         self.input: str = input_string
         self.output: str = output_string
@@ -344,7 +348,10 @@ class ParallelGymAgent(GymAgent):
             return {"env_obs": observation}
 
         if isinstance(observation, dict):
-            return {f"env_obs/{key}": value for key, value in ParallelGymAgent._flatten_value(observation).items()}
+            return {
+                f"env_obs/{key}": value
+                for key, value in ParallelGymAgent._flatten_value(observation).items()
+            }
 
         raise ValueError(
             f"Observation must be a torch.Tensor or a dict, not {type(observation)}"
@@ -442,7 +449,9 @@ class ParallelGymAgent(GymAgent):
             if self.input in self.workspace.variables:
                 # Action is a tensor
                 action = self.get((self.input, t - 1))
-                assert action.size()[0] == self.num_envs, f"Incompatible number of envs ({action.shape[0]} vs {self.num_envs})"
+                assert (
+                    action.size()[0] == self.num_envs
+                ), f"Incompatible number of envs ({action.shape[0]} vs {self.num_envs})"
             else:
                 # Action is a dictionary
                 action = {}
@@ -456,12 +465,12 @@ class ParallelGymAgent(GymAgent):
                     for key in keys[:-1]:
                         current = current.setdefault(key, {})
                     current[keys[-1]] = self.get((varname, t - 1))
-                
+
             def dict_slice(k: int, object):
                 if isinstance(object, dict):
                     return {key: dict_slice(k, value) for key, value in object.items()}
                 return object[k]
-                
+
             for k, env in enumerate(self.envs):
                 if self._last_frame[k] is None:
                     if isinstance(action, dict):

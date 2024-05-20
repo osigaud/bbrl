@@ -5,7 +5,10 @@ authors = [
     { name = "Olivier Sigaud",  email = "Olivier.Sigaud@isir.upmc.fr" }
 ]
 description = "RL library inspired from salina"
-dynamic = ["version", "readme"]
+dynamic = ["version", "readme", "dependencies"]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
 
 [tool.setuptools_scm]
 write_to = "src/bbrl/_version.py"

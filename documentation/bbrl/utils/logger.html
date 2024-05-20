@@ -1,0 +1,2032 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>bbrl.utils.logger API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>bbrl.utils.logger</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python"># This source code is licensed under the MIT license found in the
+# LICENSE file in the root directory of this source tree.
+#
+
+import bz2
+import pickle
+import time
+
+import numpy as np
+import pandas as pd
+
+from omegaconf import DictConfig
+from torch.utils.tensorboard import SummaryWriter
+from tqdm import tqdm
+
+
+class TFPrefixLogger:
+    def __init__(self, prefix, logger):
+        self.logger = logger
+        self.prefix = prefix
+
+    def add_images(self, name, value, iteration):
+        self.logger.add_images(self.prefix + name, value, iteration)
+
+    def add_figure(self, name, value, iteration):
+        self.logger.add_figure(self.prefix + name, value, iteration)
+
+    def add_scalar(self, name, value, iteration):
+        self.logger.add_scalar(self.prefix + name, value, iteration)
+
+    def add_video(self, name, value, iteration, fps=10):
+        self.logger.add_video(self.prefix + name, value, iteration, fps)
+
+    def message(self, msg, from_name=&#34;&#34;):
+        self.logger.message(msg, from_name=self.prefix + from_name)
+
+    def debug(self, msg, from_name=&#34;&#34;):
+        self.logger.debug(msg, from_name=self.prefix + from_name)
+
+    def get_logger(self, prefix):
+        return TFPrefixLogger(self.prefix + prefix, self.logger)
+
+    def close(self):
+        pass
+
+
+class TFLogger(SummaryWriter):
+    &#34;&#34;&#34;A logger that stores informations both in tensorboard and CSV formats&#34;&#34;&#34;
+
+    def __init__(
+        self,
+        log_dir=None,
+        hps={},
+        cache_size=10000,
+        every_n_seconds=None,
+        modulo=1,
+        verbose=False,
+        use_zip=True,
+        save_tensorboard=True,
+    ):
+        SummaryWriter.__init__(self, log_dir=log_dir)
+        self.save_tensorboard = save_tensorboard
+        self.use_zip = use_zip
+        self.save_every = cache_size
+        self.modulo = modulo
+        self.written_values = {}
+        self.log_dir = log_dir
+        self.every_n_seconds = every_n_seconds
+        if self.every_n_seconds is None:
+            print(
+                &#34;[Deprecated] bbrl.utils.logger: use &#39;every_n_seconds&#39; instead of cache_size&#34;
+            )
+        else:
+            self.save_every = None
+        self._start_time = time.time()
+        self.verbose = verbose
+
+        self.picklename = log_dir + &#34;/db.pickle.bzip2&#34;
+        if not self.use_zip:
+            self.picklename = log_dir + &#34;/db.pickle&#34;
+        self.to_pickle = []
+        if len(hps) &gt; 0:
+            f = open(log_dir + &#34;/params.json&#34;, &#34;wt&#34;)
+            f.write(str(hps) + &#34;\n&#34;)
+            f.close()
+
+            outfile = open(log_dir + &#34;/params.pickle&#34;, &#34;wb&#34;)
+            pickle.dump(hps, outfile)
+            outfile.close()
+            self.add_text(&#34;Hyperparameters&#34;, str(hps))
+
+    def _omegaconf_to_dict(self, hps):
+        d = {}
+        for k, v in hps.items():
+            if isinstance(v, DictConfig):
+                d[k] = self._omegaconf_to_dict(v)
+            else:
+                d[k] = v
+        return d
+
+    def _to_dict(self, h):
+        if isinstance(h, dict):
+            return {k: self._to_dict(v) for k, v in h.items()}
+        if isinstance(h, DictConfig):
+            return {k: self._to_dict(v) for k, v in h.items()}
+        else:
+            return h
+
+    def save_hps(self, hps, verbose=True):
+        hps = self._to_dict(hps)
+        if verbose:
+            print(hps)
+        f = open(self.log_dir + &#34;/params.json&#34;, &#34;wt&#34;)
+        f.write(str(hps) + &#34;\n&#34;)
+        f.close()
+
+        outfile = open(self.log_dir + &#34;/params.pickle&#34;, &#34;wb&#34;)
+        pickle.dump(hps, outfile)
+        outfile.close()
+        self.add_text(&#34;Hyperparameters&#34;, str(hps))
+
+    def get_logger(self, prefix):
+        return TFPrefixLogger(prefix, self)
+
+    def message(self, msg, from_name=&#34;&#34;):
+        print(&#34;[&#34;, from_name, &#34;]: &#34;, msg)
+
+    def debug(self, msg, from_name=&#34;&#34;):
+        print(&#34;[DEBUG] [&#34;, from_name, &#34;]: &#34;, msg)
+
+    def _to_pickle(self, name, value, iteration):
+        self.to_pickle.append((name, iteration, value))
+
+        if self.every_n_seconds is not None:
+            if time.time() - self._start_time &gt; self.every_n_seconds:
+                if self.use_zip:
+                    f = bz2.BZ2File(self.picklename, &#34;ab&#34;)
+                    pickle.dump(self.to_pickle, f)
+                    f.close()
+                else:
+                    f = open(self.picklename, &#34;ab&#34;)
+                    pickle.dump(self.to_pickle, f)
+                    f.close()
+                self._start_time = time.time()
+                self.to_pickle = []
+        else:
+            if len(self.to_pickle) &gt; self.save_every:
+                if self.use_zip:
+                    f = bz2.BZ2File(self.picklename, &#34;ab&#34;)
+                    pickle.dump(self.to_pickle, f)
+                    f.close()
+                else:
+                    f = open(self.picklename, &#34;ab&#34;)
+                    pickle.dump(self.to_pickle, f)
+                    f.close()
+                self.to_pickle = []
+
+    def add_images(self, name, value, iteration):
+        iteration = int(iteration / self.modulo) * self.modulo
+        if (name, iteration) in self.written_values:
+            return
+        else:
+            self.written_values[(name, iteration)] = True
+
+        self._to_pickle(name, value, iteration)
+        if self.save_tensorboard:
+            SummaryWriter.add_images(self, name, value, iteration)
+
+    def add_figure(self, name, value, iteration):
+        iteration = int(iteration / self.modulo) * self.modulo
+        if (name, iteration) in self.written_values:
+            return
+        else:
+            self.written_values[(name, iteration)] = True
+
+        self._to_pickle(name, value, iteration)
+        if self.save_tensorboard:
+            SummaryWriter.add_figure(self, name, value, iteration)
+
+    def add_scalar(self, name, value, iteration):
+        iteration = int(iteration / self.modulo) * self.modulo
+        if (name, iteration) in self.written_values:
+            return
+        else:
+            self.written_values[(name, iteration)] = True
+
+        self._to_pickle(name, value, iteration)
+        if self.verbose:
+            print(&#34;[&#39;&#34; + name + &#34;&#39; at &#34; + str(iteration) + &#34;] = &#34; + str(value))
+
+        if isinstance(value, int) or isinstance(value, float):
+            if self.save_tensorboard:
+                SummaryWriter.add_scalar(self, name, value, iteration)
+
+    def add_video(self, name, value, iteration, fps=10):
+        iteration = int(iteration / self.modulo) * self.modulo
+        if (name, iteration) in self.written_values:
+            return
+        else:
+            self.written_values[(name, iteration)] = True
+
+        self._to_pickle(name, value.numpy(), iteration)
+        if self.save_tensorboard:
+            SummaryWriter.add_video(self, name, value, iteration, fps=fps)
+
+    def close(self):
+        if len(self.to_pickle) &gt; 0:
+            if self.use_zip:
+                f = bz2.BZ2File(self.picklename, &#34;ab&#34;)
+                pickle.dump(self.to_pickle, f)
+                f.close()
+            else:
+                f = open(self.picklename, &#34;ab&#34;)
+                pickle.dump(self.to_pickle, f)
+                f.close()
+            self.to_pickle = []
+
+        SummaryWriter.close(self)
+
+        f = open(self.log_dir + &#34;/done&#34;, &#34;wt&#34;)
+        f.write(&#34;Done\n&#34;)
+        f.close()
+
+
+class Log:
+    def __init__(self, hps, values):
+        self.hps = hps
+        self.values = values
+        max_length = max([len(v) for v in self.values])
+        for k in values:
+            while len(values[k]) &lt; max_length:
+                values[k].append(None)
+        self.length = max_length
+
+    def to_xy(self, name):
+        assert name in self.values
+        x, y = [], []
+        for k, v in enumerate(self.values[name]):
+            if v is not None:
+                x.append(k)
+                y.append(v)
+        return x, y
+
+    def to_dataframe(self, with_hps=False):
+        max_len = np.max([len(k) for v, k in self.values.items()])
+        nv = {}
+        for k, v in self.values.items():
+            nnv = [None] * (max_len - len(v))
+            nv[k] = v + nnv
+        self.values = nv
+        it = list(np.arange(max_len))
+        d = {**self.values, **{&#34;iteration&#34;: it}}
+        _pd = pd.DataFrame(d)
+        if with_hps:
+            for k in self.hps:
+                _pd[&#34;_hp/&#34; + k] = self.hps[k]
+        return _pd
+
+    def get_at(self, name, iteration):
+        return self.values[name][iteration]
+
+    def get(self, name, keep_none=False):
+        v = self.values[name]
+        if not keep_none:
+            return [k for k in v if k is not None]
+        else:
+            return v
+
+    def replace_none_(self, name):
+        v = self.values[name]
+        last_v = None
+        first_v = None
+        r = []
+        for k in range(len(v)):
+            if v[k] is None:
+                r.append(last_v)
+            else:
+                r.append(v[k])
+                if last_v is None:
+                    first_v = v[k]
+                last_v = v[k]
+
+        p = 0
+        while r[p] is None:
+            r[p] = first_v
+            p += 1
+        self.values[name] = r
+
+    def max(self, name):
+        v = self.values[name]
+        vv = [k for k in v if k is not None]
+        return np.max(vv)
+
+    def min(self, name):
+        v = self.values[name]
+        vv = [k for k in v if k is not None]
+        return np.min(vv)
+
+    def argmin(self, name):
+        v = self.values[name]
+        vv = [k for k in v if k is not None]
+        _max = np.max(vv)
+
+        for k in range(len(v)):
+            if v[k] is None:
+                vv.append(_max + 1.0)
+            else:
+                vv.append(v[k])
+        return np.argmin(vv)
+
+    def argmax(self, name):
+        v = self.values[name]
+        vv = [k for k in v if k is not None]
+        _min = np.min(vv)
+        vv = []
+        for k in range(len(v)):
+            if v[k] is None:
+                vv.append(_min - 1.0)
+            else:
+                vv.append(v[k])
+        return np.argmax(vv)
+
+
+class Logs:
+    def __init__(self):
+        self.logs = []
+        self.hp_names = None
+        self.filenames = []
+
+    def _add(self, log):
+        self.hp_names = {k: True for k in log.hps}
+        for log in self.logs:
+            for k in log.hps:
+                if k not in log.hps:
+                    log.hps[k] = &#34;none&#34;
+
+        self.logs.append(log)
+
+    def add(self, logs):
+        if isinstance(logs, Log):
+            self._add(logs)
+        else:
+            for log in logs:
+                self._add(log)
+
+    def max(self, function):
+        alls = [function(log) for log in self.logs]
+        idx = np.argmax(alls)
+        return self.logs[idx]
+
+    def columns(self):
+        return list(self.logs[0].values)
+
+    def hps(self):
+        return list(self.hp_names)
+
+    def size(self):
+        return len(self.logs)
+
+    def filter(self, hp_name, test_fn):
+        logs = Logs()
+        if not callable(test_fn):
+            for log in self.logs:
+                h = log.hps[hp_name]
+                if h == test_fn:
+                    logs.add(log)
+        else:
+            for log in self.logs:
+                if test_fn(log.hps[hp_name]):
+                    logs.add(log)
+        return logs
+
+    def unique_hps(self, name):
+        r = {}
+        for log in self.logs:
+            v = log.hps[name]
+            r[v] = 1
+        return list(r.keys())
+
+    def __len__(self):
+        return len(self.logs)
+
+    def to_dataframe(self):
+        rdf = None
+        for log in tqdm(self.logs):
+            df = log.to_dataframe(with_hps=True)
+            if rdf is None:
+                rdf = [df]
+            else:
+                rdf.append(df)
+        return pd.concat(rdf)
+
+    # def plot(self, y, x, hue=None, style=None, row=None, col=None, kind=&#34;line&#34;):
+
+
+def flattify(d):
+    r = {}
+    for k, v in d.items():
+        if isinstance(v, dict):
+            rr = flattify(v)
+            rrr = {k + &#34;/&#34; + kk: rrr for kk, rrr in rr.items()}
+            r = {**r, **rrr}
+        elif isinstance(v, list):
+            r[k] = str(v)
+        else:
+            r[k] = v
+    return r
+
+
+def read_log(directory, use_bz2=True, debug=False):
+    if use_bz2:
+        picklename = directory + &#34;/db.pickle.bzip2&#34;
+        f = bz2.BZ2File(picklename, &#34;rb&#34;)
+    else:
+        picklename = directory + &#34;/db.pickle&#34;
+        f = open(picklename, &#34;rb&#34;)
+    values = {}
+
+    try:
+        while True:
+            a = pickle.load(f)
+            if a is not None:
+                for name, iteration, value in a:
+                    # print(name,iteration,value)
+                    if debug:
+                        print(name, value, type(value))
+                    if isinstance(value, np.int64):
+                        value = int(value)
+                    if (
+                        isinstance(value, int)
+                        or isinstance(value, float)
+                        or isinstance(value, str)
+                    ):
+                        if name not in values:
+                            values[name] = []
+                        while len(values[name]) &lt; iteration + 1:
+                            values[name].append(None)
+                        values[name][iteration] = value
+    except pickle.PickleError:
+        f.close()
+    f = open(directory + &#34;/params.pickle&#34;, &#34;rb&#34;)
+    params = pickle.load(f)
+    params = eval(str(params))
+    params = flattify(params)
+    f.close()
+    log = Log(params, values)
+    log.from_directory = directory
+    # f=open(directory+&#34;/fast.pickle&#34;,&#34;wb&#34;)
+    # pickle.dump(log,f)
+    # f.close()
+
+    return log
+
+
+def get_directories(directory, use_bz2=True):
+    import os.path
+
+    name = &#34;db.pickle&#34;
+    if use_bz2:
+        name = &#34;db.pickle.bzip2&#34;
+
+    return [
+        dirpath
+        for dirpath, dirnames, filenames in os.walk(directory)
+        if name in filenames
+    ]
+
+
+def read_directories(directories, use_bz2=True):
+
+    logs = Logs()
+    for dirpath in directories:
+        log = read_log(dirpath, use_bz2)
+        logs.add(log)
+    print(&#34;Found %d logs&#34; % logs.size())
+    return logs
+
+
+def read_directory(directory, use_bz2=True):
+    import os.path
+
+    logs = Logs()
+    name = &#34;db.pickle&#34;
+    if use_bz2:
+        name = &#34;db.pickle.bzip2&#34;
+    for dirpath, dirnames, filenames in os.walk(directory):
+        if name in filenames:
+            log = read_log(dirpath, use_bz2)
+            logs.add(log)
+    print(&#34;Found %d logs&#34; % logs.size())
+    return logs
+
+
+def _create_col(df, hps, _name):
+    vs = []
+    for k, v in df.groupby(hps):
+        n = {hps[i]: k[i] for i in range(len(hps))}
+        v = v.copy()
+        name = &#34;,&#34;.join([str(k) + &#34;=&#34; + str(n[k]) for k in n])
+        print(name)
+        print(_name)
+        v[_name] = name
+        vs.append(v)
+    return pd.concat(vs)
+
+
+def plot_dataframe(
+    df, y, x=&#34;iteration&#34;, hue=None, style=None, row=None, col=None, kind=&#34;line&#34;
+):
+    import seaborn as sns
+
+    cols = [y, x]
+    if isinstance(row, list):
+        cols += row
+    else:
+        cols += [row]
+    if isinstance(col, list):
+        cols += col
+    else:
+        cols += [col]
+    if isinstance(style, list):
+        cols += style
+    else:
+        cols += [style]
+    if isinstance(hue, list):
+        cols += hue
+    else:
+        cols += [hue]
+    cols = [c for c in cols if c is not None]
+    df = df[cols].dropna()
+
+    if isinstance(row, list):
+        df = _create_col(df, row, &#34;__row&#34;)
+        row = &#34;__row&#34;
+    if isinstance(col, list):
+        df = _create_col(df, col, &#34;__col&#34;)
+        col = &#34;__col&#34;
+    if isinstance(style, list):
+        df = _create_col(df, style, &#34;__style&#34;)
+        style = &#34;__style&#34;
+    if isinstance(hue, list):
+        df = _create_col(df, hue, &#34;__hue&#34;)
+        hue = &#34;__hue&#34;
+
+    # df = convert_iteration_to_steps(df)
+
+    sns.relplot(x=x, y=y, hue=hue, style=style, row=row, col=col, data=df, kind=kind)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="bbrl.utils.logger.flattify"><code class="name flex">
+<span>def <span class="ident">flattify</span></span>(<span>d)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def flattify(d):
+    r = {}
+    for k, v in d.items():
+        if isinstance(v, dict):
+            rr = flattify(v)
+            rrr = {k + &#34;/&#34; + kk: rrr for kk, rrr in rr.items()}
+            r = {**r, **rrr}
+        elif isinstance(v, list):
+            r[k] = str(v)
+        else:
+            r[k] = v
+    return r</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.get_directories"><code class="name flex">
+<span>def <span class="ident">get_directories</span></span>(<span>directory, use_bz2=True)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_directories(directory, use_bz2=True):
+    import os.path
+
+    name = &#34;db.pickle&#34;
+    if use_bz2:
+        name = &#34;db.pickle.bzip2&#34;
+
+    return [
+        dirpath
+        for dirpath, dirnames, filenames in os.walk(directory)
+        if name in filenames
+    ]</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.plot_dataframe"><code class="name flex">
+<span>def <span class="ident">plot_dataframe</span></span>(<span>df, y, x='iteration', hue=None, style=None, row=None, col=None, kind='line')</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def plot_dataframe(
+    df, y, x=&#34;iteration&#34;, hue=None, style=None, row=None, col=None, kind=&#34;line&#34;
+):
+    import seaborn as sns
+
+    cols = [y, x]
+    if isinstance(row, list):
+        cols += row
+    else:
+        cols += [row]
+    if isinstance(col, list):
+        cols += col
+    else:
+        cols += [col]
+    if isinstance(style, list):
+        cols += style
+    else:
+        cols += [style]
+    if isinstance(hue, list):
+        cols += hue
+    else:
+        cols += [hue]
+    cols = [c for c in cols if c is not None]
+    df = df[cols].dropna()
+
+    if isinstance(row, list):
+        df = _create_col(df, row, &#34;__row&#34;)
+        row = &#34;__row&#34;
+    if isinstance(col, list):
+        df = _create_col(df, col, &#34;__col&#34;)
+        col = &#34;__col&#34;
+    if isinstance(style, list):
+        df = _create_col(df, style, &#34;__style&#34;)
+        style = &#34;__style&#34;
+    if isinstance(hue, list):
+        df = _create_col(df, hue, &#34;__hue&#34;)
+        hue = &#34;__hue&#34;
+
+    # df = convert_iteration_to_steps(df)
+
+    sns.relplot(x=x, y=y, hue=hue, style=style, row=row, col=col, data=df, kind=kind)</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.read_directories"><code class="name flex">
+<span>def <span class="ident">read_directories</span></span>(<span>directories, use_bz2=True)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def read_directories(directories, use_bz2=True):
+
+    logs = Logs()
+    for dirpath in directories:
+        log = read_log(dirpath, use_bz2)
+        logs.add(log)
+    print(&#34;Found %d logs&#34; % logs.size())
+    return logs</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.read_directory"><code class="name flex">
+<span>def <span class="ident">read_directory</span></span>(<span>directory, use_bz2=True)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def read_directory(directory, use_bz2=True):
+    import os.path
+
+    logs = Logs()
+    name = &#34;db.pickle&#34;
+    if use_bz2:
+        name = &#34;db.pickle.bzip2&#34;
+    for dirpath, dirnames, filenames in os.walk(directory):
+        if name in filenames:
+            log = read_log(dirpath, use_bz2)
+            logs.add(log)
+    print(&#34;Found %d logs&#34; % logs.size())
+    return logs</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.read_log"><code class="name flex">
+<span>def <span class="ident">read_log</span></span>(<span>directory, use_bz2=True, debug=False)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def read_log(directory, use_bz2=True, debug=False):
+    if use_bz2:
+        picklename = directory + &#34;/db.pickle.bzip2&#34;
+        f = bz2.BZ2File(picklename, &#34;rb&#34;)
+    else:
+        picklename = directory + &#34;/db.pickle&#34;
+        f = open(picklename, &#34;rb&#34;)
+    values = {}
+
+    try:
+        while True:
+            a = pickle.load(f)
+            if a is not None:
+                for name, iteration, value in a:
+                    # print(name,iteration,value)
+                    if debug:
+                        print(name, value, type(value))
+                    if isinstance(value, np.int64):
+                        value = int(value)
+                    if (
+                        isinstance(value, int)
+                        or isinstance(value, float)
+                        or isinstance(value, str)
+                    ):
+                        if name not in values:
+                            values[name] = []
+                        while len(values[name]) &lt; iteration + 1:
+                            values[name].append(None)
+                        values[name][iteration] = value
+    except pickle.PickleError:
+        f.close()
+    f = open(directory + &#34;/params.pickle&#34;, &#34;rb&#34;)
+    params = pickle.load(f)
+    params = eval(str(params))
+    params = flattify(params)
+    f.close()
+    log = Log(params, values)
+    log.from_directory = directory
+    # f=open(directory+&#34;/fast.pickle&#34;,&#34;wb&#34;)
+    # pickle.dump(log,f)
+    # f.close()
+
+    return log</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="bbrl.utils.logger.Log"><code class="flex name class">
+<span>class <span class="ident">Log</span></span>
+<span>(</span><span>hps, values)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Log:
+    def __init__(self, hps, values):
+        self.hps = hps
+        self.values = values
+        max_length = max([len(v) for v in self.values])
+        for k in values:
+            while len(values[k]) &lt; max_length:
+                values[k].append(None)
+        self.length = max_length
+
+    def to_xy(self, name):
+        assert name in self.values
+        x, y = [], []
+        for k, v in enumerate(self.values[name]):
+            if v is not None:
+                x.append(k)
+                y.append(v)
+        return x, y
+
+    def to_dataframe(self, with_hps=False):
+        max_len = np.max([len(k) for v, k in self.values.items()])
+        nv = {}
+        for k, v in self.values.items():
+            nnv = [None] * (max_len - len(v))
+            nv[k] = v + nnv
+        self.values = nv
+        it = list(np.arange(max_len))
+        d = {**self.values, **{&#34;iteration&#34;: it}}
+        _pd = pd.DataFrame(d)
+        if with_hps:
+            for k in self.hps:
+                _pd[&#34;_hp/&#34; + k] = self.hps[k]
+        return _pd
+
+    def get_at(self, name, iteration):
+        return self.values[name][iteration]
+
+    def get(self, name, keep_none=False):
+        v = self.values[name]
+        if not keep_none:
+            return [k for k in v if k is not None]
+        else:
+            return v
+
+    def replace_none_(self, name):
+        v = self.values[name]
+        last_v = None
+        first_v = None
+        r = []
+        for k in range(len(v)):
+            if v[k] is None:
+                r.append(last_v)
+            else:
+                r.append(v[k])
+                if last_v is None:
+                    first_v = v[k]
+                last_v = v[k]
+
+        p = 0
+        while r[p] is None:
+            r[p] = first_v
+            p += 1
+        self.values[name] = r
+
+    def max(self, name):
+        v = self.values[name]
+        vv = [k for k in v if k is not None]
+        return np.max(vv)
+
+    def min(self, name):
+        v = self.values[name]
+        vv = [k for k in v if k is not None]
+        return np.min(vv)
+
+    def argmin(self, name):
+        v = self.values[name]
+        vv = [k for k in v if k is not None]
+        _max = np.max(vv)
+
+        for k in range(len(v)):
+            if v[k] is None:
+                vv.append(_max + 1.0)
+            else:
+                vv.append(v[k])
+        return np.argmin(vv)
+
+    def argmax(self, name):
+        v = self.values[name]
+        vv = [k for k in v if k is not None]
+        _min = np.min(vv)
+        vv = []
+        for k in range(len(v)):
+            if v[k] is None:
+                vv.append(_min - 1.0)
+            else:
+                vv.append(v[k])
+        return np.argmax(vv)</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="bbrl.utils.logger.Log.argmax"><code class="name flex">
+<span>def <span class="ident">argmax</span></span>(<span>self, name)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def argmax(self, name):
+    v = self.values[name]
+    vv = [k for k in v if k is not None]
+    _min = np.min(vv)
+    vv = []
+    for k in range(len(v)):
+        if v[k] is None:
+            vv.append(_min - 1.0)
+        else:
+            vv.append(v[k])
+    return np.argmax(vv)</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.Log.argmin"><code class="name flex">
+<span>def <span class="ident">argmin</span></span>(<span>self, name)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def argmin(self, name):
+    v = self.values[name]
+    vv = [k for k in v if k is not None]
+    _max = np.max(vv)
+
+    for k in range(len(v)):
+        if v[k] is None:
+            vv.append(_max + 1.0)
+        else:
+            vv.append(v[k])
+    return np.argmin(vv)</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.Log.get"><code class="name flex">
+<span>def <span class="ident">get</span></span>(<span>self, name, keep_none=False)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get(self, name, keep_none=False):
+    v = self.values[name]
+    if not keep_none:
+        return [k for k in v if k is not None]
+    else:
+        return v</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.Log.get_at"><code class="name flex">
+<span>def <span class="ident">get_at</span></span>(<span>self, name, iteration)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_at(self, name, iteration):
+    return self.values[name][iteration]</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.Log.max"><code class="name flex">
+<span>def <span class="ident">max</span></span>(<span>self, name)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def max(self, name):
+    v = self.values[name]
+    vv = [k for k in v if k is not None]
+    return np.max(vv)</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.Log.min"><code class="name flex">
+<span>def <span class="ident">min</span></span>(<span>self, name)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def min(self, name):
+    v = self.values[name]
+    vv = [k for k in v if k is not None]
+    return np.min(vv)</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.Log.replace_none_"><code class="name flex">
+<span>def <span class="ident">replace_none_</span></span>(<span>self, name)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def replace_none_(self, name):
+    v = self.values[name]
+    last_v = None
+    first_v = None
+    r = []
+    for k in range(len(v)):
+        if v[k] is None:
+            r.append(last_v)
+        else:
+            r.append(v[k])
+            if last_v is None:
+                first_v = v[k]
+            last_v = v[k]
+
+    p = 0
+    while r[p] is None:
+        r[p] = first_v
+        p += 1
+    self.values[name] = r</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.Log.to_dataframe"><code class="name flex">
+<span>def <span class="ident">to_dataframe</span></span>(<span>self, with_hps=False)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_dataframe(self, with_hps=False):
+    max_len = np.max([len(k) for v, k in self.values.items()])
+    nv = {}
+    for k, v in self.values.items():
+        nnv = [None] * (max_len - len(v))
+        nv[k] = v + nnv
+    self.values = nv
+    it = list(np.arange(max_len))
+    d = {**self.values, **{&#34;iteration&#34;: it}}
+    _pd = pd.DataFrame(d)
+    if with_hps:
+        for k in self.hps:
+            _pd[&#34;_hp/&#34; + k] = self.hps[k]
+    return _pd</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.Log.to_xy"><code class="name flex">
+<span>def <span class="ident">to_xy</span></span>(<span>self, name)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_xy(self, name):
+    assert name in self.values
+    x, y = [], []
+    for k, v in enumerate(self.values[name]):
+        if v is not None:
+            x.append(k)
+            y.append(v)
+    return x, y</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="bbrl.utils.logger.Logs"><code class="flex name class">
+<span>class <span class="ident">Logs</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Logs:
+    def __init__(self):
+        self.logs = []
+        self.hp_names = None
+        self.filenames = []
+
+    def _add(self, log):
+        self.hp_names = {k: True for k in log.hps}
+        for log in self.logs:
+            for k in log.hps:
+                if k not in log.hps:
+                    log.hps[k] = &#34;none&#34;
+
+        self.logs.append(log)
+
+    def add(self, logs):
+        if isinstance(logs, Log):
+            self._add(logs)
+        else:
+            for log in logs:
+                self._add(log)
+
+    def max(self, function):
+        alls = [function(log) for log in self.logs]
+        idx = np.argmax(alls)
+        return self.logs[idx]
+
+    def columns(self):
+        return list(self.logs[0].values)
+
+    def hps(self):
+        return list(self.hp_names)
+
+    def size(self):
+        return len(self.logs)
+
+    def filter(self, hp_name, test_fn):
+        logs = Logs()
+        if not callable(test_fn):
+            for log in self.logs:
+                h = log.hps[hp_name]
+                if h == test_fn:
+                    logs.add(log)
+        else:
+            for log in self.logs:
+                if test_fn(log.hps[hp_name]):
+                    logs.add(log)
+        return logs
+
+    def unique_hps(self, name):
+        r = {}
+        for log in self.logs:
+            v = log.hps[name]
+            r[v] = 1
+        return list(r.keys())
+
+    def __len__(self):
+        return len(self.logs)
+
+    def to_dataframe(self):
+        rdf = None
+        for log in tqdm(self.logs):
+            df = log.to_dataframe(with_hps=True)
+            if rdf is None:
+                rdf = [df]
+            else:
+                rdf.append(df)
+        return pd.concat(rdf)
+
+    # def plot(self, y, x, hue=None, style=None, row=None, col=None, kind=&#34;line&#34;):</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="bbrl.utils.logger.Logs.add"><code class="name flex">
+<span>def <span class="ident">add</span></span>(<span>self, logs)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add(self, logs):
+    if isinstance(logs, Log):
+        self._add(logs)
+    else:
+        for log in logs:
+            self._add(log)</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.Logs.columns"><code class="name flex">
+<span>def <span class="ident">columns</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def columns(self):
+    return list(self.logs[0].values)</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.Logs.filter"><code class="name flex">
+<span>def <span class="ident">filter</span></span>(<span>self, hp_name, test_fn)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def filter(self, hp_name, test_fn):
+    logs = Logs()
+    if not callable(test_fn):
+        for log in self.logs:
+            h = log.hps[hp_name]
+            if h == test_fn:
+                logs.add(log)
+    else:
+        for log in self.logs:
+            if test_fn(log.hps[hp_name]):
+                logs.add(log)
+    return logs</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.Logs.hps"><code class="name flex">
+<span>def <span class="ident">hps</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def hps(self):
+    return list(self.hp_names)</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.Logs.max"><code class="name flex">
+<span>def <span class="ident">max</span></span>(<span>self, function)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def max(self, function):
+    alls = [function(log) for log in self.logs]
+    idx = np.argmax(alls)
+    return self.logs[idx]</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.Logs.size"><code class="name flex">
+<span>def <span class="ident">size</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def size(self):
+    return len(self.logs)</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.Logs.to_dataframe"><code class="name flex">
+<span>def <span class="ident">to_dataframe</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_dataframe(self):
+    rdf = None
+    for log in tqdm(self.logs):
+        df = log.to_dataframe(with_hps=True)
+        if rdf is None:
+            rdf = [df]
+        else:
+            rdf.append(df)
+    return pd.concat(rdf)</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.Logs.unique_hps"><code class="name flex">
+<span>def <span class="ident">unique_hps</span></span>(<span>self, name)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def unique_hps(self, name):
+    r = {}
+    for log in self.logs:
+        v = log.hps[name]
+        r[v] = 1
+    return list(r.keys())</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="bbrl.utils.logger.TFLogger"><code class="flex name class">
+<span>class <span class="ident">TFLogger</span></span>
+<span>(</span><span>log_dir=None, hps={}, cache_size=10000, every_n_seconds=None, modulo=1, verbose=False, use_zip=True, save_tensorboard=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A logger that stores informations both in tensorboard and CSV formats</p>
+<p>Creates a <code>SummaryWriter</code> that will write out events and summaries
+to the event file.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>log_dir</code></strong> :&ensp;<code>string</code></dt>
+<dd>Save directory location. Default is
+runs/<strong>CURRENT_DATETIME_HOSTNAME</strong>, which changes after each run.
+Use hierarchical folder structure to compare
+between runs easily. e.g. pass in 'runs/exp1', 'runs/exp2', etc.
+for each new experiment to compare across them.</dd>
+<dt><strong><code>comment</code></strong> :&ensp;<code>string</code></dt>
+<dd>Comment log_dir suffix appended to the default
+<code>log_dir</code>. If <code>log_dir</code> is assigned, this argument has no effect.</dd>
+<dt>purge_step (int):</dt>
+<dt>When logging crashes at step :math:<code>T+X</code> and restarts at step :math:<code>T</code>,</dt>
+<dt>any events whose global_step larger or equal to :math:<code>T</code> will be</dt>
+<dt>purged and hidden from TensorBoard.</dt>
+<dt>Note that crashed and resumed experiments should have the same <code>log_dir</code>.</dt>
+<dt><strong><code>max_queue</code></strong> :&ensp;<code>int</code></dt>
+<dd>Size of the queue for pending events and
+summaries before one of the 'add' calls forces a flush to disk.
+Default is ten items.</dd>
+<dt><strong><code>flush_secs</code></strong> :&ensp;<code>int</code></dt>
+<dd>How often, in seconds, to flush the
+pending events and summaries to disk. Default is every two minutes.</dd>
+<dt><strong><code>filename_suffix</code></strong> :&ensp;<code>string</code></dt>
+<dd>Suffix added to all event filenames in
+the log_dir directory. More details on filename construction in
+tensorboard.summary.writer.event_file_writer.EventFileWriter.</dd>
+</dl>
+<p>Examples::</p>
+<pre><code>from torch.utils.tensorboard import SummaryWriter
+
+# create a summary writer with automatically generated folder name.
+writer = SummaryWriter()
+# folder location: runs/May04_22-14-54_s-MacBook-Pro.local/
+
+# create a summary writer using the specified folder name.
+writer = SummaryWriter("my_experiment")
+# folder location: my_experiment
+
+# create a summary writer with comment appended.
+writer = SummaryWriter(comment="LR_0.1_BATCH_16")
+# folder location: runs/May04_22-14-54_s-MacBook-Pro.localLR_0.1_BATCH_16/
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class TFLogger(SummaryWriter):
+    &#34;&#34;&#34;A logger that stores informations both in tensorboard and CSV formats&#34;&#34;&#34;
+
+    def __init__(
+        self,
+        log_dir=None,
+        hps={},
+        cache_size=10000,
+        every_n_seconds=None,
+        modulo=1,
+        verbose=False,
+        use_zip=True,
+        save_tensorboard=True,
+    ):
+        SummaryWriter.__init__(self, log_dir=log_dir)
+        self.save_tensorboard = save_tensorboard
+        self.use_zip = use_zip
+        self.save_every = cache_size
+        self.modulo = modulo
+        self.written_values = {}
+        self.log_dir = log_dir
+        self.every_n_seconds = every_n_seconds
+        if self.every_n_seconds is None:
+            print(
+                &#34;[Deprecated] bbrl.utils.logger: use &#39;every_n_seconds&#39; instead of cache_size&#34;
+            )
+        else:
+            self.save_every = None
+        self._start_time = time.time()
+        self.verbose = verbose
+
+        self.picklename = log_dir + &#34;/db.pickle.bzip2&#34;
+        if not self.use_zip:
+            self.picklename = log_dir + &#34;/db.pickle&#34;
+        self.to_pickle = []
+        if len(hps) &gt; 0:
+            f = open(log_dir + &#34;/params.json&#34;, &#34;wt&#34;)
+            f.write(str(hps) + &#34;\n&#34;)
+            f.close()
+
+            outfile = open(log_dir + &#34;/params.pickle&#34;, &#34;wb&#34;)
+            pickle.dump(hps, outfile)
+            outfile.close()
+            self.add_text(&#34;Hyperparameters&#34;, str(hps))
+
+    def _omegaconf_to_dict(self, hps):
+        d = {}
+        for k, v in hps.items():
+            if isinstance(v, DictConfig):
+                d[k] = self._omegaconf_to_dict(v)
+            else:
+                d[k] = v
+        return d
+
+    def _to_dict(self, h):
+        if isinstance(h, dict):
+            return {k: self._to_dict(v) for k, v in h.items()}
+        if isinstance(h, DictConfig):
+            return {k: self._to_dict(v) for k, v in h.items()}
+        else:
+            return h
+
+    def save_hps(self, hps, verbose=True):
+        hps = self._to_dict(hps)
+        if verbose:
+            print(hps)
+        f = open(self.log_dir + &#34;/params.json&#34;, &#34;wt&#34;)
+        f.write(str(hps) + &#34;\n&#34;)
+        f.close()
+
+        outfile = open(self.log_dir + &#34;/params.pickle&#34;, &#34;wb&#34;)
+        pickle.dump(hps, outfile)
+        outfile.close()
+        self.add_text(&#34;Hyperparameters&#34;, str(hps))
+
+    def get_logger(self, prefix):
+        return TFPrefixLogger(prefix, self)
+
+    def message(self, msg, from_name=&#34;&#34;):
+        print(&#34;[&#34;, from_name, &#34;]: &#34;, msg)
+
+    def debug(self, msg, from_name=&#34;&#34;):
+        print(&#34;[DEBUG] [&#34;, from_name, &#34;]: &#34;, msg)
+
+    def _to_pickle(self, name, value, iteration):
+        self.to_pickle.append((name, iteration, value))
+
+        if self.every_n_seconds is not None:
+            if time.time() - self._start_time &gt; self.every_n_seconds:
+                if self.use_zip:
+                    f = bz2.BZ2File(self.picklename, &#34;ab&#34;)
+                    pickle.dump(self.to_pickle, f)
+                    f.close()
+                else:
+                    f = open(self.picklename, &#34;ab&#34;)
+                    pickle.dump(self.to_pickle, f)
+                    f.close()
+                self._start_time = time.time()
+                self.to_pickle = []
+        else:
+            if len(self.to_pickle) &gt; self.save_every:
+                if self.use_zip:
+                    f = bz2.BZ2File(self.picklename, &#34;ab&#34;)
+                    pickle.dump(self.to_pickle, f)
+                    f.close()
+                else:
+                    f = open(self.picklename, &#34;ab&#34;)
+                    pickle.dump(self.to_pickle, f)
+                    f.close()
+                self.to_pickle = []
+
+    def add_images(self, name, value, iteration):
+        iteration = int(iteration / self.modulo) * self.modulo
+        if (name, iteration) in self.written_values:
+            return
+        else:
+            self.written_values[(name, iteration)] = True
+
+        self._to_pickle(name, value, iteration)
+        if self.save_tensorboard:
+            SummaryWriter.add_images(self, name, value, iteration)
+
+    def add_figure(self, name, value, iteration):
+        iteration = int(iteration / self.modulo) * self.modulo
+        if (name, iteration) in self.written_values:
+            return
+        else:
+            self.written_values[(name, iteration)] = True
+
+        self._to_pickle(name, value, iteration)
+        if self.save_tensorboard:
+            SummaryWriter.add_figure(self, name, value, iteration)
+
+    def add_scalar(self, name, value, iteration):
+        iteration = int(iteration / self.modulo) * self.modulo
+        if (name, iteration) in self.written_values:
+            return
+        else:
+            self.written_values[(name, iteration)] = True
+
+        self._to_pickle(name, value, iteration)
+        if self.verbose:
+            print(&#34;[&#39;&#34; + name + &#34;&#39; at &#34; + str(iteration) + &#34;] = &#34; + str(value))
+
+        if isinstance(value, int) or isinstance(value, float):
+            if self.save_tensorboard:
+                SummaryWriter.add_scalar(self, name, value, iteration)
+
+    def add_video(self, name, value, iteration, fps=10):
+        iteration = int(iteration / self.modulo) * self.modulo
+        if (name, iteration) in self.written_values:
+            return
+        else:
+            self.written_values[(name, iteration)] = True
+
+        self._to_pickle(name, value.numpy(), iteration)
+        if self.save_tensorboard:
+            SummaryWriter.add_video(self, name, value, iteration, fps=fps)
+
+    def close(self):
+        if len(self.to_pickle) &gt; 0:
+            if self.use_zip:
+                f = bz2.BZ2File(self.picklename, &#34;ab&#34;)
+                pickle.dump(self.to_pickle, f)
+                f.close()
+            else:
+                f = open(self.picklename, &#34;ab&#34;)
+                pickle.dump(self.to_pickle, f)
+                f.close()
+            self.to_pickle = []
+
+        SummaryWriter.close(self)
+
+        f = open(self.log_dir + &#34;/done&#34;, &#34;wt&#34;)
+        f.write(&#34;Done\n&#34;)
+        f.close()</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>torch.utils.tensorboard.writer.SummaryWriter</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="bbrl.utils.logger.TFLogger.add_figure"><code class="name flex">
+<span>def <span class="ident">add_figure</span></span>(<span>self, name, value, iteration)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Render matplotlib figure into an image and add it to summary.</p>
+<p>Note that this requires the <code>matplotlib</code> package.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>tag</code></strong> :&ensp;<code>string</code></dt>
+<dd>Data identifier</dd>
+<dt>figure (matplotlib.pyplot.figure) or list of figures: Figure or a list of figures</dt>
+<dt><strong><code>global_step</code></strong> :&ensp;<code>int</code></dt>
+<dd>Global step value to record</dd>
+<dt><strong><code>close</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Flag to automatically close the figure</dd>
+<dt><strong><code>walltime</code></strong> :&ensp;<code>float</code></dt>
+<dd>Optional override default walltime (time.time())
+seconds after epoch of event</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_figure(self, name, value, iteration):
+    iteration = int(iteration / self.modulo) * self.modulo
+    if (name, iteration) in self.written_values:
+        return
+    else:
+        self.written_values[(name, iteration)] = True
+
+    self._to_pickle(name, value, iteration)
+    if self.save_tensorboard:
+        SummaryWriter.add_figure(self, name, value, iteration)</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.TFLogger.add_images"><code class="name flex">
+<span>def <span class="ident">add_images</span></span>(<span>self, name, value, iteration)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Add batched image data to summary.</p>
+<p>Note that this requires the <code>pillow</code> package.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>tag</code></strong> :&ensp;<code>string</code></dt>
+<dd>Data identifier</dd>
+<dt>img_tensor (torch.Tensor, numpy.array, or string/blobname): Image data</dt>
+<dt><strong><code>global_step</code></strong> :&ensp;<code>int</code></dt>
+<dd>Global step value to record</dd>
+<dt><strong><code>walltime</code></strong> :&ensp;<code>float</code></dt>
+<dd>Optional override default walltime (time.time())
+seconds after epoch of event</dd>
+<dt><strong><code>dataformats</code></strong> :&ensp;<code>string</code></dt>
+<dd>Image data format specification of the form
+NCHW, NHWC, CHW, HWC, HW, WH, etc.</dd>
+</dl>
+<h2 id="shape">Shape</h2>
+<p>img_tensor: Default is :math:<code>(N, 3, H, W)</code>. If <code>dataformats</code> is specified, other shape will be
+accepted. e.g. NCHW or NHWC.</p>
+<p>Examples::</p>
+<pre><code>from torch.utils.tensorboard import SummaryWriter
+import numpy as np
+
+img_batch = np.zeros((16, 3, 100, 100))
+for i in range(16):
+    img_batch[i, 0] = np.arange(0, 10000).reshape(100, 100) / 10000 / 16 * i
+    img_batch[i, 1] = (1 - np.arange(0, 10000).reshape(100, 100) / 10000) / 16 * i
+
+writer = SummaryWriter()
+writer.add_images('my_image_batch', img_batch, 0)
+writer.close()
+</code></pre>
+<p>Expected result:</p>
+<p><img alt=":scale: 30 %" src="_static/img/tensorboard/add_images.png"></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_images(self, name, value, iteration):
+    iteration = int(iteration / self.modulo) * self.modulo
+    if (name, iteration) in self.written_values:
+        return
+    else:
+        self.written_values[(name, iteration)] = True
+
+    self._to_pickle(name, value, iteration)
+    if self.save_tensorboard:
+        SummaryWriter.add_images(self, name, value, iteration)</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.TFLogger.add_scalar"><code class="name flex">
+<span>def <span class="ident">add_scalar</span></span>(<span>self, name, value, iteration)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Add scalar data to summary.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>tag</code></strong> :&ensp;<code>string</code></dt>
+<dd>Data identifier</dd>
+<dt>scalar_value (float or string/blobname): Value to save</dt>
+<dt><strong><code>global_step</code></strong> :&ensp;<code>int</code></dt>
+<dd>Global step value to record</dd>
+<dt><strong><code>walltime</code></strong> :&ensp;<code>float</code></dt>
+<dd>Optional override default walltime (time.time())
+with seconds after epoch of event</dd>
+<dt><strong><code>new_style</code></strong> :&ensp;<code>boolean</code></dt>
+<dd>Whether to use new style (tensor field) or old
+style (simple_value field). New style could lead to faster data loading.</dd>
+</dl>
+<p>Examples::</p>
+<pre><code>from torch.utils.tensorboard import SummaryWriter
+writer = SummaryWriter()
+x = range(100)
+for i in x:
+    writer.add_scalar('y=2x', i * 2, i)
+writer.close()
+</code></pre>
+<p>Expected result:</p>
+<p><img alt=":scale: 50 %" src="_static/img/tensorboard/add_scalar.png"></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_scalar(self, name, value, iteration):
+    iteration = int(iteration / self.modulo) * self.modulo
+    if (name, iteration) in self.written_values:
+        return
+    else:
+        self.written_values[(name, iteration)] = True
+
+    self._to_pickle(name, value, iteration)
+    if self.verbose:
+        print(&#34;[&#39;&#34; + name + &#34;&#39; at &#34; + str(iteration) + &#34;] = &#34; + str(value))
+
+    if isinstance(value, int) or isinstance(value, float):
+        if self.save_tensorboard:
+            SummaryWriter.add_scalar(self, name, value, iteration)</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.TFLogger.add_video"><code class="name flex">
+<span>def <span class="ident">add_video</span></span>(<span>self, name, value, iteration, fps=10)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Add video data to summary.</p>
+<p>Note that this requires the <code>moviepy</code> package.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>tag</code></strong> :&ensp;<code>string</code></dt>
+<dd>Data identifier</dd>
+<dt><strong><code>vid_tensor</code></strong> :&ensp;<code>torch.Tensor</code></dt>
+<dd>Video data</dd>
+<dt><strong><code>global_step</code></strong> :&ensp;<code>int</code></dt>
+<dd>Global step value to record</dd>
+<dt><strong><code>fps</code></strong> :&ensp;<code>float</code> or <code>int</code></dt>
+<dd>Frames per second</dd>
+<dt><strong><code>walltime</code></strong> :&ensp;<code>float</code></dt>
+<dd>Optional override default walltime (time.time())
+seconds after epoch of event</dd>
+</dl>
+<h2 id="shape">Shape</h2>
+<p>vid_tensor: :math:<code>(N, T, C, H, W)</code>. The values should lie in [0, 255] for type <code>uint8</code> or [0, 1] for type <code>float</code>.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_video(self, name, value, iteration, fps=10):
+    iteration = int(iteration / self.modulo) * self.modulo
+    if (name, iteration) in self.written_values:
+        return
+    else:
+        self.written_values[(name, iteration)] = True
+
+    self._to_pickle(name, value.numpy(), iteration)
+    if self.save_tensorboard:
+        SummaryWriter.add_video(self, name, value, iteration, fps=fps)</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.TFLogger.close"><code class="name flex">
+<span>def <span class="ident">close</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def close(self):
+    if len(self.to_pickle) &gt; 0:
+        if self.use_zip:
+            f = bz2.BZ2File(self.picklename, &#34;ab&#34;)
+            pickle.dump(self.to_pickle, f)
+            f.close()
+        else:
+            f = open(self.picklename, &#34;ab&#34;)
+            pickle.dump(self.to_pickle, f)
+            f.close()
+        self.to_pickle = []
+
+    SummaryWriter.close(self)
+
+    f = open(self.log_dir + &#34;/done&#34;, &#34;wt&#34;)
+    f.write(&#34;Done\n&#34;)
+    f.close()</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.TFLogger.debug"><code class="name flex">
+<span>def <span class="ident">debug</span></span>(<span>self, msg, from_name='')</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def debug(self, msg, from_name=&#34;&#34;):
+    print(&#34;[DEBUG] [&#34;, from_name, &#34;]: &#34;, msg)</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.TFLogger.get_logger"><code class="name flex">
+<span>def <span class="ident">get_logger</span></span>(<span>self, prefix)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_logger(self, prefix):
+    return TFPrefixLogger(prefix, self)</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.TFLogger.message"><code class="name flex">
+<span>def <span class="ident">message</span></span>(<span>self, msg, from_name='')</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def message(self, msg, from_name=&#34;&#34;):
+    print(&#34;[&#34;, from_name, &#34;]: &#34;, msg)</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.TFLogger.save_hps"><code class="name flex">
+<span>def <span class="ident">save_hps</span></span>(<span>self, hps, verbose=True)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def save_hps(self, hps, verbose=True):
+    hps = self._to_dict(hps)
+    if verbose:
+        print(hps)
+    f = open(self.log_dir + &#34;/params.json&#34;, &#34;wt&#34;)
+    f.write(str(hps) + &#34;\n&#34;)
+    f.close()
+
+    outfile = open(self.log_dir + &#34;/params.pickle&#34;, &#34;wb&#34;)
+    pickle.dump(hps, outfile)
+    outfile.close()
+    self.add_text(&#34;Hyperparameters&#34;, str(hps))</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="bbrl.utils.logger.TFPrefixLogger"><code class="flex name class">
+<span>class <span class="ident">TFPrefixLogger</span></span>
+<span>(</span><span>prefix, logger)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class TFPrefixLogger:
+    def __init__(self, prefix, logger):
+        self.logger = logger
+        self.prefix = prefix
+
+    def add_images(self, name, value, iteration):
+        self.logger.add_images(self.prefix + name, value, iteration)
+
+    def add_figure(self, name, value, iteration):
+        self.logger.add_figure(self.prefix + name, value, iteration)
+
+    def add_scalar(self, name, value, iteration):
+        self.logger.add_scalar(self.prefix + name, value, iteration)
+
+    def add_video(self, name, value, iteration, fps=10):
+        self.logger.add_video(self.prefix + name, value, iteration, fps)
+
+    def message(self, msg, from_name=&#34;&#34;):
+        self.logger.message(msg, from_name=self.prefix + from_name)
+
+    def debug(self, msg, from_name=&#34;&#34;):
+        self.logger.debug(msg, from_name=self.prefix + from_name)
+
+    def get_logger(self, prefix):
+        return TFPrefixLogger(self.prefix + prefix, self.logger)
+
+    def close(self):
+        pass</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="bbrl.utils.logger.TFPrefixLogger.add_figure"><code class="name flex">
+<span>def <span class="ident">add_figure</span></span>(<span>self, name, value, iteration)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_figure(self, name, value, iteration):
+    self.logger.add_figure(self.prefix + name, value, iteration)</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.TFPrefixLogger.add_images"><code class="name flex">
+<span>def <span class="ident">add_images</span></span>(<span>self, name, value, iteration)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_images(self, name, value, iteration):
+    self.logger.add_images(self.prefix + name, value, iteration)</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.TFPrefixLogger.add_scalar"><code class="name flex">
+<span>def <span class="ident">add_scalar</span></span>(<span>self, name, value, iteration)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_scalar(self, name, value, iteration):
+    self.logger.add_scalar(self.prefix + name, value, iteration)</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.TFPrefixLogger.add_video"><code class="name flex">
+<span>def <span class="ident">add_video</span></span>(<span>self, name, value, iteration, fps=10)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_video(self, name, value, iteration, fps=10):
+    self.logger.add_video(self.prefix + name, value, iteration, fps)</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.TFPrefixLogger.close"><code class="name flex">
+<span>def <span class="ident">close</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def close(self):
+    pass</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.TFPrefixLogger.debug"><code class="name flex">
+<span>def <span class="ident">debug</span></span>(<span>self, msg, from_name='')</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def debug(self, msg, from_name=&#34;&#34;):
+    self.logger.debug(msg, from_name=self.prefix + from_name)</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.TFPrefixLogger.get_logger"><code class="name flex">
+<span>def <span class="ident">get_logger</span></span>(<span>self, prefix)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_logger(self, prefix):
+    return TFPrefixLogger(self.prefix + prefix, self.logger)</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.logger.TFPrefixLogger.message"><code class="name flex">
+<span>def <span class="ident">message</span></span>(<span>self, msg, from_name='')</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def message(self, msg, from_name=&#34;&#34;):
+    self.logger.message(msg, from_name=self.prefix + from_name)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="bbrl.utils" href="index.html">bbrl.utils</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="two-column">
+<li><code><a title="bbrl.utils.logger.flattify" href="#bbrl.utils.logger.flattify">flattify</a></code></li>
+<li><code><a title="bbrl.utils.logger.get_directories" href="#bbrl.utils.logger.get_directories">get_directories</a></code></li>
+<li><code><a title="bbrl.utils.logger.plot_dataframe" href="#bbrl.utils.logger.plot_dataframe">plot_dataframe</a></code></li>
+<li><code><a title="bbrl.utils.logger.read_directories" href="#bbrl.utils.logger.read_directories">read_directories</a></code></li>
+<li><code><a title="bbrl.utils.logger.read_directory" href="#bbrl.utils.logger.read_directory">read_directory</a></code></li>
+<li><code><a title="bbrl.utils.logger.read_log" href="#bbrl.utils.logger.read_log">read_log</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="bbrl.utils.logger.Log" href="#bbrl.utils.logger.Log">Log</a></code></h4>
+<ul class="two-column">
+<li><code><a title="bbrl.utils.logger.Log.argmax" href="#bbrl.utils.logger.Log.argmax">argmax</a></code></li>
+<li><code><a title="bbrl.utils.logger.Log.argmin" href="#bbrl.utils.logger.Log.argmin">argmin</a></code></li>
+<li><code><a title="bbrl.utils.logger.Log.get" href="#bbrl.utils.logger.Log.get">get</a></code></li>
+<li><code><a title="bbrl.utils.logger.Log.get_at" href="#bbrl.utils.logger.Log.get_at">get_at</a></code></li>
+<li><code><a title="bbrl.utils.logger.Log.max" href="#bbrl.utils.logger.Log.max">max</a></code></li>
+<li><code><a title="bbrl.utils.logger.Log.min" href="#bbrl.utils.logger.Log.min">min</a></code></li>
+<li><code><a title="bbrl.utils.logger.Log.replace_none_" href="#bbrl.utils.logger.Log.replace_none_">replace_none_</a></code></li>
+<li><code><a title="bbrl.utils.logger.Log.to_dataframe" href="#bbrl.utils.logger.Log.to_dataframe">to_dataframe</a></code></li>
+<li><code><a title="bbrl.utils.logger.Log.to_xy" href="#bbrl.utils.logger.Log.to_xy">to_xy</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="bbrl.utils.logger.Logs" href="#bbrl.utils.logger.Logs">Logs</a></code></h4>
+<ul class="two-column">
+<li><code><a title="bbrl.utils.logger.Logs.add" href="#bbrl.utils.logger.Logs.add">add</a></code></li>
+<li><code><a title="bbrl.utils.logger.Logs.columns" href="#bbrl.utils.logger.Logs.columns">columns</a></code></li>
+<li><code><a title="bbrl.utils.logger.Logs.filter" href="#bbrl.utils.logger.Logs.filter">filter</a></code></li>
+<li><code><a title="bbrl.utils.logger.Logs.hps" href="#bbrl.utils.logger.Logs.hps">hps</a></code></li>
+<li><code><a title="bbrl.utils.logger.Logs.max" href="#bbrl.utils.logger.Logs.max">max</a></code></li>
+<li><code><a title="bbrl.utils.logger.Logs.size" href="#bbrl.utils.logger.Logs.size">size</a></code></li>
+<li><code><a title="bbrl.utils.logger.Logs.to_dataframe" href="#bbrl.utils.logger.Logs.to_dataframe">to_dataframe</a></code></li>
+<li><code><a title="bbrl.utils.logger.Logs.unique_hps" href="#bbrl.utils.logger.Logs.unique_hps">unique_hps</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="bbrl.utils.logger.TFLogger" href="#bbrl.utils.logger.TFLogger">TFLogger</a></code></h4>
+<ul class="two-column">
+<li><code><a title="bbrl.utils.logger.TFLogger.add_figure" href="#bbrl.utils.logger.TFLogger.add_figure">add_figure</a></code></li>
+<li><code><a title="bbrl.utils.logger.TFLogger.add_images" href="#bbrl.utils.logger.TFLogger.add_images">add_images</a></code></li>
+<li><code><a title="bbrl.utils.logger.TFLogger.add_scalar" href="#bbrl.utils.logger.TFLogger.add_scalar">add_scalar</a></code></li>
+<li><code><a title="bbrl.utils.logger.TFLogger.add_video" href="#bbrl.utils.logger.TFLogger.add_video">add_video</a></code></li>
+<li><code><a title="bbrl.utils.logger.TFLogger.close" href="#bbrl.utils.logger.TFLogger.close">close</a></code></li>
+<li><code><a title="bbrl.utils.logger.TFLogger.debug" href="#bbrl.utils.logger.TFLogger.debug">debug</a></code></li>
+<li><code><a title="bbrl.utils.logger.TFLogger.get_logger" href="#bbrl.utils.logger.TFLogger.get_logger">get_logger</a></code></li>
+<li><code><a title="bbrl.utils.logger.TFLogger.message" href="#bbrl.utils.logger.TFLogger.message">message</a></code></li>
+<li><code><a title="bbrl.utils.logger.TFLogger.save_hps" href="#bbrl.utils.logger.TFLogger.save_hps">save_hps</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="bbrl.utils.logger.TFPrefixLogger" href="#bbrl.utils.logger.TFPrefixLogger">TFPrefixLogger</a></code></h4>
+<ul class="two-column">
+<li><code><a title="bbrl.utils.logger.TFPrefixLogger.add_figure" href="#bbrl.utils.logger.TFPrefixLogger.add_figure">add_figure</a></code></li>
+<li><code><a title="bbrl.utils.logger.TFPrefixLogger.add_images" href="#bbrl.utils.logger.TFPrefixLogger.add_images">add_images</a></code></li>
+<li><code><a title="bbrl.utils.logger.TFPrefixLogger.add_scalar" href="#bbrl.utils.logger.TFPrefixLogger.add_scalar">add_scalar</a></code></li>
+<li><code><a title="bbrl.utils.logger.TFPrefixLogger.add_video" href="#bbrl.utils.logger.TFPrefixLogger.add_video">add_video</a></code></li>
+<li><code><a title="bbrl.utils.logger.TFPrefixLogger.close" href="#bbrl.utils.logger.TFPrefixLogger.close">close</a></code></li>
+<li><code><a title="bbrl.utils.logger.TFPrefixLogger.debug" href="#bbrl.utils.logger.TFPrefixLogger.debug">debug</a></code></li>
+<li><code><a title="bbrl.utils.logger.TFPrefixLogger.get_logger" href="#bbrl.utils.logger.TFPrefixLogger.get_logger">get_logger</a></code></li>
+<li><code><a title="bbrl.utils.logger.TFPrefixLogger.message" href="#bbrl.utils.logger.TFPrefixLogger.message">message</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

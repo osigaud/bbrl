@@ -9,15 +9,17 @@ import numpy as np
 import torch
 from typing import Optional
 
-""" This module provides different ways to store tensors that are more flexible than the torch.Tensor class.
-It also defines the `Workspace` as a dictionary of tensors and a version of the workspace
-where tensors are in shared memory for multiprocessing
+"""This module provides different ways to store tensors that are more flexible
+than the torch.Tensor class. It also defines the `Workspace` as a dictionary of
+tensors and a version of the workspace where tensors are in shared memory for
+multiprocessing
 """
 
 
 class SlicedTemporalTensor:
-    """A SlicedTemporalTensor represents a tensor of size TxBx... by using a list of tensors of size Bx...
-    The interest is that this tensor automatically adapts its timestep dimension and does not need to have a predefined size.
+    """A SlicedTemporalTensor represents a tensor of size TxBx... by using a
+    list of tensors of size Bx... The interest is that this tensor automatically
+    adapts its timestep dimension and does not need to have a predefined size.
     """
 
     def __init__(self):
@@ -40,7 +42,9 @@ class SlicedTemporalTensor:
             "Incompatible size:" + str(self.size) + " vs " + str(value.size())
         )
         assert self.device == value.device, "Incompatible device:" + str(self.device)
-        assert self.dtype == value.dtype, f"Incompatible type ({self.dtype} vs {value.dtype})"
+        assert (
+            self.dtype == value.dtype
+        ), f"Incompatible type ({self.dtype} vs {value.dtype})"
         while len(self.tensors) <= t:
             self.tensors.append(
                 torch.zeros(*self.size, device=self.device, dtype=self.dtype)
@@ -60,7 +64,9 @@ class SlicedTemporalTensor:
         assert (
             batch_dims is None
         ), "Unable to use batch dimensions with SlicedTemporalTensor"
-        assert t < len(self.tensors), f"Temporal index out of bounds: {t} vs {len(self.tensors)}"
+        assert t < len(
+            self.tensors
+        ), f"Temporal index out of bounds: {t} vs {len(self.tensors)}"
         return self.tensors[t]
 
     def get_full(self, batch_dims):
@@ -164,7 +170,9 @@ class CompactTemporalTensor:
         assert self.size[1:] == value.size(), "Incompatible size"
         assert self.device == value.device, "Incompatible device"
         assert self.dtype == value.dtype, "Incompatible type"
-        assert t < self.tensor.size()[0], "Temporal index out of bounds: {t} vs {self.tensor.size()[0]}"
+        assert (
+            t < self.tensor.size()[0]
+        ), "Temporal index out of bounds: {t} vs {self.tensor.size()[0]}"
         if batch_dims is None:
             self.tensor[t] = value
         else:
@@ -188,7 +196,9 @@ class CompactTemporalTensor:
         return CompactTemporalTensor(t)
 
     def get(self, t, batch_dims):
-        assert t < self.tensor.size()[0], f"Temporal index out of bounds: {t} vs {self.tensor.size()[0]}"
+        assert (
+            t < self.tensor.size()[0]
+        ), f"Temporal index out of bounds: {t} vs {self.tensor.size()[0]}"
         if batch_dims is None:
             return self.tensor[t]
         else:
@@ -252,7 +262,9 @@ class CompactSharedTensor:
             self.tensor[t, batch_dims[0] : batch_dims[1]] = value.detach()
 
     def get(self, t, batch_dims):
-        assert t < self.tensor.size()[0], f"Temporal index out of bounds: {t}, {self.tensor.size()[0]}"
+        assert (
+            t < self.tensor.size()[0]
+        ), f"Temporal index out of bounds: {t}, {self.tensor.size()[0]}"
         if batch_dims is None:
             return self.tensor[t]
         else:
@@ -391,9 +403,9 @@ class Workspace:
         self, var_name: str, batch_dims: Optional[tuple[int, int]] = None
     ) -> torch.Tensor:
         """Return the complete tensor for var_name"""
-        assert var_name in self.variables, (
-            f"[Workspace.get_full] unknown variable: {var_name}"
-        )
+        assert (
+            var_name in self.variables
+        ), f"[Workspace.get_full] unknown variable: {var_name}"
         return self.variables[var_name].get_full(batch_dims=batch_dims)
 
     def keys(self):
@@ -425,7 +437,9 @@ class Workspace:
         for k, v in self.variables.items():
             if _ts is None:
                 _ts = v.time_size()
-            assert _ts == v.time_size(), f"Variables must have the same time size: {_ts} vs {v.time_size()}"
+            assert (
+                _ts == v.time_size()
+            ), f"Variables must have the same time size: {_ts} vs {v.time_size()}"
         return _ts
 
     def batch_size(self) -> int:
@@ -434,7 +448,9 @@ class Workspace:
         for k, v in self.variables.items():
             if _bs is None:
                 _bs = v.batch_size()
-            assert _bs == v.batch_size(), f"Variables must have the same batch size: {_bs} vs {v.batch_size()}"
+            assert (
+                _bs == v.batch_size()
+            ), f"Variables must have the same batch size: {_bs} vs {v.batch_size()}"
         return _bs
 
     def select_batch(self, batch_indexes: torch.LongTensor) -> Workspace:
@@ -445,7 +461,9 @@ class Workspace:
         for k, v in self.variables.items():
             if _bs is None:
                 _bs = v.batch_size()
-            assert _bs == v.batch_size(), f"Variables must have the same batch size: {_bs} vs {v.batch_size()}"
+            assert (
+                _bs == v.batch_size()
+            ), f"Variables must have the same batch size: {_bs} vs {v.batch_size()}"
 
         workspace = Workspace()
         for k, v in self.variables.items():
@@ -506,7 +524,9 @@ class Workspace:
         for w in workspaces:
             if ts is None:
                 ts = w.time_size()
-            assert ts == w.time_size(), f"Workspaces must have the same time size: {ts} vs {w.time_size()}"
+            assert (
+                ts == w.time_size()
+            ), f"Workspaces must have the same time size: {ts} vs {w.time_size()}"
 
         workspace = Workspace()
         for k in workspaces[0].keys():
@@ -522,9 +542,9 @@ class Workspace:
             if var_names is None or k in var_names:
                 if _ts is None:
                     _ts = v.time_size()
-                assert _ts == v.time_size(), (
-                    f"Variables must have the same time size: {_ts} vs {v.time_size()}"
-                )
+                assert (
+                    _ts == v.time_size()
+                ), f"Variables must have the same time size: {_ts} vs {v.time_size()}"
 
         for k, v in self.variables.items():
             if var_names is None or k in var_names:
@@ -689,7 +709,7 @@ class Workspace:
                 x_next = array[1:].view(-1, *array.shape[2:])
                 transitions[key] = torch.stack([x, x_next])
         else:
-            done = self[filter_key][:-1]
+            done = self[filter_key][:-1].bool()
             for key in self.keys():
                 array = self[key]
 
@@ -703,32 +723,6 @@ class Workspace:
         for k, v in transitions.items():
             workspace.set_full(k, v)
         return workspace
-
-    def debug_transitions(self, truncated):
-        """ """
-        critic, done, action_probs, reward, action = self[
-            "critic", "env/done", "action_probs", "env/reward", "action"
-        ]
-        timestep = self["env/timestep"]
-        assert not done[
-            0
-        ].max()  # dones is must be always false in the first timestep of the transition.
-        # if not it means we have a transition (step final) => (step initial)
-
-        # timesteps must always follow each other.
-        assert (timestep[0] == timestep[1] - 1).all()
-
-        assert (
-            truncated[not done].sum().item() == 0
-        )  # when done is false, truncated is always false
-
-        if done[truncated].numel() > 0:
-            assert torch.amin(
-                done[truncated]
-            )  # when truncated is true, done is always true
-        assert reward[1].sum() == len(
-            reward[1]
-        ), "in cartpole, rewards are always 1"  # only 1 rewards
 
 
 class _SplitSharedWorkspace:

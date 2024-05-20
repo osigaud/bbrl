@@ -2,9 +2,9 @@
 
 `bbrl`- A Flexible and Simple Library for Reinforcement Learning deriving from SaLinA
 
-BBRL stands for "BlackBoard Reinforcement Learning". Initially, this library was a fork of [the SaLinA library](https://github.com/facebookresearch/salina). 
-But SaLinA is a general model for sequential learning whereas BBRL is dedicated to RL, thus it focuses on a subset of SaLinA. 
-Morevover, BBRL is designed for education purpose (in particular, to teach various RL algorithms, concepts and phenomena). 
+BBRL stands for "BlackBoard Reinforcement Learning". Initially, this library was a fork of [the SaLinA library](https://github.com/facebookresearch/salina).
+But SaLinA is a general model for sequential learning whereas BBRL is dedicated to RL, thus it focuses on a subset of SaLinA.
+Morevover, BBRL is designed for education purpose (in particular, to teach various RL algorithms, concepts and phenomena).
 Thus the fork slowly drifted away from SaLinA and became independent after a few months, even if some parts of the code are still inherited from SaLinA.
 
 ## TL;DR.
@@ -32,14 +32,21 @@ Link to the paper: [SaLinA: Sequential Learning of Agents](https://arxiv.org/abs
 
 ## Quick Start
 
-* Just clone the repo
+* create and activate a python environment with your favorite tool, e.g. conda or venv (for instance, `conda create bbrl_env` ; `conda activate bbrl_env`)
+* Then clone the repo
 * `pip install -e .`
 
 
 ## News
 
+* April 2024:
+* * Major evolution of the documentation
+
+* March 2024:
+* * Bug fixes in the replay buffer
+
 * May-June 2023:
-* * Integrated the use of gymnasium. Turned google colab notebooks into colab compatible jupyter notebooks. Refactored all the notebooks. 
+* * Integrated the use of gymnasium. Turned google colab notebooks into colab compatible jupyter notebooks. Refactored all the notebooks.
 
 * August 2022:
 * * Major updates of the notebook-based documentation
@@ -66,33 +73,17 @@ Link to the paper: [SaLinA: Sequential Learning of Agents](https://arxiv.org/abs
 
 * * When using autoreset=True and no replay buffer, transitions from an episode to the next were considered as standard steps in an episode. We added a mechanism to properly filter them out, using an additional `get_transitions()` function in the Workspace class.
 
-### Starting with notebooks
+## Understanding BBRL
 
-There are two kinds of notebooks:
-
-- some are just for reading, they explain the main concepts and design choices behind BBRL
-
-- some are designed for learning about RL algorithms and practicing with BBRL. Ideally, these notebooks should be studied in the provided order.
-
-#### Explanatory notebooks
-
-- Getting started: The [BBRL model](https://colab.research.google.com/drive/1_yp-JKkxh_P8Yhctulqm0IrLbE41oK1p?usp=sharing)
-
-- Explanations about using [autoreset=False](https://colab.research.google.com/drive/1EX5O03mmWFp9wCL_Gb_-p08JktfiL2l5?usp=sharing)
-
-- Explanations about using [autoreset=True](https://colab.research.google.com/drive/1W9Y-3fa6LsPeR6cBC1vgwBjKfgMwZvP5?usp=sharing)
-
-- [Different Reward Indexing Schemes](https://colab.research.google.com/drive/1Cld72_FBA1aMS2U4EsyV3LGZIlQC_PsC?usp=sharing)
-
-- [Dealing with Time Limits](https://colab.research.google.com/drive/1erLbRKvdkdDy0Zn1X_JhC01s1QAt4BBj?usp=sharing)
+To help you understand how to use BBRL, we have written a doc [here](https://github.com/osigaud/bbrl/blob/master/docs/overview.md)
 
 #### Coding your first RL algorithms with BBRL
 
-Most of the notebooks below can be run under jupyter notebook as well as under Google colaboratory. In any case, download it on your disk and run it with your favorite notebook environment.
+Most of the notebooks below can be run under jupyter notebook as well as under Google colaboratory. In any case, download it on your disk and run it with your favorite notebook environment:
 
-- [A simple agent-environment interaction code](https://colab.research.google.com/drive/1gSdkOBPkIQi_my9TtwJ-qWZQS0b2X7jt?usp=sharing)
-
-- [Building a simple Neural RL agent in interaction with a gym environment](https://colab.research.google.com/drive/1Ui481r47fNHCQsQfKwdoNEVrEiqAEokh?usp=sharing)
+- `conda activate bbrl_env` (for instance)
+- `jupyter notebook`
+- the notebook opens in your browser
 
 - [Coding DQN using autoreset=False](http://master-dac.isir.upmc.fr/rld/rl/03-1-dqn-introduction.student.ipynb)
 
@@ -102,9 +93,9 @@ Most of the notebooks below can be run under jupyter notebook as well as under G
 
 - [Coding basic Policy Gradient algorithms and REINFORCE](http://master-dac.isir.upmc.fr/rld/rl/05-reinforce.student.ipynb)
 
-- [A basic version of the A2C algorithm](http://master-dac.isir.upmc.fr/rld/rl/06-1-a2c_basic.student.ipynb)
+- [A basic version of the A2C algorithm](http://master-dac.isir.upmc.fr/rld/rl/06-1-a2c-basic.student.ipynb)
 
-- [A more advanced version of the A2C algorithm](http://master-dac.isir.upmc.fr/rld/rl/06-2-a2c_advanced.student.ipynb)
+- [A more advanced version of the A2C algorithm](http://master-dac.isir.upmc.fr/rld/rl/06-2-a2c-advanced.student.ipynb)
 
 - [The KL penalty version of PPO](http://master-dac.isir.upmc.fr/rld/rl/07-1-ppo_penalty.student.ipynb)
 
@@ -112,15 +103,18 @@ Most of the notebooks below can be run under jupyter notebook as well as under G
 
 - [Coding SAC](http://master-dac.isir.upmc.fr/rld/rl/08-sac.student.ipynb)
 
+<!---
 - [Coding TQC](https://colab.research.google.com/drive/1Lg9_M9YwI_E6Xm1on8GY9TLYxLItTSuw?usp=sharing)
+-->
+
 
 ### Learning RL with `bbrl` in your favorite coding environment
 
-Have a look at the [bbrl_examples](https://github.com/osigaud/bbrl_example.git) library.
+Have a look at the [bbrl_algos](https://github.com/osigaud/bbrl_algos.git) library.
 
 ### Code Documentation:
 
-[Generated with pdoc](https://htmlpreview.github.io/?https://github.com/osigaud/bbrl/blob/master/docs/bbrl/index.html)
+[Generated with pdoc](https://htmlpreview.github.io/?https://github.com/osigaud/bbrl/blob/master/documentation/bbrl/index.html)
 
 ### Development
 
@@ -128,7 +122,7 @@ See [contributing](CONTRIBUTING.md)
 
 ## Dependencies
 
-`bbrl` utilizes `pytorch`, `hydra` for configuring experiments, and `gym` or `gymnasium` for reinforcement learning algorithms.
+`bbrl` utilizes `pytorch`, `hydra` for configuring experiments, and `gymnasium` for reinforcement learning algorithms. See requirements.txt for more details.
 
 ## License
 

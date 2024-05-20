@@ -1,0 +1,735 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>bbrl.agents.agent API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>bbrl.agents.agent</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python"># This source code is licensed under the MIT license found in the
+# LICENSE file in the root directory of this source tree.
+#
+
+import copy
+import time
+
+import torch
+import torch.nn as nn
+
+
+class Agent(nn.Module):
+    &#34;&#34;&#34;An `Agent` is a `torch.nn.Module` that reads and writes into a `bbrl.Workspace`&#34;&#34;&#34;
+
+    def __init__(self, name: str = None, verbose=False):
+        &#34;&#34;&#34;To create a new Agent
+
+        Args:
+            name ([type], optional): An agent can have a name that will allow to perform operations
+            on agents that are composed into more complex agents.
+        &#34;&#34;&#34;
+        super().__init__()
+        self._name = name
+        self.__trace_file = None
+        self.verbose = verbose
+        self.workspace = None
+
+    def seed(self, seed: int):
+        &#34;&#34;&#34;Provide a seed to this agent. Useful is the agent is stochastic.
+
+        Args:
+            seed (str): [description]
+        &#34;&#34;&#34;
+        pass
+
+    def set_name(self, n):
+        &#34;&#34;&#34;Set the name of this agent
+
+        Args:
+            n (str): The name
+        &#34;&#34;&#34;
+        self._name = n
+
+    def get_name(self):
+        &#34;&#34;&#34;Returns the name of the agent
+
+        Returns:
+            str: the name
+        &#34;&#34;&#34;
+        return self._name
+
+    def set_trace_file(self, filename):
+        print(&#34;[TRACE]: Tracing agent in file &#34; + filename)
+        self.__trace_file = open(filename, &#34;wt&#34;)
+
+    def __call__(self, workspace, **kwargs):
+        &#34;&#34;&#34;Execute an agent of a `bbrl.Workspace`
+
+        Args:
+            workspace (bbrl.Workspace): the workspace on which the agent operates
+        &#34;&#34;&#34;
+        assert workspace is not None, &#34;[Agent.__call__] workspace must not be None&#34;
+        self.workspace = workspace
+        self.forward(**kwargs)
+        self.workspace = None
+
+    def _asynchronous_call(self, workspace, **kwargs):
+        &#34;&#34;&#34;Execute the `__call__` in non-blocking mode (if the agent is in another process)
+
+        Args:
+             workspace (bbrl.Workspace): the workspace on which the agent operates
+        &#34;&#34;&#34;
+        self.__call__(workspace, **kwargs)
+
+    def is_running(self):
+        &#34;&#34;&#34;Returns True if the agent is currently executing (for remote agents)&#34;&#34;&#34;
+        return False
+
+    def forward(self, **kwargs):
+        &#34;&#34;&#34;The generic function to override when defining a new agent&#34;&#34;&#34;
+        raise NotImplementedError
+
+    def clone(self):
+        &#34;&#34;&#34;Create a clone of the agent
+
+        Returns:
+            bbrl.Agent: A clone
+        &#34;&#34;&#34;
+        self.workspace = None
+        self.zero_grad()
+        return copy.deepcopy(self)
+
+    def get(self, index):
+        &#34;&#34;&#34;Returns the value of a particular variable in the agent workspace
+
+        Args:
+            index (str or tuple(str,int)): if str, returns the variable workspace[str].
+            If tuple(var_name,t), returns workspace[var_name] at time t
+        &#34;&#34;&#34;
+        if self.__trace_file is not None:
+            t = time.time()
+            self.__trace_file.write(
+                str(self) + &#34; type = &#34; + type(self) + &#34; time = &#34;,
+                t,
+                &#34; get &#34;,
+                index,
+                &#34;\n&#34;,
+            )
+        if isinstance(index, str):
+            return self.workspace.get_full(index)
+        else:
+            return self.workspace.get(index[0], index[1])
+
+    def get_time_truncated(self, var_name, from_time, to_time):
+        &#34;&#34;&#34;Return a variable truncated between from_time and to_time&#34;&#34;&#34;
+        return self.workspace.get_time_truncated(var_name, from_time, to_time)
+
+    def set(self, index, value):
+        &#34;&#34;&#34;Write a variable in the workspace
+
+        Args:
+            index (str or tuple(str,int)):
+            value (torch.Tensor): the value to write
+        &#34;&#34;&#34;
+        if self.__trace_file is not None:
+            t = time.time()
+            self.__trace_file.write(
+                str(self) + &#34; type = &#34; + type(self) + &#34; time = &#34;,
+                t,
+                &#34; set &#34;,
+                index,
+                &#34; = &#34;,
+                value.size(),
+                &#34;/&#34;,
+                value.dtype,
+                &#34;\n&#34;,
+            )
+        if isinstance(index, str):
+            self.workspace.set_full(index, value)
+        else:
+            self.workspace.set(index[0], index[1], value)
+
+    def get_by_name(self, n):
+        &#34;&#34;&#34;Returns the list of agents included in this agent that have a particular name.&#34;&#34;&#34;
+        if n == self._name:
+            return [self]
+        return []
+
+    def save_model(self, filename) -&gt; None:
+        &#34;&#34;&#34;
+        Save a neural network model into a file
+        :param filename: the filename, including the path
+        :return: nothing
+        &#34;&#34;&#34;
+        torch.save(self, filename)
+
+    def load_model(self, filename) -&gt; nn.Module:
+        &#34;&#34;&#34;
+        Load a neural network model from a file
+        :param filename: the filename, including the path
+        :return: the resulting pytorch network
+        &#34;&#34;&#34;
+        return torch.load(filename)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="bbrl.agents.agent.Agent"><code class="flex name class">
+<span>class <span class="ident">Agent</span></span>
+<span>(</span><span>name: str = None, verbose=False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>An <code><a title="bbrl.agents.agent.Agent" href="#bbrl.agents.agent.Agent">Agent</a></code> is a <code>torch.nn.Module</code> that reads and writes into a <code>bbrl.Workspace</code></p>
+<p>To create a new Agent</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>name</code></strong> :&ensp;<code>[type]</code>, optional</dt>
+<dd>An agent can have a name that will allow to perform operations</dd>
+</dl>
+<p>on agents that are composed into more complex agents.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Agent(nn.Module):
+    &#34;&#34;&#34;An `Agent` is a `torch.nn.Module` that reads and writes into a `bbrl.Workspace`&#34;&#34;&#34;
+
+    def __init__(self, name: str = None, verbose=False):
+        &#34;&#34;&#34;To create a new Agent
+
+        Args:
+            name ([type], optional): An agent can have a name that will allow to perform operations
+            on agents that are composed into more complex agents.
+        &#34;&#34;&#34;
+        super().__init__()
+        self._name = name
+        self.__trace_file = None
+        self.verbose = verbose
+        self.workspace = None
+
+    def seed(self, seed: int):
+        &#34;&#34;&#34;Provide a seed to this agent. Useful is the agent is stochastic.
+
+        Args:
+            seed (str): [description]
+        &#34;&#34;&#34;
+        pass
+
+    def set_name(self, n):
+        &#34;&#34;&#34;Set the name of this agent
+
+        Args:
+            n (str): The name
+        &#34;&#34;&#34;
+        self._name = n
+
+    def get_name(self):
+        &#34;&#34;&#34;Returns the name of the agent
+
+        Returns:
+            str: the name
+        &#34;&#34;&#34;
+        return self._name
+
+    def set_trace_file(self, filename):
+        print(&#34;[TRACE]: Tracing agent in file &#34; + filename)
+        self.__trace_file = open(filename, &#34;wt&#34;)
+
+    def __call__(self, workspace, **kwargs):
+        &#34;&#34;&#34;Execute an agent of a `bbrl.Workspace`
+
+        Args:
+            workspace (bbrl.Workspace): the workspace on which the agent operates
+        &#34;&#34;&#34;
+        assert workspace is not None, &#34;[Agent.__call__] workspace must not be None&#34;
+        self.workspace = workspace
+        self.forward(**kwargs)
+        self.workspace = None
+
+    def _asynchronous_call(self, workspace, **kwargs):
+        &#34;&#34;&#34;Execute the `__call__` in non-blocking mode (if the agent is in another process)
+
+        Args:
+             workspace (bbrl.Workspace): the workspace on which the agent operates
+        &#34;&#34;&#34;
+        self.__call__(workspace, **kwargs)
+
+    def is_running(self):
+        &#34;&#34;&#34;Returns True if the agent is currently executing (for remote agents)&#34;&#34;&#34;
+        return False
+
+    def forward(self, **kwargs):
+        &#34;&#34;&#34;The generic function to override when defining a new agent&#34;&#34;&#34;
+        raise NotImplementedError
+
+    def clone(self):
+        &#34;&#34;&#34;Create a clone of the agent
+
+        Returns:
+            bbrl.Agent: A clone
+        &#34;&#34;&#34;
+        self.workspace = None
+        self.zero_grad()
+        return copy.deepcopy(self)
+
+    def get(self, index):
+        &#34;&#34;&#34;Returns the value of a particular variable in the agent workspace
+
+        Args:
+            index (str or tuple(str,int)): if str, returns the variable workspace[str].
+            If tuple(var_name,t), returns workspace[var_name] at time t
+        &#34;&#34;&#34;
+        if self.__trace_file is not None:
+            t = time.time()
+            self.__trace_file.write(
+                str(self) + &#34; type = &#34; + type(self) + &#34; time = &#34;,
+                t,
+                &#34; get &#34;,
+                index,
+                &#34;\n&#34;,
+            )
+        if isinstance(index, str):
+            return self.workspace.get_full(index)
+        else:
+            return self.workspace.get(index[0], index[1])
+
+    def get_time_truncated(self, var_name, from_time, to_time):
+        &#34;&#34;&#34;Return a variable truncated between from_time and to_time&#34;&#34;&#34;
+        return self.workspace.get_time_truncated(var_name, from_time, to_time)
+
+    def set(self, index, value):
+        &#34;&#34;&#34;Write a variable in the workspace
+
+        Args:
+            index (str or tuple(str,int)):
+            value (torch.Tensor): the value to write
+        &#34;&#34;&#34;
+        if self.__trace_file is not None:
+            t = time.time()
+            self.__trace_file.write(
+                str(self) + &#34; type = &#34; + type(self) + &#34; time = &#34;,
+                t,
+                &#34; set &#34;,
+                index,
+                &#34; = &#34;,
+                value.size(),
+                &#34;/&#34;,
+                value.dtype,
+                &#34;\n&#34;,
+            )
+        if isinstance(index, str):
+            self.workspace.set_full(index, value)
+        else:
+            self.workspace.set(index[0], index[1], value)
+
+    def get_by_name(self, n):
+        &#34;&#34;&#34;Returns the list of agents included in this agent that have a particular name.&#34;&#34;&#34;
+        if n == self._name:
+            return [self]
+        return []
+
+    def save_model(self, filename) -&gt; None:
+        &#34;&#34;&#34;
+        Save a neural network model into a file
+        :param filename: the filename, including the path
+        :return: nothing
+        &#34;&#34;&#34;
+        torch.save(self, filename)
+
+    def load_model(self, filename) -&gt; nn.Module:
+        &#34;&#34;&#34;
+        Load a neural network model from a file
+        :param filename: the filename, including the path
+        :return: the resulting pytorch network
+        &#34;&#34;&#34;
+        return torch.load(filename)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>torch.nn.modules.module.Module</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="bbrl.agents.asynchronous.AsynchronousAgent" href="asynchronous.html#bbrl.agents.asynchronous.AsynchronousAgent">AsynchronousAgent</a></li>
+<li><a title="bbrl.agents.dataloader.DataLoaderAgent" href="dataloader.html#bbrl.agents.dataloader.DataLoaderAgent">DataLoaderAgent</a></li>
+<li><a title="bbrl.agents.dataloader.ShuffledDatasetAgent" href="dataloader.html#bbrl.agents.dataloader.ShuffledDatasetAgent">ShuffledDatasetAgent</a></li>
+<li><a title="bbrl.agents.gyma.GymAgent" href="gyma.html#bbrl.agents.gyma.GymAgent">GymAgent</a></li>
+<li><a title="bbrl.agents.gymb.GymAgent" href="gymb.html#bbrl.agents.gymb.GymAgent">GymAgent</a></li>
+<li><a title="bbrl.agents.remote.NRemoteAgent" href="remote.html#bbrl.agents.remote.NRemoteAgent">NRemoteAgent</a></li>
+<li><a title="bbrl.agents.remote.RemoteAgent" href="remote.html#bbrl.agents.remote.RemoteAgent">RemoteAgent</a></li>
+<li><a title="bbrl.agents.utils.Agents" href="utils.html#bbrl.agents.utils.Agents">Agents</a></li>
+<li><a title="bbrl.agents.utils.CopyTAgent" href="utils.html#bbrl.agents.utils.CopyTAgent">CopyTAgent</a></li>
+<li><a title="bbrl.agents.utils.EpisodesDone" href="utils.html#bbrl.agents.utils.EpisodesDone">EpisodesDone</a></li>
+<li><a title="bbrl.agents.utils.PrintAgent" href="utils.html#bbrl.agents.utils.PrintAgent">PrintAgent</a></li>
+<li><a title="bbrl.agents.utils.TemporalAgent" href="utils.html#bbrl.agents.utils.TemporalAgent">TemporalAgent</a></li>
+<li><a title="bbrl.utils.utils.nRemoteDistinctAgents" href="../utils/utils.html#bbrl.utils.utils.nRemoteDistinctAgents">nRemoteDistinctAgents</a></li>
+<li><a title="bbrl.utils.utils.nRemoteParamAgent" href="../utils/utils.html#bbrl.utils.utils.nRemoteParamAgent">nRemoteParamAgent</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="bbrl.agents.agent.Agent.dump_patches"><code class="name">var <span class="ident">dump_patches</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="bbrl.agents.agent.Agent.training"><code class="name">var <span class="ident">training</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="bbrl.agents.agent.Agent.clone"><code class="name flex">
+<span>def <span class="ident">clone</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a clone of the agent</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bbrl.Agent</code></dt>
+<dd>A clone</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def clone(self):
+    &#34;&#34;&#34;Create a clone of the agent
+
+    Returns:
+        bbrl.Agent: A clone
+    &#34;&#34;&#34;
+    self.workspace = None
+    self.zero_grad()
+    return copy.deepcopy(self)</code></pre>
+</details>
+</dd>
+<dt id="bbrl.agents.agent.Agent.forward"><code class="name flex">
+<span>def <span class="ident">forward</span></span>(<span>self, **kwargs) ‑> Callable[..., Any]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>The generic function to override when defining a new agent</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def forward(self, **kwargs):
+    &#34;&#34;&#34;The generic function to override when defining a new agent&#34;&#34;&#34;
+    raise NotImplementedError</code></pre>
+</details>
+</dd>
+<dt id="bbrl.agents.agent.Agent.get"><code class="name flex">
+<span>def <span class="ident">get</span></span>(<span>self, index)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the value of a particular variable in the agent workspace</p>
+<h2 id="args">Args</h2>
+<p>index (str or tuple(str,int)): if str, returns the variable workspace[str].
+If tuple(var_name,t), returns workspace[var_name] at time t</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get(self, index):
+    &#34;&#34;&#34;Returns the value of a particular variable in the agent workspace
+
+    Args:
+        index (str or tuple(str,int)): if str, returns the variable workspace[str].
+        If tuple(var_name,t), returns workspace[var_name] at time t
+    &#34;&#34;&#34;
+    if self.__trace_file is not None:
+        t = time.time()
+        self.__trace_file.write(
+            str(self) + &#34; type = &#34; + type(self) + &#34; time = &#34;,
+            t,
+            &#34; get &#34;,
+            index,
+            &#34;\n&#34;,
+        )
+    if isinstance(index, str):
+        return self.workspace.get_full(index)
+    else:
+        return self.workspace.get(index[0], index[1])</code></pre>
+</details>
+</dd>
+<dt id="bbrl.agents.agent.Agent.get_by_name"><code class="name flex">
+<span>def <span class="ident">get_by_name</span></span>(<span>self, n)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the list of agents included in this agent that have a particular name.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_by_name(self, n):
+    &#34;&#34;&#34;Returns the list of agents included in this agent that have a particular name.&#34;&#34;&#34;
+    if n == self._name:
+        return [self]
+    return []</code></pre>
+</details>
+</dd>
+<dt id="bbrl.agents.agent.Agent.get_name"><code class="name flex">
+<span>def <span class="ident">get_name</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the name of the agent</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>str</code></dt>
+<dd>the name</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_name(self):
+    &#34;&#34;&#34;Returns the name of the agent
+
+    Returns:
+        str: the name
+    &#34;&#34;&#34;
+    return self._name</code></pre>
+</details>
+</dd>
+<dt id="bbrl.agents.agent.Agent.get_time_truncated"><code class="name flex">
+<span>def <span class="ident">get_time_truncated</span></span>(<span>self, var_name, from_time, to_time)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return a variable truncated between from_time and to_time</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_time_truncated(self, var_name, from_time, to_time):
+    &#34;&#34;&#34;Return a variable truncated between from_time and to_time&#34;&#34;&#34;
+    return self.workspace.get_time_truncated(var_name, from_time, to_time)</code></pre>
+</details>
+</dd>
+<dt id="bbrl.agents.agent.Agent.is_running"><code class="name flex">
+<span>def <span class="ident">is_running</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns True if the agent is currently executing (for remote agents)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_running(self):
+    &#34;&#34;&#34;Returns True if the agent is currently executing (for remote agents)&#34;&#34;&#34;
+    return False</code></pre>
+</details>
+</dd>
+<dt id="bbrl.agents.agent.Agent.load_model"><code class="name flex">
+<span>def <span class="ident">load_model</span></span>(<span>self, filename) ‑> torch.nn.modules.module.Module</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Load a neural network model from a file
+:param filename: the filename, including the path
+:return: the resulting pytorch network</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def load_model(self, filename) -&gt; nn.Module:
+    &#34;&#34;&#34;
+    Load a neural network model from a file
+    :param filename: the filename, including the path
+    :return: the resulting pytorch network
+    &#34;&#34;&#34;
+    return torch.load(filename)</code></pre>
+</details>
+</dd>
+<dt id="bbrl.agents.agent.Agent.save_model"><code class="name flex">
+<span>def <span class="ident">save_model</span></span>(<span>self, filename) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Save a neural network model into a file
+:param filename: the filename, including the path
+:return: nothing</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def save_model(self, filename) -&gt; None:
+    &#34;&#34;&#34;
+    Save a neural network model into a file
+    :param filename: the filename, including the path
+    :return: nothing
+    &#34;&#34;&#34;
+    torch.save(self, filename)</code></pre>
+</details>
+</dd>
+<dt id="bbrl.agents.agent.Agent.seed"><code class="name flex">
+<span>def <span class="ident">seed</span></span>(<span>self, seed: int)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Provide a seed to this agent. Useful is the agent is stochastic.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>seed</code></strong> :&ensp;<code>str</code></dt>
+<dd>[description]</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def seed(self, seed: int):
+    &#34;&#34;&#34;Provide a seed to this agent. Useful is the agent is stochastic.
+
+    Args:
+        seed (str): [description]
+    &#34;&#34;&#34;
+    pass</code></pre>
+</details>
+</dd>
+<dt id="bbrl.agents.agent.Agent.set"><code class="name flex">
+<span>def <span class="ident">set</span></span>(<span>self, index, value)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Write a variable in the workspace</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt>index (str or tuple(str,int)):</dt>
+<dt><strong><code>value</code></strong> :&ensp;<code>torch.Tensor</code></dt>
+<dd>the value to write</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set(self, index, value):
+    &#34;&#34;&#34;Write a variable in the workspace
+
+    Args:
+        index (str or tuple(str,int)):
+        value (torch.Tensor): the value to write
+    &#34;&#34;&#34;
+    if self.__trace_file is not None:
+        t = time.time()
+        self.__trace_file.write(
+            str(self) + &#34; type = &#34; + type(self) + &#34; time = &#34;,
+            t,
+            &#34; set &#34;,
+            index,
+            &#34; = &#34;,
+            value.size(),
+            &#34;/&#34;,
+            value.dtype,
+            &#34;\n&#34;,
+        )
+    if isinstance(index, str):
+        self.workspace.set_full(index, value)
+    else:
+        self.workspace.set(index[0], index[1], value)</code></pre>
+</details>
+</dd>
+<dt id="bbrl.agents.agent.Agent.set_name"><code class="name flex">
+<span>def <span class="ident">set_name</span></span>(<span>self, n)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Set the name of this agent</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>n</code></strong> :&ensp;<code>str</code></dt>
+<dd>The name</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_name(self, n):
+    &#34;&#34;&#34;Set the name of this agent
+
+    Args:
+        n (str): The name
+    &#34;&#34;&#34;
+    self._name = n</code></pre>
+</details>
+</dd>
+<dt id="bbrl.agents.agent.Agent.set_trace_file"><code class="name flex">
+<span>def <span class="ident">set_trace_file</span></span>(<span>self, filename)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_trace_file(self, filename):
+    print(&#34;[TRACE]: Tracing agent in file &#34; + filename)
+    self.__trace_file = open(filename, &#34;wt&#34;)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="bbrl.agents" href="index.html">bbrl.agents</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="bbrl.agents.agent.Agent" href="#bbrl.agents.agent.Agent">Agent</a></code></h4>
+<ul class="two-column">
+<li><code><a title="bbrl.agents.agent.Agent.clone" href="#bbrl.agents.agent.Agent.clone">clone</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.dump_patches" href="#bbrl.agents.agent.Agent.dump_patches">dump_patches</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.forward" href="#bbrl.agents.agent.Agent.forward">forward</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.get" href="#bbrl.agents.agent.Agent.get">get</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.get_by_name" href="#bbrl.agents.agent.Agent.get_by_name">get_by_name</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.get_name" href="#bbrl.agents.agent.Agent.get_name">get_name</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.get_time_truncated" href="#bbrl.agents.agent.Agent.get_time_truncated">get_time_truncated</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.is_running" href="#bbrl.agents.agent.Agent.is_running">is_running</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.load_model" href="#bbrl.agents.agent.Agent.load_model">load_model</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.save_model" href="#bbrl.agents.agent.Agent.save_model">save_model</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.seed" href="#bbrl.agents.agent.Agent.seed">seed</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.set" href="#bbrl.agents.agent.Agent.set">set</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.set_name" href="#bbrl.agents.agent.Agent.set_name">set_name</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.set_trace_file" href="#bbrl.agents.agent.Agent.set_trace_file">set_trace_file</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.training" href="#bbrl.agents.agent.Agent.training">training</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

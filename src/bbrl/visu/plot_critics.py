@@ -23,6 +23,7 @@ from bbrl.workspace import Workspace
 # plot a DPDG-like critic.
 # If the input_action is None, which cannot be the case with DDPG-like critic, a random action is drawn, which makes little sense.
 
+
 def plot_critic(
     agent: Agent,
     env: GymAgent,
@@ -64,9 +65,9 @@ def plot_critic(
         warnings.warn("action is ignored for non q function agent")
     if agent.is_q_function and input_action is None:
         action_space: Space[ActType] = env.get_action_space()
-        input_action = action_space.sample()   
+        input_action = action_space.sample()
         warnings.warn("trying to plot a Q critic without giving an action")
-        
+
     assert (
         len(env.observation_space.shape) == 1
     ), "Nested observation space not supported"
@@ -115,14 +116,9 @@ def plot_critic(
 
     agent(workspace, t=0, **kwargs)
     data = workspace.get_full(var_name_value)
-    portrait = (
-        data
-        .reshape(definition, definition)
-        .detach()
-        .numpy()
-    )
+    portrait = data.reshape(definition, definition).detach().numpy()
     plt.figure(figsize=(10, 10))
-    
+
     plt.imshow(
         portrait,
         cmap="inferno",
@@ -144,11 +140,13 @@ def plot_critic(
     x_label, y_label = getattr(env.observation_space, "names", ["x", "y"])
     final_show(save_fig, plot, directory, figure_name, x_label, y_label, title)
 
+
 # Plot a DQN-like critic.
 # If input_action is "policy", it plots the actions with a different color for each action
 # If input_action is "None", it plots the value of the best action
 # Otherwise, input_action is a number and it plots the Q-value of the corresponding action
-    
+
+
 def plot_discrete_q(
     agent: Agent,
     env: GymAgent,
@@ -227,7 +225,7 @@ def plot_discrete_q(
     workspace.set_full(var_name_obs, all_obs, batch_dims=None)
 
     assert agent.is_q_function, "plot_discrete_q should only be called for Q functions"
-    
+
     if var_name_value == "None":
         var_name_value: str = f"{agent.name}/q_values"
 
@@ -240,12 +238,8 @@ def plot_discrete_q(
         q_values = data.max(dim=-1).indices
     else:
         q_values = data[:, :, input_action]
-        
-    portrait = (
-        q_values.reshape(definition, definition)
-        .detach()
-        .numpy()
-    )
+
+    portrait = q_values.reshape(definition, definition).detach().numpy()
 
     plt.figure(figsize=(10, 10))
     plt.imshow(

@@ -1,0 +1,879 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>bbrl.utils.utils API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>bbrl.utils.utils</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python"># This source code is licensed under the MIT license found in the
+# LICENSE file in the root directory of this source tree.
+#
+
+import copy
+from typing import Callable, List, Union
+
+import gym
+import torch
+from gym.spaces import Box, Discrete
+from gym.wrappers import TimeLimit
+from omegaconf import DictConfig
+
+from bbrl.agents.agent import Agent
+from bbrl.workspace import Workspace
+from bbrl import instantiate_class
+from bbrl.agents.asynchronous import AsynchronousAgent
+
+
+def get_env_dimensions(env) -&gt; tuple:
+    env = instantiate_class(env)
+    obs_dim = env.observation_space.shape[0]
+    if isinstance(env.action_space, Discrete):
+        action_dim = env.action_space.n
+        del env
+        return obs_dim, action_dim
+
+    elif isinstance(env.action_space, Box):
+        action_dim = env.action_space.shape[0]
+        max_action = env.action_space.high[0]
+        del env
+        return obs_dim, action_dim, max_action
+    else:
+        raise Exception(f&#34;{type(env.action_space)} unknown&#34;)
+
+
+def make_gym_env(max_episode_steps, env_name):
+    return TimeLimit(gym.make(env_name), max_episode_steps=max_episode_steps)
+
+
+def soft_param_update(network_to_update, network, rho):
+    for n_to_update, p_net in zip(network_to_update.parameters(), network.parameters()):
+        n_to_update.data.copy_(rho * p_net.data + (1 - rho) * n_to_update.data)
+
+
+# dict configs utils :
+def key_path_in_dict(nested_dict: dict, key_path: str):
+    &#34;&#34;&#34;
+    Check if a sequences of keys exists in a nested dict
+    &#34;&#34;&#34;
+    try:
+        keys = key_path.split(&#34;.&#34;)
+        rv = nested_dict
+        for key in keys:
+            rv = rv[key]
+        return True
+    except KeyError:
+        return False
+
+
+def set_value_with_key_path(nested_dict: DictConfig, key_path: str, value):
+    keys = key_path.split(&#34;.&#34;)
+    for key in keys[:-1]:
+        nested_dict = nested_dict[key]
+    nested_dict[keys[-1]] = value
+
+
+# Salina additions ####
+
+# need to check if this function works well using cuda
+def vector_to_parameters(vec: torch.Tensor, parameters) -&gt; None:
+    r&#34;&#34;&#34;Convert one vector to the parameters
+
+    Args:
+        vec (Tensor): a single vector represents the parameters of a model.
+        parameters (Iterable[Tensor]): an iterator of Tensors that are the
+            parameters of a model.
+    &#34;&#34;&#34;
+    # Ensure vec of type Tensor
+    if not isinstance(vec, torch.Tensor):
+        raise TypeError(
+            &#34;expected torch.Tensor, but got: {}&#34;.format(torch.typename(vec))
+        )
+
+    # Pointer for slicing the vector for each parameter
+    pointer = 0
+    for param in parameters:
+        # The length of the parameter
+        num_param = param.numel()
+        # Slice the vector, reshape it, and replace the old data of the parameter
+        param.data.copy_(vec[pointer : pointer + num_param].view_as(param).data)
+
+        # Increment the pointer
+        pointer += num_param
+
+
+# !!!! nRemoteParamAgent,  Not ready (WIP) !!!
+class nRemoteParamAgent(Agent):
+    &#34;&#34;&#34;
+    Class that allows to evaluate N (different) individuals with m processes
+    The user have to provide:
+       1/ the aquisition agent list or template
+       2/ list of parameters for each of the individual of the pop
+       3/ the function that apply the parameters to the acquisition agent
+    This implementation is based on the  Asynchronous agents
+    (I think another implementation could use the NRemote agent
+    maybe by slicing the shared workspace to separate the experiences
+    collected by each individual)
+    &#34;&#34;&#34;
+
+    def __init__(self, acq_agent: Agent, n_process: int, name: str = &#34;&#34;) -&gt; None:
+        &#34;&#34;&#34;
+        Implements a list of agent which are executed aynchronously in another process.
+        Each agent can be parametrized by specific parameters and will returns it&#39;s own workspace.
+        acq_agent : an instance of the agent that will be runned over each processes
+        n_process :
+        apply_params : a function f(acq_agent, param) =&gt; acq_agent
+                       Allow to update each of the agent with a specific set of parameters.
+        &#34;&#34;&#34;
+        super().__init__(name)
+        self.async_agents = []
+        self.n_process = n_process
+        for i in range(n_process):
+            async_agent = AsynchronousAgent(copy.deepcopy(acq_agent))
+            self.async_agents.append(async_agent)
+
+    def __call__(self, params: list, apply_params: Callable, **kwargs):
+        self.workspaces = []
+        nb_agent_to_launch = len(params)
+        pool = []
+        to_launch_id = 0
+
+        def launch_agent(agent, to_launch_id):
+            apply_params(agent, params[to_launch_id])
+            agent(**kwargs)
+            to_launch_id += 1
+            pool.append(agent)
+
+        for i in range(min(nb_agent_to_launch, self.n_process)):
+            launch_agent(self.async_agents[i], i)
+
+        while True:
+            for agent in pool:
+                if not agent.is_running():
+                    workspace = agent.get_workspace()
+                    if workspace:
+                        self.workspaces.append(workspace)
+                        if len(self.workspaces) == nb_agent_to_launch:
+                            return
+                    if to_launch_id &lt; nb_agent_to_launch:
+                        last_launched_id = len(self.workspaces) - 1
+                        apply_params(agent, params[last_launched_id])
+                        agent(**kwargs)
+                        last_launched_id += 1
+                    else:
+                        pool.remove(agent)
+
+    def get_workspaces(self) -&gt; List[Workspace]:
+        try:
+            return self.workspaces
+        except AttributeError:
+            raise Exception(
+                &#34;The nRemoteParamAgent has not been called yet, workspaces have not been created&#34;
+            )
+
+    def close(self) -&gt; None:
+        for a in self.async_agents:
+            a.close()
+
+
+# !!!! nRemoteDistinctAgents Not functionnal !!!
+# To my knownledge you can&#39;t
+# change the content of an async agent
+class nRemoteDistinctAgents(Agent):
+    &#34;&#34;&#34;
+    Class that allows to evaluate N (different) individuals with m processes
+    Basic usage :
+    remote = nRemoteDistinctAgents(n_process)
+    remote(acq_agent_list,)
+    The user have to provide:
+        1/ a list of acqusition_agent that will be copied to remotes
+    This implementation is based on the  Asynchronous agents
+    (i think another implementation could use the Nremote agent
+    maybe by slicing the shared workspace to separate the experiences
+    collected by each individual)
+    &#34;&#34;&#34;
+
+    def __init__(self, n_process: int, name: str = &#34;&#34;) -&gt; None:
+        &#34;&#34;&#34;
+        Implements a list of agent which are executed aynchronously in another process.
+        Each agent can be parametrized by specific parameters and will returns it&#39;s own
+        workspace.
+        acq_agent : an instance of the agent that will be runned over each processes
+        n_process :
+        apply_params : a function f(acq_agent, param) =&gt; acq_agent
+                       Allow to update each of the agent with a specific set of parameters.
+        &#34;&#34;&#34;
+        super().__init__(name)
+        self.async_agents = []
+        self.n_process = n_process
+        for i in range(n_process):
+            async_agent = AsynchronousAgent(None)
+            self.async_agents.append(async_agent)
+
+    def __call__(
+        self, acq_agents: List[Agent], agents_args: Union[list, dict, None], **kwargs
+    ):
+        def get_agent_args(agent_id):
+            if agents_args is None:
+                args = {}
+            elif isinstance(agents_args, dict):
+                args = agents_args
+            elif isinstance(agents_args, list):
+                args = agents_args[agent_id]
+            else:
+                raise Exception(&#34;Unsupported&#34;)
+            return args
+
+        self.workspaces = []
+        nb_agent_to_launch = len(acq_agents)
+        to_launch_id = 0
+
+        pool = []
+        for _ in range(min(self.n_process, nb_agent_to_launch)):
+            args = get_agent_args(to_launch_id)
+            self.async_agents[to_launch_id].agent = acq_agents[to_launch_id]
+            self.async_agents[to_launch_id](**args, **kwargs)
+            pool.append(self.async_agents[to_launch_id])
+            to_launch_id += 1
+
+        while len(self.workspaces) &lt; nb_agent_to_launch:
+            j = 0
+            for async_agent in pool:
+                if not async_agent.is_running():
+                    workspace = async_agent.get_workspace()
+                    self.workspaces.append(workspace)
+                    # print(f&#39;process {j} finished total {len(self.workspaces)}/{nb_agent_to_launch}&#39;)
+                    if len(self.workspaces) == nb_agent_to_launch:
+                        return
+                    if to_launch_id &lt; nb_agent_to_launch:
+                        async_agent.agent = acq_agents[to_launch_id]
+                        args = get_agent_args(to_launch_id)
+                        async_agent(**args, **kwargs)
+                        # print(f&#39;process {j} launched for agent {to_launch_id}&#39;)
+                        to_launch_id += 1
+                    else:
+                        pool.remove(async_agent)
+                j += 1
+
+    def get_workspaces(self) -&gt; List[Workspace]:
+        try:
+            return self.workspaces
+        except AttributeError:
+            raise Exception(
+                &#34;The nRemoteParamAgent has not been called yet, workspaces have not been created&#34;
+            )
+
+    def close(self) -&gt; None:
+        for a in self.async_agents:
+            a.close()
+
+
+def is_vec_of_ones(vec) -&gt; bool:
+    # print(vec)
+    # print(vec.shape)
+    for subvec in vec:
+        for i in subvec:
+            # print(f&#34;{i} &#34;)
+            if not i == 1:
+                # print(f&#34;{i} is not one&#34;)
+                return False
+    return True</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="bbrl.utils.utils.get_env_dimensions"><code class="name flex">
+<span>def <span class="ident">get_env_dimensions</span></span>(<span>env) ‑> tuple</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_env_dimensions(env) -&gt; tuple:
+    env = instantiate_class(env)
+    obs_dim = env.observation_space.shape[0]
+    if isinstance(env.action_space, Discrete):
+        action_dim = env.action_space.n
+        del env
+        return obs_dim, action_dim
+
+    elif isinstance(env.action_space, Box):
+        action_dim = env.action_space.shape[0]
+        max_action = env.action_space.high[0]
+        del env
+        return obs_dim, action_dim, max_action
+    else:
+        raise Exception(f&#34;{type(env.action_space)} unknown&#34;)</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.utils.is_vec_of_ones"><code class="name flex">
+<span>def <span class="ident">is_vec_of_ones</span></span>(<span>vec) ‑> bool</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_vec_of_ones(vec) -&gt; bool:
+    # print(vec)
+    # print(vec.shape)
+    for subvec in vec:
+        for i in subvec:
+            # print(f&#34;{i} &#34;)
+            if not i == 1:
+                # print(f&#34;{i} is not one&#34;)
+                return False
+    return True</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.utils.key_path_in_dict"><code class="name flex">
+<span>def <span class="ident">key_path_in_dict</span></span>(<span>nested_dict: dict, key_path: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Check if a sequences of keys exists in a nested dict</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def key_path_in_dict(nested_dict: dict, key_path: str):
+    &#34;&#34;&#34;
+    Check if a sequences of keys exists in a nested dict
+    &#34;&#34;&#34;
+    try:
+        keys = key_path.split(&#34;.&#34;)
+        rv = nested_dict
+        for key in keys:
+            rv = rv[key]
+        return True
+    except KeyError:
+        return False</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.utils.make_gym_env"><code class="name flex">
+<span>def <span class="ident">make_gym_env</span></span>(<span>max_episode_steps, env_name)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def make_gym_env(max_episode_steps, env_name):
+    return TimeLimit(gym.make(env_name), max_episode_steps=max_episode_steps)</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.utils.set_value_with_key_path"><code class="name flex">
+<span>def <span class="ident">set_value_with_key_path</span></span>(<span>nested_dict: omegaconf.dictconfig.DictConfig, key_path: str, value)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_value_with_key_path(nested_dict: DictConfig, key_path: str, value):
+    keys = key_path.split(&#34;.&#34;)
+    for key in keys[:-1]:
+        nested_dict = nested_dict[key]
+    nested_dict[keys[-1]] = value</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.utils.soft_param_update"><code class="name flex">
+<span>def <span class="ident">soft_param_update</span></span>(<span>network_to_update, network, rho)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def soft_param_update(network_to_update, network, rho):
+    for n_to_update, p_net in zip(network_to_update.parameters(), network.parameters()):
+        n_to_update.data.copy_(rho * p_net.data + (1 - rho) * n_to_update.data)</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.utils.vector_to_parameters"><code class="name flex">
+<span>def <span class="ident">vector_to_parameters</span></span>(<span>vec: torch.Tensor, parameters) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Convert one vector to the parameters</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>vec</code></strong> :&ensp;<code>Tensor</code></dt>
+<dd>a single vector represents the parameters of a model.</dd>
+<dt><strong><code>parameters</code></strong> :&ensp;<code>Iterable[Tensor]</code></dt>
+<dd>an iterator of Tensors that are the
+parameters of a model.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def vector_to_parameters(vec: torch.Tensor, parameters) -&gt; None:
+    r&#34;&#34;&#34;Convert one vector to the parameters
+
+    Args:
+        vec (Tensor): a single vector represents the parameters of a model.
+        parameters (Iterable[Tensor]): an iterator of Tensors that are the
+            parameters of a model.
+    &#34;&#34;&#34;
+    # Ensure vec of type Tensor
+    if not isinstance(vec, torch.Tensor):
+        raise TypeError(
+            &#34;expected torch.Tensor, but got: {}&#34;.format(torch.typename(vec))
+        )
+
+    # Pointer for slicing the vector for each parameter
+    pointer = 0
+    for param in parameters:
+        # The length of the parameter
+        num_param = param.numel()
+        # Slice the vector, reshape it, and replace the old data of the parameter
+        param.data.copy_(vec[pointer : pointer + num_param].view_as(param).data)
+
+        # Increment the pointer
+        pointer += num_param</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="bbrl.utils.utils.nRemoteDistinctAgents"><code class="flex name class">
+<span>class <span class="ident">nRemoteDistinctAgents</span></span>
+<span>(</span><span>n_process: int, name: str = '')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Class that allows to evaluate N (different) individuals with m processes
+Basic usage :
+remote = nRemoteDistinctAgents(n_process)
+remote(acq_agent_list,)
+The user have to provide:
+1/ a list of acqusition_agent that will be copied to remotes
+This implementation is based on the
+Asynchronous agents
+(i think another implementation could use the Nremote agent
+maybe by slicing the shared workspace to separate the experiences
+collected by each individual)</p>
+<p>Implements a list of agent which are executed aynchronously in another process.
+Each agent can be parametrized by specific parameters and will returns it's own
+workspace.
+acq_agent : an instance of the agent that will be runned over each processes
+n_process :
+apply_params : a function f(acq_agent, param) =&gt; acq_agent
+Allow to update each of the agent with a specific set of parameters.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class nRemoteDistinctAgents(Agent):
+    &#34;&#34;&#34;
+    Class that allows to evaluate N (different) individuals with m processes
+    Basic usage :
+    remote = nRemoteDistinctAgents(n_process)
+    remote(acq_agent_list,)
+    The user have to provide:
+        1/ a list of acqusition_agent that will be copied to remotes
+    This implementation is based on the  Asynchronous agents
+    (i think another implementation could use the Nremote agent
+    maybe by slicing the shared workspace to separate the experiences
+    collected by each individual)
+    &#34;&#34;&#34;
+
+    def __init__(self, n_process: int, name: str = &#34;&#34;) -&gt; None:
+        &#34;&#34;&#34;
+        Implements a list of agent which are executed aynchronously in another process.
+        Each agent can be parametrized by specific parameters and will returns it&#39;s own
+        workspace.
+        acq_agent : an instance of the agent that will be runned over each processes
+        n_process :
+        apply_params : a function f(acq_agent, param) =&gt; acq_agent
+                       Allow to update each of the agent with a specific set of parameters.
+        &#34;&#34;&#34;
+        super().__init__(name)
+        self.async_agents = []
+        self.n_process = n_process
+        for i in range(n_process):
+            async_agent = AsynchronousAgent(None)
+            self.async_agents.append(async_agent)
+
+    def __call__(
+        self, acq_agents: List[Agent], agents_args: Union[list, dict, None], **kwargs
+    ):
+        def get_agent_args(agent_id):
+            if agents_args is None:
+                args = {}
+            elif isinstance(agents_args, dict):
+                args = agents_args
+            elif isinstance(agents_args, list):
+                args = agents_args[agent_id]
+            else:
+                raise Exception(&#34;Unsupported&#34;)
+            return args
+
+        self.workspaces = []
+        nb_agent_to_launch = len(acq_agents)
+        to_launch_id = 0
+
+        pool = []
+        for _ in range(min(self.n_process, nb_agent_to_launch)):
+            args = get_agent_args(to_launch_id)
+            self.async_agents[to_launch_id].agent = acq_agents[to_launch_id]
+            self.async_agents[to_launch_id](**args, **kwargs)
+            pool.append(self.async_agents[to_launch_id])
+            to_launch_id += 1
+
+        while len(self.workspaces) &lt; nb_agent_to_launch:
+            j = 0
+            for async_agent in pool:
+                if not async_agent.is_running():
+                    workspace = async_agent.get_workspace()
+                    self.workspaces.append(workspace)
+                    # print(f&#39;process {j} finished total {len(self.workspaces)}/{nb_agent_to_launch}&#39;)
+                    if len(self.workspaces) == nb_agent_to_launch:
+                        return
+                    if to_launch_id &lt; nb_agent_to_launch:
+                        async_agent.agent = acq_agents[to_launch_id]
+                        args = get_agent_args(to_launch_id)
+                        async_agent(**args, **kwargs)
+                        # print(f&#39;process {j} launched for agent {to_launch_id}&#39;)
+                        to_launch_id += 1
+                    else:
+                        pool.remove(async_agent)
+                j += 1
+
+    def get_workspaces(self) -&gt; List[Workspace]:
+        try:
+            return self.workspaces
+        except AttributeError:
+            raise Exception(
+                &#34;The nRemoteParamAgent has not been called yet, workspaces have not been created&#34;
+            )
+
+    def close(self) -&gt; None:
+        for a in self.async_agents:
+            a.close()</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="bbrl.agents.agent.Agent" href="../agents/agent.html#bbrl.agents.agent.Agent">Agent</a></li>
+<li>torch.nn.modules.module.Module</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="bbrl.utils.utils.nRemoteDistinctAgents.dump_patches"><code class="name">var <span class="ident">dump_patches</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="bbrl.utils.utils.nRemoteDistinctAgents.training"><code class="name">var <span class="ident">training</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="bbrl.utils.utils.nRemoteDistinctAgents.close"><code class="name flex">
+<span>def <span class="ident">close</span></span>(<span>self) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def close(self) -&gt; None:
+    for a in self.async_agents:
+        a.close()</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.utils.nRemoteDistinctAgents.get_workspaces"><code class="name flex">
+<span>def <span class="ident">get_workspaces</span></span>(<span>self) ‑> List[<a title="bbrl.workspace.Workspace" href="../workspace.html#bbrl.workspace.Workspace">Workspace</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_workspaces(self) -&gt; List[Workspace]:
+    try:
+        return self.workspaces
+    except AttributeError:
+        raise Exception(
+            &#34;The nRemoteParamAgent has not been called yet, workspaces have not been created&#34;
+        )</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="bbrl.agents.agent.Agent" href="../agents/agent.html#bbrl.agents.agent.Agent">Agent</a></b></code>:
+<ul class="hlist">
+<li><code><a title="bbrl.agents.agent.Agent.clone" href="../agents/agent.html#bbrl.agents.agent.Agent.clone">clone</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.forward" href="../agents/agent.html#bbrl.agents.agent.Agent.forward">forward</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.get" href="../agents/agent.html#bbrl.agents.agent.Agent.get">get</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.get_by_name" href="../agents/agent.html#bbrl.agents.agent.Agent.get_by_name">get_by_name</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.get_name" href="../agents/agent.html#bbrl.agents.agent.Agent.get_name">get_name</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.get_time_truncated" href="../agents/agent.html#bbrl.agents.agent.Agent.get_time_truncated">get_time_truncated</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.is_running" href="../agents/agent.html#bbrl.agents.agent.Agent.is_running">is_running</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.load_model" href="../agents/agent.html#bbrl.agents.agent.Agent.load_model">load_model</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.save_model" href="../agents/agent.html#bbrl.agents.agent.Agent.save_model">save_model</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.seed" href="../agents/agent.html#bbrl.agents.agent.Agent.seed">seed</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.set" href="../agents/agent.html#bbrl.agents.agent.Agent.set">set</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.set_name" href="../agents/agent.html#bbrl.agents.agent.Agent.set_name">set_name</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="bbrl.utils.utils.nRemoteParamAgent"><code class="flex name class">
+<span>class <span class="ident">nRemoteParamAgent</span></span>
+<span>(</span><span>acq_agent: <a title="bbrl.agents.agent.Agent" href="../agents/agent.html#bbrl.agents.agent.Agent">Agent</a>, n_process: int, name: str = '')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Class that allows to evaluate N (different) individuals with m processes
+The user have to provide:
+1/ the aquisition agent list or template
+2/ list of parameters for each of the individual of the pop
+3/ the function that apply the parameters to the acquisition agent
+This implementation is based on the
+Asynchronous agents
+(I think another implementation could use the NRemote agent
+maybe by slicing the shared workspace to separate the experiences
+collected by each individual)</p>
+<p>Implements a list of agent which are executed aynchronously in another process.
+Each agent can be parametrized by specific parameters and will returns it's own workspace.
+acq_agent : an instance of the agent that will be runned over each processes
+n_process :
+apply_params : a function f(acq_agent, param) =&gt; acq_agent
+Allow to update each of the agent with a specific set of parameters.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class nRemoteParamAgent(Agent):
+    &#34;&#34;&#34;
+    Class that allows to evaluate N (different) individuals with m processes
+    The user have to provide:
+       1/ the aquisition agent list or template
+       2/ list of parameters for each of the individual of the pop
+       3/ the function that apply the parameters to the acquisition agent
+    This implementation is based on the  Asynchronous agents
+    (I think another implementation could use the NRemote agent
+    maybe by slicing the shared workspace to separate the experiences
+    collected by each individual)
+    &#34;&#34;&#34;
+
+    def __init__(self, acq_agent: Agent, n_process: int, name: str = &#34;&#34;) -&gt; None:
+        &#34;&#34;&#34;
+        Implements a list of agent which are executed aynchronously in another process.
+        Each agent can be parametrized by specific parameters and will returns it&#39;s own workspace.
+        acq_agent : an instance of the agent that will be runned over each processes
+        n_process :
+        apply_params : a function f(acq_agent, param) =&gt; acq_agent
+                       Allow to update each of the agent with a specific set of parameters.
+        &#34;&#34;&#34;
+        super().__init__(name)
+        self.async_agents = []
+        self.n_process = n_process
+        for i in range(n_process):
+            async_agent = AsynchronousAgent(copy.deepcopy(acq_agent))
+            self.async_agents.append(async_agent)
+
+    def __call__(self, params: list, apply_params: Callable, **kwargs):
+        self.workspaces = []
+        nb_agent_to_launch = len(params)
+        pool = []
+        to_launch_id = 0
+
+        def launch_agent(agent, to_launch_id):
+            apply_params(agent, params[to_launch_id])
+            agent(**kwargs)
+            to_launch_id += 1
+            pool.append(agent)
+
+        for i in range(min(nb_agent_to_launch, self.n_process)):
+            launch_agent(self.async_agents[i], i)
+
+        while True:
+            for agent in pool:
+                if not agent.is_running():
+                    workspace = agent.get_workspace()
+                    if workspace:
+                        self.workspaces.append(workspace)
+                        if len(self.workspaces) == nb_agent_to_launch:
+                            return
+                    if to_launch_id &lt; nb_agent_to_launch:
+                        last_launched_id = len(self.workspaces) - 1
+                        apply_params(agent, params[last_launched_id])
+                        agent(**kwargs)
+                        last_launched_id += 1
+                    else:
+                        pool.remove(agent)
+
+    def get_workspaces(self) -&gt; List[Workspace]:
+        try:
+            return self.workspaces
+        except AttributeError:
+            raise Exception(
+                &#34;The nRemoteParamAgent has not been called yet, workspaces have not been created&#34;
+            )
+
+    def close(self) -&gt; None:
+        for a in self.async_agents:
+            a.close()</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="bbrl.agents.agent.Agent" href="../agents/agent.html#bbrl.agents.agent.Agent">Agent</a></li>
+<li>torch.nn.modules.module.Module</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="bbrl.utils.utils.nRemoteParamAgent.dump_patches"><code class="name">var <span class="ident">dump_patches</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="bbrl.utils.utils.nRemoteParamAgent.training"><code class="name">var <span class="ident">training</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="bbrl.utils.utils.nRemoteParamAgent.close"><code class="name flex">
+<span>def <span class="ident">close</span></span>(<span>self) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def close(self) -&gt; None:
+    for a in self.async_agents:
+        a.close()</code></pre>
+</details>
+</dd>
+<dt id="bbrl.utils.utils.nRemoteParamAgent.get_workspaces"><code class="name flex">
+<span>def <span class="ident">get_workspaces</span></span>(<span>self) ‑> List[<a title="bbrl.workspace.Workspace" href="../workspace.html#bbrl.workspace.Workspace">Workspace</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_workspaces(self) -&gt; List[Workspace]:
+    try:
+        return self.workspaces
+    except AttributeError:
+        raise Exception(
+            &#34;The nRemoteParamAgent has not been called yet, workspaces have not been created&#34;
+        )</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="bbrl.agents.agent.Agent" href="../agents/agent.html#bbrl.agents.agent.Agent">Agent</a></b></code>:
+<ul class="hlist">
+<li><code><a title="bbrl.agents.agent.Agent.clone" href="../agents/agent.html#bbrl.agents.agent.Agent.clone">clone</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.forward" href="../agents/agent.html#bbrl.agents.agent.Agent.forward">forward</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.get" href="../agents/agent.html#bbrl.agents.agent.Agent.get">get</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.get_by_name" href="../agents/agent.html#bbrl.agents.agent.Agent.get_by_name">get_by_name</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.get_name" href="../agents/agent.html#bbrl.agents.agent.Agent.get_name">get_name</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.get_time_truncated" href="../agents/agent.html#bbrl.agents.agent.Agent.get_time_truncated">get_time_truncated</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.is_running" href="../agents/agent.html#bbrl.agents.agent.Agent.is_running">is_running</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.load_model" href="../agents/agent.html#bbrl.agents.agent.Agent.load_model">load_model</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.save_model" href="../agents/agent.html#bbrl.agents.agent.Agent.save_model">save_model</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.seed" href="../agents/agent.html#bbrl.agents.agent.Agent.seed">seed</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.set" href="../agents/agent.html#bbrl.agents.agent.Agent.set">set</a></code></li>
+<li><code><a title="bbrl.agents.agent.Agent.set_name" href="../agents/agent.html#bbrl.agents.agent.Agent.set_name">set_name</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="bbrl.utils" href="index.html">bbrl.utils</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="bbrl.utils.utils.get_env_dimensions" href="#bbrl.utils.utils.get_env_dimensions">get_env_dimensions</a></code></li>
+<li><code><a title="bbrl.utils.utils.is_vec_of_ones" href="#bbrl.utils.utils.is_vec_of_ones">is_vec_of_ones</a></code></li>
+<li><code><a title="bbrl.utils.utils.key_path_in_dict" href="#bbrl.utils.utils.key_path_in_dict">key_path_in_dict</a></code></li>
+<li><code><a title="bbrl.utils.utils.make_gym_env" href="#bbrl.utils.utils.make_gym_env">make_gym_env</a></code></li>
+<li><code><a title="bbrl.utils.utils.set_value_with_key_path" href="#bbrl.utils.utils.set_value_with_key_path">set_value_with_key_path</a></code></li>
+<li><code><a title="bbrl.utils.utils.soft_param_update" href="#bbrl.utils.utils.soft_param_update">soft_param_update</a></code></li>
+<li><code><a title="bbrl.utils.utils.vector_to_parameters" href="#bbrl.utils.utils.vector_to_parameters">vector_to_parameters</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="bbrl.utils.utils.nRemoteDistinctAgents" href="#bbrl.utils.utils.nRemoteDistinctAgents">nRemoteDistinctAgents</a></code></h4>
+<ul class="">
+<li><code><a title="bbrl.utils.utils.nRemoteDistinctAgents.close" href="#bbrl.utils.utils.nRemoteDistinctAgents.close">close</a></code></li>
+<li><code><a title="bbrl.utils.utils.nRemoteDistinctAgents.dump_patches" href="#bbrl.utils.utils.nRemoteDistinctAgents.dump_patches">dump_patches</a></code></li>
+<li><code><a title="bbrl.utils.utils.nRemoteDistinctAgents.get_workspaces" href="#bbrl.utils.utils.nRemoteDistinctAgents.get_workspaces">get_workspaces</a></code></li>
+<li><code><a title="bbrl.utils.utils.nRemoteDistinctAgents.training" href="#bbrl.utils.utils.nRemoteDistinctAgents.training">training</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="bbrl.utils.utils.nRemoteParamAgent" href="#bbrl.utils.utils.nRemoteParamAgent">nRemoteParamAgent</a></code></h4>
+<ul class="">
+<li><code><a title="bbrl.utils.utils.nRemoteParamAgent.close" href="#bbrl.utils.utils.nRemoteParamAgent.close">close</a></code></li>
+<li><code><a title="bbrl.utils.utils.nRemoteParamAgent.dump_patches" href="#bbrl.utils.utils.nRemoteParamAgent.dump_patches">dump_patches</a></code></li>
+<li><code><a title="bbrl.utils.utils.nRemoteParamAgent.get_workspaces" href="#bbrl.utils.utils.nRemoteParamAgent.get_workspaces">get_workspaces</a></code></li>
+<li><code><a title="bbrl.utils.utils.nRemoteParamAgent.training" href="#bbrl.utils.utils.nRemoteParamAgent.training">training</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

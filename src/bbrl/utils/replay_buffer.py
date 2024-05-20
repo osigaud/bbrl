@@ -52,48 +52,38 @@ class ReplayBuffer:
         self.init_workspace(new_data)
 
         batch_size = None
-        arange = None
         indexes = None
 
         for k, v in new_data.items():
             if batch_size is None:
                 batch_size = v.size()[1]
-                # print(f"{k}: batch size : {batch_size}")
-                # print("pos", self.position)
-            if self.position + batch_size < self.max_size:
-                # The case where the batch can be inserted before the end of the replay buffer
-                if indexes is None:
-                    indexes = torch.arange(batch_size) + self.position
-                    arange = torch.arange(batch_size)
-                    self.position = self.position + batch_size
-                indexes = indexes.to(dtype=torch.long, device=v.device)
-                arange = arange.to(dtype=torch.long, device=v.device)
-                # print("insertion standard:", indexes)
-                # # print("v shape", v.detach().shape)
-                self._insert(k, indexes, v)
-            else:
-                # The case where the batch cannot be inserted before the end of the replay buffer
-                # A part is at the end, the other part is in the beginning
-                self.is_full = True
-                # the number of data at the end of the RB
-                batch_end_size = self.max_size - self.position
-                # the number of data at the beginning of the RB
-                batch_begin_size = batch_size - batch_end_size
-                if indexes is None:
-                    # print(f"{k}: batch size : {batch_size}")
-                    # print("pos", self.position)
-                    # the part of the indexes at the end of the RB
-                    indexes = torch.arange(batch_end_size) + self.position
-                    arange = torch.arange(batch_end_size)
-                    # the part of the indexes at the beginning of the RB
-                    # print("insertion intermediate computed:", indexes)
-                    indexes = torch.cat((indexes, torch.arange(batch_begin_size)), 0)
-                    arange = torch.cat((arange, torch.arange(batch_begin_size)), 0)
-                    # print("insertion full:", indexes)
-                    self.position = batch_begin_size
-                indexes = indexes.to(dtype=torch.long, device=v.device)
-                arange = arange.to(dtype=torch.long, device=v.device)
-                self._insert(k, indexes, v)
+
+                if self.position + batch_size < self.max_size:
+                    # The case where the batch can be inserted before the end of
+                    # the replay buffer
+                    if indexes is None:
+                        indexes = torch.arange(batch_size) + self.position
+                        self.position = self.position + batch_size
+                    indexes = indexes.to(dtype=torch.long, device=v.device)
+                else:
+                    # The case where the batch cannot be inserted before the end
+                    # of the replay buffer A part is at the end, the other part
+                    # is in the beginning
+                    self.is_full = True
+                    # the number of data at the end of the RB
+                    batch_end_size = self.max_size - self.position
+                    # the number of data at the beginning of the RB
+                    batch_begin_size = batch_size - batch_end_size
+                    if indexes is None:
+                        # the part of the indexes at the end of the RB
+                        indexes = torch.arange(batch_end_size) + self.position
+                        # the part of the indexes at the beginning of the RB
+                        indexes = torch.cat(
+                            (indexes, torch.arange(batch_begin_size)), 0
+                        )
+                        self.position = batch_begin_size
+                    indexes = indexes.to(dtype=torch.long, device=v.device)
+            self._insert(k, indexes, v)
 
     def size(self):
         if self.is_full:
@@ -102,8 +92,8 @@ class ReplayBuffer:
             return self.position
 
     def print_obs(self):
-        print(f"position: {self.position}")
-        print(self.variables["env/env_obs"])
+        print(f"position: {self.position}")  # noqa: T201
+        print(self.variables["env/env_obs"])  # noqa: T201
 
     def get_shuffled(self, batch_size):
         who = torch.randint(
