@@ -331,7 +331,7 @@ class ParallelGymAgent(GymAgent):
                     ret[f"{key}/{subkey}"] = subvalue
             else:
                 raise ValueError(
-                    f"Observation component must be a torch.Tensor or a dict, not {type(observation)}"
+                    f"Observation component must be a torch.Tensor or a dict, not {type(value)}"
                 )                
 
         return ret
