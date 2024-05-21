@@ -53,23 +53,35 @@ def doubleqlearning_temporal_difference(
     return td
 
 
-def gae(reward, next_critic, must_bootstrap, critic, discount_factor, gae_coef):
+def gae(reward, next_critic: torch.Tensor, must_bootstrap: torch.Tensor, critic: torch.Tensor, discount_factor: float, gae_coef: float):
+    """Computes the generalized advantage estimation
+
+    :param reward: The reward matrix for each transition (dimension TxB)
+    :param next_critic: The critic value at t+1 (dimension TxB)
+    :param must_bootstrap: Must bootstrap flag, true if this was not the last
+        state of an episode (dimension TxB)
+    :param critic: The critic value at t (dimension TxB)
+    :param discount_factor: The discount factor
+    :param gae_coef: The generalized advantage lambda
+    :return: a TxB matrix containing the advantages
+    """
     mb = must_bootstrap.int()
     # delta = reward + discount_factor * next_critic.detach() * mb
     td = reward + discount_factor * next_critic.detach() * mb - critic
-    # handling td0 case
-    # print("delta", delta)
-    # print("td", td)
+
+    # handling TD0 case
     if gae_coef == 0.0:
         return td
 
-    td_shape = td.shape[0]
+    # Compute GAE
     gae_val = td[-1]
     gaes = [gae_val]
-    for t in range(td_shape - 2, -1, -1):
+    for t in range(len(td) - 2, -1, -1):
         # print(t, "td", td[t], mb[t])
         gae_val = td[t] + discount_factor * gae_coef * mb[t] * gae_val
         gaes.append(gae_val)
-    gaes = list([g.unsqueeze(0) for g in reversed(gaes)])
-    gaes = torch.cat(gaes, dim=0)
+        
+    # Returns the matrix of advantages
+    gaes.reverse()
+    gaes = torch.stack(gaes, dim=0)
     return gaes
