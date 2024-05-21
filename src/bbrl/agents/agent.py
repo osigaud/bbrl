@@ -46,6 +46,7 @@ class Agent(nn.Module):
             n (str): The name
         """
         self._name = n
+        return self
 
     def get_name(self):
         """Returns the name of the agent
@@ -54,6 +55,14 @@ class Agent(nn.Module):
             str: the name
         """
         return self._name
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @name.setter
+    def name(self, name: str):
+        self._name = name
 
     def with_prefix(self, prefix: str):
         """Returns the prefix in environments"""
@@ -172,6 +181,25 @@ class Agent(nn.Module):
         :return: the resulting pytorch network
         """
         return torch.load(filename)
+
+
+class KWAgentWrapper(Agent, ABC):
+    """A wrapper that calls the agent with some specific keyword parameters"""
+
+    def __init__(self, agent: Agent, **kwargs):
+        """Creates a new keyword-based wrapper
+
+        :param agent: The agent to be wrapped
+        """
+        super().__init__()
+        self.wrapped = agent
+        self.kwargs = kwargs
+
+    def forward(self, t: int, *args, **kwargs) -> Any:
+        self.wrapped.workspace = self.workspace
+        r = self.wrapped.forward(t, *args, **kwargs, **self.kwargs)
+        self.wrapped.workspace = None
+        return r
 
 
 class TimeAgent(Agent, ABC):
