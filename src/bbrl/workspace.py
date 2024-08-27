@@ -403,9 +403,10 @@ class Workspace:
         self, var_name: str, batch_dims: Optional[tuple[int, int]] = None
     ) -> torch.Tensor:
         """Return the complete tensor for var_name"""
-        assert (
-            var_name in self.variables
-        ), f"[Workspace.get_full] unknown variable: {var_name}"
+        assert var_name in self.variables, (
+            f"""[Workspace.get_full] unknown variable: {var_name} """
+            f"""(keys: {", ".join(self.variables.keys())}"""
+        )
         return self.variables[var_name].get_full(batch_dims=batch_dims)
 
     def keys(self):
