@@ -77,6 +77,10 @@ Link to the paper: [SaLinA: Sequential Learning of Agents](https://arxiv.org/abs
 
 To help you understand how to use BBRL, we have written a doc [here](https://github.com/osigaud/bbrl/blob/master/docs/overview.md)
 
+## Learning RL on your own
+
+If you want to learn RL on your own using BBRL, you can do so from [the following online material](https://github.com/osigaud/bbrl/blob/master/docs/learning_RL/learning_RL.md)
+
 #### Coding your first RL algorithms with BBRL
 
 Most of the notebooks below can be run under jupyter notebook as well as under Google colaboratory. In any case, download it on your disk and run it with your favorite notebook environment:
