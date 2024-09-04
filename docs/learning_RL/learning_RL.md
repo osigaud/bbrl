@@ -2,7 +2,7 @@
 
 ## Outlook
 
-The pages below contain teaching material from Olivier Sigaud's reinforcement learning (RL) classes. They are designed to help you learn RL on your own. Each page contains at least slides, and most often lessons in youtube videos and notebooks corresponding to labs. There might also be additional material to go beyond the basics.
+The pages below contain teaching material from Olivier Sigaud's reinforcement learning (RL) lectures. They are designed to help you learn RL on your own. Each page contains at least slides, and most often lessons in youtube videos and notebooks corresponding to labs. There might also be additional material to go beyond the basics.
 
 The order of the lessons below matters, if you want to understand a lot about RL and you don't have much prior knowledge, you are encouraged to work on these lessons sequentially. Getting a good grasp on RL from the "central flow of lessons" below may take something like 10 days of work to a motivated beginner.
 

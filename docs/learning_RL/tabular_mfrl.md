@@ -10,7 +10,7 @@
 
 [Model-Free RL (25')](https://www.youtube.com/watch?v=mQ4X48qlmlo)
 
-Note about the videos: The slides are more recent. The videos note $r_t$ the reward resulting from applying action $a_t$ in state $s_t$, in the slides I switched to noting it $r_{t+1}$, which makes more sense.
+Note about the video: The slides are more recent. The video notes $r_t$ the reward resulting from applying action $a_t$ in state $s_t$, in the slides I switched to noting it $r_{t+1}$, which makes more sense.
 
 ### Labs
 
