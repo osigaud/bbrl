@@ -353,7 +353,7 @@ class ParallelGymAgent(GymAgent):
 
         self._initialize_envs_from_env(num_envs=num_envs)
 
-    def _initialize_envs_from_env(self, num_envs: int):
+    def _initialize_envs_from_env(self, env, num_envs: int):
         self.envs = [env for _ in range(num_envs)]
         self._timestep = torch.zeros(len(self.envs), dtype=torch.long)
         self.observation_space = self.envs[0].observation_space
