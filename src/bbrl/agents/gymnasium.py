@@ -351,7 +351,7 @@ class ParallelGymAgent(GymAgent):
         self._is_autoreset: bool = False
         self._last_frame = [None for _ in range(num_envs)]
 
-        self._initialize_envs_from_env(num_envs=num_envs)
+        self._initialize_envs_from_env(env, num_envs=num_envs)
 
     def _initialize_envs_from_env(self, env, num_envs: int):
         self.envs = [env for _ in range(num_envs)]
