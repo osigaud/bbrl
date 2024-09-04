@@ -294,9 +294,6 @@ class ParallelGymAgent(GymAgent):
         super().__init__(*args, **kwargs)
         assert num_envs > 0, "n_envs must be > 0"
 
-        if make_env_fn == None: return
-
-        self.make_env_fn: Callable[[], Env] = make_env_fn
         self.num_envs: int = num_envs
 
         self.envs: List[Env] = []
@@ -306,6 +303,8 @@ class ParallelGymAgent(GymAgent):
         self._is_autoreset: bool = False
         self._last_frame = [None for _ in range(num_envs)]
 
+        if make_env_fn == None: return
+        self.make_env_fn: Callable[[], Env] = make_env_fn
         args: Dict[str, Any] = make_env_args if make_env_args is not None else {}
         self._initialize_envs(num_envs=num_envs, make_env_args=args)
 
