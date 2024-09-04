@@ -294,6 +294,8 @@ class ParallelGymAgent(GymAgent):
         super().__init__(*args, **kwargs)
         assert num_envs > 0, "n_envs must be > 0"
 
+        if make_env_fn == None: return
+
         self.make_env_fn: Callable[[], Env] = make_env_fn
         self.num_envs: int = num_envs
 
