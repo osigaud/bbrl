@@ -324,50 +324,6 @@ class ParallelGymAgent(GymAgent):
             # Do not include last state if not auto-reset
             self.include_last_state = False
 
-    def create_with_env(
-        self,
-        env,
-        num_envs: int=1,
-        *args,
-        **kwargs,
-    ):
-        """Create an agent from an already built Gymnasium environment (useful when combining wrappers)
-
-        Args:
-            env: a single gymnasium environments
-            num_envs ([int]): The number of environments to create, defaults to 1
-
-        """
-        super().__init__(*args, **kwargs)
-        assert num_envs > 0, "n_envs must be > 0"
-
-        self.num_envs: int = num_envs
-
-        self.envs: List[Env] = []
-        self.cumulated_reward: Dict[int, float] = {}
-
-        self._timestep: Tensor
-        self._is_autoreset: bool = False
-        self._last_frame = [None for _ in range(num_envs)]
-
-        self._initialize_envs_from_env(env, num_envs=num_envs)
-
-    def _initialize_envs_from_env(self, env, num_envs: int):
-        self.envs = [env for _ in range(num_envs)]
-        self._timestep = torch.zeros(len(self.envs), dtype=torch.long)
-        self.observation_space = self.envs[0].observation_space
-        self.action_space = self.envs[0].action_space
-
-        # Check if we have an autoreset wrapper somewhere
-        _env = self.envs[0]
-        while isinstance(_env, Wrapper) and not self._is_autoreset:
-            self._is_autoreset = isinstance(_env, AutoResetWrapper)
-            _env = _env.env
-
-        if not self._is_autoreset:
-            # Do not include last state if not auto-reset
-            self.include_last_state = False
-
     @staticmethod
     def _flatten_value(value: Dict[str, Any]):
         """Flatten nested dict structures with concatenating keys"""
