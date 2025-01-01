@@ -17,7 +17,7 @@ import gymnasium as gym
 from gymnasium import Env, Space, Wrapper, make
 from gymnasium.core import ActType, ObsType
 from gymnasium.vector import VectorEnv
-from gymnasium.wrappers import AutoReset
+from gymnasium.wrappers.common import AutoReset
 from gymnasium.wrappers.monitoring.video_recorder import VideoRecorder
 
 from bbrl import SeedableAgent, SerializableAgent, TimeAgent, Agent
