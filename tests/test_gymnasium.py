@@ -12,7 +12,7 @@ from gymnasium import spaces
 from bbrl.agents import Agent, TemporalAgent, Agents
 from bbrl.workspace import Workspace
 from bbrl.agents.gymnasium import ParallelGymAgent, make_env
-from gymnasium.wrappers import AutoResetWrapper
+from gymnasium.wrappers.common import Autoreset
 
 
 class MyEnv(gym.Env):
@@ -199,7 +199,7 @@ add_scenarios(
 )
 def test_gymnasium_autoreset(autoreset, include_last_state, reward_at_t, scenarios):
     make_env_fn = (
-        (lambda: gym.Wrapper(AutoResetWrapper(MyEnv())))
+        (lambda: gym.Wrapper(Autoreset(MyEnv())))
         if autoreset
         else (lambda: MyEnv())
     )
