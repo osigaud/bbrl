@@ -14,34 +14,53 @@ These pages are subject to perpetual improvement, if you have any question or an
 
 [Overview: the 5 routes to Deep RL](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/overview.md)
 
-[Tabular dynamic programming](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/tabular_dp.md)
+------------
 
-[Tabular model-free reinforcement learning](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/tabular_mfrl.md)
+[Tabular dynamic programming](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/Tabular/tabular_dp.md)
 
-[Tabular model-based reinforcement learning](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/tabular_mbrl.md)
+[Tabular model-free reinforcement learning](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/Tabular/tabular_mfrl.md)
 
-[Deep Q-Network (DQN) and its successors](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/dqn.md)
+[Tabular model-based reinforcement learning](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/Tabular/tabular_mbrl.md)
 
-[Deep Deterministic Policy Gradient (DDPG) and Twin Delayed Deep Deterministic Policy Gradient (TD3)](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/ddpg.md)
+------------
 
-[On-policy vs Off-policy](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/onp_ofp.md)
+[Deep Q-Network (DQN) and its successors](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/DeepMFRL/dqn.md)
 
-[Policy Gradient approaches](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/reinforce.md)
+[Deep Deterministic Policy Gradient (DDPG) and Twin Delayed Deep Deterministic Policy Gradient (TD3)](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/DeepMFRL/ddpg.md)
 
-[Bias vs Variance](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/bias_variance.md)
+[On-policy vs Off-policy](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/DeepMFRL/onp_ofp.md)
 
-[Advantage Actor-Critic (A2C)](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/a2c.md)
+[Policy Gradient approaches](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/DeepMFRL/reinforce.md)
 
-[Trust Region Policy Optimization (TRPO) and ACKTR](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/trpo.md)
+[Bias vs Variance](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/DeepMFRL/bias_variance.md)
 
-[Proximal Policy Optimization (PPO)](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/ppo.md)
+[Advantage Actor-Critic (A2C)](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/DeepMFRL/a2c.md)
 
-[Soft Actor-Critic (SAC)](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/sac.md)
+[Trust Region Policy Optimization (TRPO) and ACKTR](https://github.com/osigaud/bbrl/tree/master/docs/DeepMFRL/learning_RL/trpo.md)
 
-[High UTD ratio algorithms (TQC, DroQ)](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/high_UTD.md)
+[Proximal Policy Optimization (PPO)](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/DeepMFRL/ppo.md)
 
-[Wrap-Up](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/wrap_up.md)
+[Soft Actor-Critic (SAC)](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/DeepMFRL/sac.md)
 
+[High UTD ratio algorithms (TQC, DroQ)](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/DeepMFRL/high_UTD.md)
+
+[Deel Model-free RL Wrap-Up](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/DeepMFRL/wrap_up.md)
+
+------------
+
+[Direct policy search and RL: introduction](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/EvoRL/intro.md)
+
+[Direct policy search methods](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/EvoRL/dps_methods.md)
+
+[Policy gradient details](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/EvoRL/pg_details.md)
+
+[Direct policy search and RL: comparisons](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/EvoRL/comparisons.md)
+
+[Direct policy search and RL: combinations](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/EvoRL/combinations.md)
+
+[Population-based training](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/EvoRL/pbt.md)
+
+[TD-MPC](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/EvoRL/td_mpc.md)
 <!---
 ## Beyond standard RL approaches
 
