@@ -17,7 +17,7 @@ import gymnasium as gym
 from gymnasium import Env, Space, Wrapper, make
 from gymnasium.core import ActType, ObsType
 from gymnasium.vector import VectorEnv
-from gymnasium.wrappers.common import AutoReset
+from gymnasium.wrappers.common import Autoreset
 from gymnasium.wrappers.monitoring.video_recorder import VideoRecorder
 
 from bbrl import SeedableAgent, SerializableAgent, TimeAgent, Agent
@@ -34,7 +34,7 @@ def make_env(env_name, autoreset=False, wrappers: List = [], **kwargs):
     :param wrappers: Wrappers applied to the base environment **in the order
         they are provided**: that is, if wrappers=[W1, W2], the environment
         (before the optional auto-wrapping) will be W2(W1(base_env))
-    :param autoreset: if True, wrap the environment into an AutoResetWrapper,
+    :param autoreset: if True, wrap the environment into an Autoreset Wrapper,
         defaults to False
     """
     env = make(env_name, **kwargs)
@@ -42,7 +42,7 @@ def make_env(env_name, autoreset=False, wrappers: List = [], **kwargs):
         env = wrapper(env)
 
     if autoreset:
-        env = AutoReset(env)
+        env = Autoreset(env)
     return env
 
 
@@ -262,7 +262,7 @@ class ParallelGymAgent(GymAgent):
     """Create an Agent from a gymnasium environment
 
     To create an auto-reset ParallelGymAgent, use the gymnasium
-    `AutoResetWrapper` in the make_env_fn
+    `Autoreset Wrapper` in the make_env_fn
     """
 
     def __init__(
@@ -317,7 +317,7 @@ class ParallelGymAgent(GymAgent):
         # Check if we have an autoreset wrapper somewhere
         _env = self.envs[0]
         while isinstance(_env, Wrapper) and not self._is_autoreset:
-            self._is_autoreset = isinstance(_env, AutoReset)
+            self._is_autoreset = isinstance(_env, Autoreset)
             _env = _env.env
 
         if not self._is_autoreset:
