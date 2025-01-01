@@ -18,7 +18,7 @@ from gymnasium import Env, Space, Wrapper, make
 from gymnasium.core import ActType, ObsType
 from gymnasium.vector import VectorEnv
 from gymnasium.wrappers.common import Autoreset
-from gymnasium.wrappers.monitoring.video_recorder import VideoRecorder
+#from gymnasium.wrappers.monitoring.video_recorder import VideoRecorder
 
 from bbrl import SeedableAgent, SerializableAgent, TimeAgent, Agent
 from bbrl.agents.utils import TemporalAgent
@@ -68,8 +68,8 @@ def record_video(env: Env, policy: Agent, path: str):
         workspace.set("env/env_obs", 0, torch.Tensor(obs).unsqueeze(0))
         t = 0
         done = False
-        video_recorder = VideoRecorder(env, str(path.resolve()), enabled=True)
-        video_recorder.capture_frame()
+        # video_recorder = VideoRecorder(env, str(path.resolve()), enabled=True)
+        # video_recorder.capture_frame()
 
         while not done:
             workspace.set("env/env_obs", t, torch.Tensor(obs).unsqueeze(0))
@@ -80,7 +80,7 @@ def record_video(env: Env, policy: Agent, path: str):
             done = terminated or truncated
             t += 1
 
-        video_recorder.close()
+        # video_recorder.close()
 
 
 def _convert_action(action: Union[Dict, Tensor]) -> Union[int, np.ndarray]:
