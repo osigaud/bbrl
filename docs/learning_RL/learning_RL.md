@@ -16,6 +16,8 @@ These pages are subject to perpetual improvement, if you have any question or an
 
 ------------
 
+### Tabular reinforcement learning
+
 [Tabular dynamic programming](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/Tabular/tabular_dp.md)
 
 [Tabular model-free reinforcement learning](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/Tabular/tabular_mfrl.md)
@@ -23,6 +25,8 @@ These pages are subject to perpetual improvement, if you have any question or an
 [Tabular model-based reinforcement learning](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/Tabular/tabular_mbrl.md)
 
 ------------
+
+### Deep (model-free) reinforcement learning
 
 [Deep Q-Network (DQN) and its successors](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/DeepMFRL/dqn.md)
 
@@ -48,6 +52,8 @@ These pages are subject to perpetual improvement, if you have any question or an
 
 ------------
 
+### Direct policy search and RL
+
 [Direct policy search and RL: introduction](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/EvoRL/intro.md)
 
 [Direct policy search methods](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/EvoRL/dps_methods.md)
@@ -61,6 +67,25 @@ These pages are subject to perpetual improvement, if you have any question or an
 [Population-based training](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/EvoRL/pbt.md)
 
 [TD-MPC](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/EvoRL/td_mpc.md)
+
+------------
+
+### Goal-conditioned reinforcement learning
+
+[GCRL: introduction](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/GCRL/intro.md)
+
+[GCRL: core concepts](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/GCRL/core_concepts.md)
+
+[GCRL: typology](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/GCRL/typology.md)
+
+[GCRL: skill learners](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/GCRL/skill_learners.md)
+
+[GCRL: hindsight experience replay](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/her.md)
+
+[GCRL: goal reachers](https://github.com/osigaud/bbrl/tree/master/docs/learning_RL/GCRL/goal_reachers.md)
+
+------------
+
 <!---
 ## Beyond standard RL approaches
 
