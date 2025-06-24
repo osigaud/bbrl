@@ -59,6 +59,8 @@ def record_video(env: Env, policy: Agent, path: Union[str, Path]):
 
     path.parent.mkdir(exist_ok=True, parents=True)
 
+    env = RecordVideo(env, video_folder=path.with_suffix(""))
+
     with torch.no_grad():
         workspace = Workspace()
         obs, _ = env.reset()
@@ -66,25 +68,20 @@ def record_video(env: Env, policy: Agent, path: Union[str, Path]):
         t = 0
         done = False
 
-        video_recorder = RecordVideo(env, video_folder=path, enabled=True)
-        video_recorder.capture_frame()
-
         while not done:
             workspace.set("env/env_obs", t, torch.Tensor(obs).unsqueeze(0))
             policy(t=t, workspace=workspace)
             action = workspace.get("action", t).squeeze(0).numpy()
             obs, reward, terminated, truncated, info = env.step(action)
-            video_recorder.capture_frame()
             done = terminated or truncated
             t += 1
 
-        # video_recorder.close()
+        env.close()
 
 
 def _convert_action(action: Union[Dict, Tensor]) -> Union[int, np.ndarray]:
     if isinstance(action, dict):
         actions = {key: _convert_action(value) for key, value in action.items()}
-        print(actions)  # FIXME: remove
         return actions
     if len(action.size()) == 0:
         action = action.item()
@@ -305,7 +302,7 @@ class ParallelGymAgent(GymAgent):
         #: Stores the last frame if (1) no autoreset (2) include last state
         self._last_frame = [None for _ in range(num_envs)]
 
-        if make_env_fn == None:
+        if make_env_fn is None:
             return
         self.make_env_fn: Callable[[], Env] = make_env_fn
         args: Dict[str, Any] = make_env_args if make_env_args is not None else {}
@@ -418,7 +415,7 @@ class ParallelGymAgent(GymAgent):
         self.cumulated_reward[k] += reward
 
         # Just reset the state if not including last state
-        if (terminated or truncated):
+        if terminated or truncated:
             if not self.include_last_state:
                 obs, _, _, _, _ = env.step(None)
 
@@ -466,7 +463,6 @@ class ParallelGymAgent(GymAgent):
 
             # Perform the action
             for k, env in enumerate(self.envs):
-
                 # Just copy the last frame
                 if not self._is_autoreset and self._last_frame[k] is not None:
                     observations.append(self._last_frame[k])
