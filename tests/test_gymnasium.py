@@ -12,7 +12,7 @@ from gymnasium import spaces
 from bbrl.agents import Agent, TemporalAgent, Agents
 from bbrl.workspace import Workspace
 from bbrl.agents.gymnasium import ParallelGymAgent, make_env
-from gymnasium.wrappers import AutoResetWrapper
+from gymnasium.wrappers import Autoreset
 
 
 class MyEnv(gym.Env):
@@ -21,7 +21,8 @@ class MyEnv(gym.Env):
     action 1: 0 -> 1 -> 2
     action 0: 1 -> 0 -> 2
 
-    Target (reward=1) is 3, max 5 steps
+    Target (reward=5) is 2, max 5 steps
+    Each action is -1 reward
     """
 
     MOVES = {0: [2, 1], 1: [0, 2], 2: [2, 2]}
@@ -96,8 +97,8 @@ def check(
 SCENARIOS = []
 
 
-def add_scenarios(autoreset, include_last_state, scenarios: List[Dict]):
-    # Check
+def add_scenarios(autoreset: bool, include_last_state: bool, scenarios: List[Dict]):
+    # Add two scenarios (reward at t or t+1)
     n_steps = None
     for ix, scenario in enumerate(scenarios):
         for key, value in scenario.items():
@@ -199,7 +200,7 @@ add_scenarios(
 )
 def test_gymnasium_autoreset(autoreset, include_last_state, reward_at_t, scenarios):
     make_env_fn = (
-        (lambda: gym.Wrapper(AutoResetWrapper(MyEnv())))
+        (lambda: gym.Wrapper(Autoreset(MyEnv())))
         if autoreset
         else (lambda: MyEnv())
     )

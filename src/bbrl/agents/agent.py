@@ -96,7 +96,7 @@ class Agent(nn.Module):
         """Returns True if the agent is currently executing (for remote agents)"""
         return False
 
-    def forward(self, **kwargs):
+    def forward(self, *args, **kwargs):
         """The generic function to override when defining a new agent"""
         raise NotImplementedError
 

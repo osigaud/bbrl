@@ -17,8 +17,7 @@ import gymnasium as gym
 from gymnasium import Env, Space, Wrapper, make
 from gymnasium.core import ActType, ObsType
 from gymnasium.vector import VectorEnv
-from gymnasium.wrappers import AutoResetWrapper
-from gymnasium.wrappers.monitoring.video_recorder import VideoRecorder
+from gymnasium.wrappers import RecordVideo, Autoreset
 
 from bbrl import SeedableAgent, SerializableAgent, TimeAgent, Agent
 from bbrl.agents.utils import TemporalAgent
@@ -34,31 +33,29 @@ def make_env(env_name, autoreset=False, wrappers: List = [], **kwargs):
     :param wrappers: Wrappers applied to the base environment **in the order
         they are provided**: that is, if wrappers=[W1, W2], the environment
         (before the optional auto-wrapping) will be W2(W1(base_env))
-    :param autoreset: if True, wrap the environment into an AutoResetWrapper,
-        defaults to False
     """
     env = make(env_name, **kwargs)
     for wrapper in wrappers:
         env = wrapper(env)
 
     if autoreset:
-        env = AutoResetWrapper(env)
+        env = Autoreset(env)
     return env
 
 
-def record_video(env: Env, policy: Agent, path: str):
+def record_video(env: Env, policy: Agent, path: Union[str, Path]):
     """Record a video for a given gymnasium environment and a BBRL agent
 
     :param env: The environment (created with `render_mode="rgb_array"`)
     :param policy: The BBRL agent
-    :param path: The path of the video
+    :param path_str: The path of the video
     """
     # Tries to get the non temporal agent.
     if isinstance(policy, TemporalAgent):
         policy = policy.agent
 
     # Creates the containing folder if needed
-    path = Path(path)
+    path = Path(path).resolve()
 
     path.parent.mkdir(exist_ok=True, parents=True)
 
@@ -68,7 +65,8 @@ def record_video(env: Env, policy: Agent, path: str):
         workspace.set("env/env_obs", 0, torch.Tensor(obs).unsqueeze(0))
         t = 0
         done = False
-        video_recorder = VideoRecorder(env, str(path.resolve()), enabled=True)
+
+        video_recorder = RecordVideo(env, video_folder=path, enabled=True)
         video_recorder.capture_frame()
 
         while not done:
@@ -85,10 +83,12 @@ def record_video(env: Env, policy: Agent, path: str):
 
 def _convert_action(action: Union[Dict, Tensor]) -> Union[int, np.ndarray]:
     if isinstance(action, dict):
-        return {key: _convert_action(value) for key, value in action.items()}
+        actions = {key: _convert_action(value) for key, value in action.items()}
+        print(actions)  # FIXME: remove
+        return actions
     if len(action.size()) == 0:
         action = action.item()
-        assert isinstance(action, int)
+        assert isinstance(action, int), f"{action} is not an integer"
     else:
         action = np.array(action.tolist())
     return action
@@ -184,7 +184,7 @@ class GymAgent(TimeAgent, SeedableAgent, SerializableAgent, ABC):
         self.observation_space: Optional[Space[ObsType]] = None
         self.action_space: Optional[Space[ActType]] = None
 
-    def forward(self, t: int, *args, **kwargs) -> None:
+    def forward(self, t: int, *args, **kwargs):
         if self._seed is None:
             self.seed(self.default_seed)
         if t == 0:
@@ -301,9 +301,12 @@ class ParallelGymAgent(GymAgent):
 
         self._timestep: Tensor
         self._is_autoreset: bool = False
+
+        #: Stores the last frame if (1) no autoreset (2) include last state
         self._last_frame = [None for _ in range(num_envs)]
 
-        if make_env_fn == None: return
+        if make_env_fn == None:
+            return
         self.make_env_fn: Callable[[], Env] = make_env_fn
         args: Dict[str, Any] = make_env_args if make_env_args is not None else {}
         self._initialize_envs(num_envs=num_envs, make_env_args=args)
@@ -317,12 +320,12 @@ class ParallelGymAgent(GymAgent):
         # Check if we have an autoreset wrapper somewhere
         _env = self.envs[0]
         while isinstance(_env, Wrapper) and not self._is_autoreset:
-            self._is_autoreset = isinstance(_env, AutoResetWrapper)
+            self._is_autoreset = isinstance(_env, Autoreset)
             _env = _env.env
 
         if not self._is_autoreset:
-            # Do not include last state if not auto-reset
-            self.include_last_state = False
+            # Include last state if not auto-reset
+            self.include_last_state = True
 
     @staticmethod
     def _flatten_value(value: Dict[str, Any]):
@@ -337,7 +340,7 @@ class ParallelGymAgent(GymAgent):
             else:
                 raise ValueError(
                     f"Observation component must be a torch.Tensor or a dict, not {type(value)}"
-                )                
+                )
 
         return ret
 
@@ -366,21 +369,6 @@ class ParallelGymAgent(GymAgent):
         )
 
         done = terminated or truncated
-
-        if done and self.include_last_state:
-            # Create a new frame to be inserted after this step,
-            # containing the first observation of the next episode
-            self._last_frame[k] = {
-                **observation,
-                "terminated": torch.tensor([False]),
-                "truncated": torch.tensor([False]),
-                "done": torch.tensor([False]),
-                "reward": torch.tensor([0]).float(),
-                "cumulated_reward": torch.tensor([0]).float(),
-                "timestep": torch.tensor([0]),
-            }
-            # Use the final observation instead
-            observation = ParallelGymAgent._format_frame(info["final_observation"])
 
         ret: Dict[str, Tensor] = {
             **observation,
@@ -423,12 +411,16 @@ class ParallelGymAgent(GymAgent):
 
     def _step(self, k: int, action: Tensor):
         env = self.envs[k]
-
         action: Union[int, np.ndarray[int]] = _convert_action(action)
         obs, reward, terminated, truncated, info = env.step(action)
 
         self._timestep[k] += 1
         self.cumulated_reward[k] += reward
+
+        # Just reset the state if not including last state
+        if (terminated or truncated):
+            if not self.include_last_state:
+                obs, _, _, _, _ = env.step(None)
 
         return self._format_obs(
             k, obs, info, terminated=terminated, truncated=truncated, reward=reward
@@ -440,12 +432,12 @@ class ParallelGymAgent(GymAgent):
         If render is True, then the output of env.render() is written as env/rendering
         """
         super().forward(t, **kwargs)
+        assert self.workspace is not None
 
         observations = []
         if t == 0:
             for k, env in enumerate(self.envs):
                 observations.append(self._reset(k))
-                self._last_frame[k] = None
         else:
             if self.input in self.workspace.variables:
                 # Action is a tensor
@@ -472,23 +464,24 @@ class ParallelGymAgent(GymAgent):
                     return {key: dict_slice(k, value) for key, value in object.items()}
                 return object[k]
 
+            # Perform the action
             for k, env in enumerate(self.envs):
-                if self._last_frame[k] is None:
-                    if isinstance(action, dict):
-                        frame = self._step(k, dict_slice(k, action))
-                    else:
-                        frame = self._step(k, action[k])
+
+                # Just copy the last frame
+                if not self._is_autoreset and self._last_frame[k] is not None:
+                    observations.append(self._last_frame[k])
+                    continue
+
+                if isinstance(action, dict):
+                    frame = self._step(k, dict_slice(k, action))
                 else:
-                    # Use last frame
-                    frame = self._last_frame[k]
-                    self._last_frame[k] = None
+                    frame = self._step(k, action[k])
 
-                observations.append(frame)
-
-                # Reproduce the last frame if over (but with 0 reward)
                 if not self._is_autoreset and frame["done"]:
                     self._last_frame[k] = {key: value for key, value in frame.items()}
                     self._last_frame[k]["reward"] = torch.Tensor([0.0])
+
+                observations.append(frame)
 
         self.set_obs(observations=_torch_cat_dict(observations), t=t)
 

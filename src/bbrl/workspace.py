@@ -365,7 +365,7 @@ class Workspace:
         self, var_name: str, t: int, batch_dims: Optional[tuple[int, int]] = None
     ) -> torch.Tensor:
         """Get the variable var_name at time t"""
-        assert var_name in self.variables, f"Unknown variable: {var_name}"
+        assert var_name in self.variables, f"Unknown variable: {var_name} ({', '.join(self.variables.keys())})"
         return self.variables[var_name].get(t, batch_dims=batch_dims)
 
     def clear(self, name=None):
