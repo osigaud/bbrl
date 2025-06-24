@@ -78,7 +78,7 @@ def record_video(env: Env, policy: Agent, path: Union[str, Path]):
             done = terminated or truncated
             t += 1
 
-        video_recorder.close()
+        # video_recorder.close()
 
 
 def _convert_action(action: Union[Dict, Tensor]) -> Union[int, np.ndarray]:
@@ -262,7 +262,7 @@ class ParallelGymAgent(GymAgent):
     """Create an Agent from a gymnasium environment
 
     To create an auto-reset ParallelGymAgent, use the gymnasium
-    `AutoResetWrapper` in the make_env_fn
+    `Autoreset Wrapper` in the make_env_fn
     """
 
     def __init__(
