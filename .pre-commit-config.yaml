@@ -22,6 +22,6 @@ repos:
   - id: commitizen
   - id: commitizen-branch
     stages:
-    - push
+    - pre-push
   repo: https://github.com/commitizen-tools/commitizen
   rev: v2.42.0

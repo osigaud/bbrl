@@ -391,6 +391,7 @@ class ParallelGymAgent(GymAgent):
 
         self._timestep[k] = 0
         self.cumulated_reward[k] = 0.0
+        self._last_frame = [None for _ in range(self.num_envs)]
 
         # Computes a new seed for this environment
         s: int = self._timestep_from_reset * self.num_envs * self._nb_reset * self._seed
@@ -399,6 +400,12 @@ class ParallelGymAgent(GymAgent):
         return self._format_obs(k, *env.reset(seed=s))
 
     def _step(self, k: int, action: Tensor):
+        """Step for the k^th environment
+
+        :param k: The environment number
+        :param action: The action of the agent
+        :return: the observation
+        """
         env = self.envs[k]
         action: Union[int, np.ndarray[int]] = _convert_action(action)
         obs, reward, terminated, truncated, info = env.step(action)
