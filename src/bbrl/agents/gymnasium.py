@@ -92,7 +92,7 @@ def _convert_action(action: Union[Dict, Tensor]) -> Union[int, np.ndarray]:
 
 
 def _format_frame(
-    frame: Union[Dict[str, Tensor], List[Tensor], np.ndarray, Tensor, bool, int, float]
+    frame: Union[Dict[str, Tensor], List[Tensor], np.ndarray, Tensor, bool, int, float],
 ) -> Union[Tensor, Dict[str, Tensor]]:
     if isinstance(frame, Dict):
         r = {}
@@ -377,14 +377,6 @@ class ParallelGymAgent(GymAgent):
             "timestep": torch.tensor([self._timestep[k]]),
         }
 
-        # Resets the cumulated reward and timestep
-        if done and self._is_autoreset:
-            self.cumulated_reward[k] = 0.0
-            if self._is_autoreset and self.include_last_state:
-                self._timestep[k] = 0
-            else:
-                self._timestep[k] = 1
-
         return _torch_type(ret)
 
     def _reset(self, k: int) -> Dict[str, Tensor]:
@@ -413,15 +405,24 @@ class ParallelGymAgent(GymAgent):
 
         self._timestep[k] += 1
         self.cumulated_reward[k] += reward
+        done = terminated or truncated
 
-        # Just reset the state if not including last state
-        if terminated or truncated:
+        # Just reset the state if not including last state (but keep all the
+        # other informations)
+        if done:
             if not self.include_last_state:
                 obs, _, _, _, _ = env.step(None)
 
-        return self._format_obs(
+        obs = self._format_obs(
             k, obs, info, terminated=terminated, truncated=truncated, reward=reward
         )
+
+        # Resets the cumulated reward and timestep
+        if done and self._is_autoreset:
+            self.cumulated_reward[k] = 0.0
+            self._timestep[k] = -1
+
+        return obs
 
     def forward(self, t: int = 0, **kwargs) -> None:
         """Do one step by reading the `action` at t-1
