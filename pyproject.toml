@@ -1,3 +1,7 @@
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
 [project]
 name = "bbrl"
 license = {text = "MIT"}
@@ -6,28 +10,48 @@ authors = [
 ]
 description = "RL library inspired from salina"
 readme = "README.md"
-dynamic = ["version", "dependencies"]
+requires-python = ">=3.10"
+dynamic = ["version"]
+dependencies = [
+    "torch>=1.9.0",
+    "torchvision",
+    "tensorboard",
+    "tqdm",
+    "hydra-core",
+    "numpy",
+    "pandas",
+    "opencv-python",
+    "omegaconf",
+    "matplotlib",
+    "seaborn",
+    "scipy",
+    "bootstrapped",
+    "gymnasium>1",
+    "moviepy",
+]
 
 [project.optional-dependencies]
 test = ["pytest", "pytest-timeout"]
 
-[tool.setuptools.dynamic]
-dependencies = {file = ["requirements.txt"]}
-
-[tool.setuptools_scm]
-write_to = "src/bbrl/_version.py"
-fallback_version = "0.0.0-dev"
-
-[build-system]
-requires = ["setuptools>=45", "setuptools_scm[toml]>=6.2"]
+[project.urls]
+repository = "https://github.com/osigaud/bbrl.git"
 
 [dependency-groups]
 dev = [
     "ruff>=0.14.14",
 ]
 
-[project.urls]
-repository = "https://github.com/osigaud/bbrl.git"
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.version.raw-options]
+local_scheme = "no-local-version"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/bbrl/_version.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/bbrl"]
 
 [tool.ruff]
 line-length = 88
