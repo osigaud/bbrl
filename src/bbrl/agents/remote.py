@@ -1,6 +1,6 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
-#
+# ruff: noqa: T201
 
 import copy
 import time
@@ -82,9 +82,9 @@ class RemoteAgent(Agent):
 
     def __call__(self, workspace, **kwargs):
         with torch.no_grad():
-            assert (
-                workspace.is_shared
-            ), "You must use a shared workspace when using a Remote Agent"
+            assert workspace.is_shared, (
+                "You must use a shared workspace when using a Remote Agent"
+            )
             if self.process is None:
                 self._create_process()
                 self.train(self.train_mode)
@@ -102,9 +102,9 @@ class RemoteAgent(Agent):
         """Non-blocking forward. To use together with `is_running`"""
         with torch.no_grad():
             self._is_running = True
-            assert (
-                workspace.is_shared
-            ), "You must use a shared workspace when using a Remote Agent"
+            assert workspace.is_shared, (
+                "You must use a shared workspace when using a Remote Agent"
+            )
             if self.process is None:
                 self._create_process()
             if not workspace == self.last_workspace:

@@ -1,6 +1,6 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
-#
+# ruff: noqa: T201
 
 import bz2
 import pickle
@@ -28,7 +28,7 @@ try:
             every_n_seconds: bool = None,
             verbose: bool = False,
             log_loss: bool = False,
-            **kwargs
+            **kwargs,
         ) -> None:
             wandb.login()
             wandb.init(

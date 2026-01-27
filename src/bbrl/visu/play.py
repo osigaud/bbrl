@@ -1,3 +1,4 @@
+# ruff: noqa: T201
 from pathlib import Path
 import re
 import gym
