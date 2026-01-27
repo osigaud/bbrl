@@ -5,7 +5,11 @@ authors = [
     { name = "Olivier Sigaud",  email = "Olivier.Sigaud@isir.upmc.fr" }
 ]
 description = "RL library inspired from salina"
-dynamic = ["version", "readme", "dependencies"]
+readme = "README.md"
+dynamic = ["version", "dependencies"]
+
+[project.optional-dependencies]
+test = ["pytest", "pytest-timeout"]
 
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirements.txt"]}
@@ -17,5 +21,33 @@ fallback_version = "0.0.0-dev"
 [build-system]
 requires = ["setuptools>=45", "setuptools_scm[toml]>=6.2"]
 
+[dependency-groups]
+dev = [
+    "ruff>=0.14.14",
+]
+
 [project.urls]
 repository = "https://github.com/osigaud/bbrl.git"
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+[tool.ruff.lint]
+select = [
+    "E",      # pycodestyle errors
+    "F",      # pyflakes
+    "W",      # pycodestyle warnings
+    "C90",    # mccabe complexity
+    "T20",    # flake8-print
+]
+ignore = [
+    "E501",   # line too long (handled by formatter)
+    "E203",   # whitespace before ':' (conflicts with black-style formatting)
+    "E722",   # bare except
+    "F401",   # unused imports (in __init__.py files)
+]
+per-file-ignores = {"__init__.py" = ["F401"]}
+
+[tool.ruff.lint.mccabe]
+max-complexity = 25
