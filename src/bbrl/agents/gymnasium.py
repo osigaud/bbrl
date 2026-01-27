@@ -199,7 +199,6 @@ class GymAgent(TimeAgent, SeedableAgent, SerializableAgent, ABC):
                         (self.output + k, t - 1),
                         obs,
                     )
-
                 # Just use 0 for reward at $t$ for now
                 if k == "reward":
                     obs = torch.zeros_like(obs)
@@ -506,24 +505,35 @@ class VecGymAgent(GymAgent):
     ):
         super().__init__(*args, **kwargs)
 
-        args: Dict[str, Any] = vec_env_args or {}
-        self.envs: VectorEnv = make_envs_fn(**args)
+        init_args: Dict[str, Any] = vec_env_args or {}
+        self.envs: VectorEnv = make_envs_fn(**init_args)
 
         self.observation_space = self.envs.single_observation_space
         self.action_space = self.envs.single_action_space
 
         self.cumulated_reward: Tensor = torch.zeros(self.envs.num_envs)
+        self._timestep: Tensor = torch.zeros(self.envs.num_envs, dtype=torch.long)
+
+    def _compute_seeds(self) -> List[int]:
+        """Compute seeds for each environment to match ParallelGymAgent behavior."""
+        seeds = []
+        for k in range(self.envs.num_envs):
+            s = self._timestep_from_reset * self.envs.num_envs * self._nb_reset * self._seed
+            s += (k + 1) * 1  # At reset, timestep is 0, so (timestep + 1) = 1
+            seeds.append(s)
+        return seeds
 
     def forward(self, t: int, **kwargs) -> None:
         super().forward(t, **kwargs)
 
         if t == 0:
-            s: int = self._seed * self._nb_reset
-            obs, infos = self.envs.reset(seed=s)
+            seeds = self._compute_seeds()
+            obs, infos = self.envs.reset(seed=seeds)
             terminated = torch.tensor([False] * self.envs.num_envs)
             truncated = torch.tensor([False] * self.envs.num_envs)
             rewards = torch.tensor([0.0] * self.envs.num_envs)
             self.cumulated_reward = torch.zeros(self.envs.num_envs)
+            self._timestep = torch.zeros(self.envs.num_envs, dtype=torch.long)
         else:
             action = self.get((self.input, t - 1))
             assert (
@@ -536,7 +546,14 @@ class VecGymAgent(GymAgent):
             rewards = torch.tensor(rewards).float()
             terminated = torch.tensor(terminated)
             truncated = torch.tensor(truncated)
+            self._timestep = self._timestep + 1
             self.cumulated_reward = self.cumulated_reward + rewards
+
+            # Reset cumulated_reward and timestep for done environments (autoreset)
+            done = terminated | truncated
+            if done.any():
+                self.cumulated_reward = torch.where(done, torch.zeros_like(self.cumulated_reward), self.cumulated_reward)
+                self._timestep = torch.where(done, torch.zeros_like(self._timestep), self._timestep)
 
         observation: Union[Tensor, Dict[str, Tensor]] = _format_frame(obs)
 
@@ -547,8 +564,9 @@ class VecGymAgent(GymAgent):
             "env_obs": observation.squeeze(0),
             "terminated": terminated,
             "truncated": truncated,
-            "done": terminated or truncated,
+            "done": terminated | truncated,
             "reward": rewards,
             "cumulated_reward": self.cumulated_reward,
+            "timestep": self._timestep,
         }
         self.set_obs(observations=ret, t=t)

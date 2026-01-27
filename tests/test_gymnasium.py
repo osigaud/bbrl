@@ -11,8 +11,9 @@ from gymnasium.envs.registration import register
 from gymnasium import spaces
 from bbrl.agents import Agent, TemporalAgent, Agents
 from bbrl.workspace import Workspace
-from bbrl.agents.gymnasium import ParallelGymAgent, make_env
+from bbrl.agents.gymnasium import ParallelGymAgent, VecGymAgent, make_env
 from gymnasium.wrappers import Autoreset
+from gymnasium.vector import SyncVectorEnv
 
 
 class MyEnv(gym.Env):
@@ -221,3 +222,108 @@ def test_gymnasium_autoreset(autoreset, include_last_state, reward_at_t, scenari
     t_agents(workspace, n_steps=n_steps)
 
     check(workspace, scenarios)
+
+
+class DeterministicEnv(gym.Env):
+    """A deterministic environment for testing VecGymAgent vs ParallelGymAgent.
+
+    The environment has a 1D continuous observation space and discrete actions.
+    State transitions are deterministic based on seed and actions.
+    Episode terminates after 10 steps or if state > 2.
+    """
+
+    def __init__(self):
+        self.observation_space = spaces.Box(low=-10, high=10, shape=(2,), dtype=np.float32)
+        self.action_space = spaces.Discrete(3)
+        self._max_steps = 10
+        self._state = None
+        self._step_count = 0
+        self._rng = None
+
+    def reset(self, seed=None, options=None):
+        super().reset(seed=seed)
+        # Use seeded RNG for deterministic but seed-dependent behavior
+        self._rng = np.random.default_rng(seed)
+        initial_val = self._rng.uniform(-1, 1)
+        self._state = np.array([initial_val, 0.0], dtype=np.float32)
+        self._step_count = 0
+        return self._state.copy(), {}
+
+    def step(self, action):
+        self._state[0] += (action - 1) * 0.1
+        self._state[1] = self._step_count
+        self._step_count += 1
+
+        terminated = self._state[0] > 2.0
+        truncated = self._step_count >= self._max_steps
+        reward = 1.0 if terminated else -0.1
+
+        return self._state.copy(), reward, terminated, truncated, {}
+
+
+@pytest.mark.parametrize("num_envs", [1, 2, 4])
+@pytest.mark.parametrize("n_steps", [3, 5, 10])
+@pytest.mark.parametrize("reward_at_t", [False, True])
+def test_vec_gym_agent_matches_parallel(num_envs, n_steps, reward_at_t):
+    """Test that VecGymAgent produces the same outputs as ParallelGymAgent."""
+    seed = 42
+
+    # Create ParallelGymAgent with autoreset (VecGymAgent always uses autoreset)
+    def make_env_parallel():
+        return Autoreset(DeterministicEnv())
+
+    parallel_env = ParallelGymAgent(
+        make_env_parallel,
+        num_envs,
+        reward_at_t=reward_at_t,
+        include_last_state=False,  # VecGymAgent doesn't include last state
+    )
+    parallel_env.seed(seed)
+
+    # Create VecGymAgent
+    def make_vec_env():
+        return SyncVectorEnv([lambda: DeterministicEnv() for _ in range(num_envs)])
+
+    vec_env = VecGymAgent(
+        make_vec_env,
+        reward_at_t=reward_at_t,
+    )
+    vec_env.seed(seed)
+
+    # Create a deterministic actor that chooses action based on timestep
+    class DeterministicActor(Agent):
+        def __init__(self, num_envs):
+            super().__init__()
+            self.num_envs = num_envs
+
+        def forward(self, t):
+            # Deterministic action: cycle through 0, 1, 2
+            actions = torch.tensor([(t + i) % 3 for i in range(self.num_envs)])
+            self.set(("action", t), actions)
+
+    actor = DeterministicActor(num_envs)
+
+    # Run ParallelGymAgent
+    parallel_workspace = Workspace()
+    parallel_agents = Agents(parallel_env, actor)
+    parallel_t_agents = TemporalAgent(parallel_agents)
+    parallel_t_agents(parallel_workspace, n_steps=n_steps)
+
+    # Run VecGymAgent
+    vec_workspace = Workspace()
+    vec_agents = Agents(vec_env, actor)
+    vec_t_agents = TemporalAgent(vec_agents)
+    vec_t_agents(vec_workspace, n_steps=n_steps)
+
+    # Compare outputs (excluding timestep which VecGymAgent doesn't provide)
+    keys_to_compare = ["env/env_obs", "env/reward", "env/done", "env/terminated", "env/truncated"]
+
+    for key in keys_to_compare:
+        parallel_val = parallel_workspace[key]
+        vec_val = vec_workspace[key]
+        assert parallel_val.shape == vec_val.shape, (
+            f"Shape mismatch for {key}: {parallel_val.shape} vs {vec_val.shape}"
+        )
+        assert torch.allclose(parallel_val.float(), vec_val.float(), atol=1e-5), (
+            f"Value mismatch for {key}:\nParallel:\n{parallel_val}\nVec:\n{vec_val}"
+        )
